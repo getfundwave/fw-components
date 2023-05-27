@@ -79,7 +79,7 @@ export class FwAvatarGroup extends LitElement {
           ${this.items && this.items.length > 0? html`
 
           <div style="position: relative; display: inline-block;">
-              <div class="group" id="group" @tap=${(e) => this.showAllAvatars(e)}>
+              <div class="group" id="group" @click=${(e) => this.showAllAvatars(e)}>
                 ${repeat(this.items.slice(0, this.maxCount), (item, index) => html`
                   <fw-avatar class="overlap" type="initials" .name="${item[this.nameAttribute]}" style="z-index : ${this.items.length - index}" .color=${this.avatarBackground}></fw-avatar>
                 `)}
@@ -100,7 +100,7 @@ export class FwAvatarGroup extends LitElement {
                 ` : null}
 
                 ${this.primaryAction && this.primaryAction.title && this._filteredItems  && this._filteredItems.length ? html`
-                  <mwc-list-item graphic="avatar" @click=${(e) => this.fireEvent("primary-action-clicked")}>
+                  <mwc-list-item id="primary-action-item" graphic="avatar" @click=${(e) => this.fireEvent("primary-action-clicked")}>
                     <mwc-icon slot="graphic">${this.primaryAction?.icon ?? "add_circle"}</mwc-icon>
                     <span>${this.primaryAction.title}</span>
                   </mwc-list-item>
@@ -110,7 +110,7 @@ export class FwAvatarGroup extends LitElement {
                   
                   ${repeat(this._filteredItems, (item, index) => html`
                     
-                    <mwc-list-item graphic="avatar" .twoline=${this.secondaryAttribute ? true : false} @click=${(e) => this.fireEvent("item-clicked",{item})}>
+                    <mwc-list-item class="items-list-item" graphic="avatar" .twoline=${this.secondaryAttribute ? true : false} @click=${(e) => this.fireEvent("item-clicked",{item})}>
                     
                       <fw-avatar slot="graphic" type="initials" .name="${item[this.nameAttribute]}" .color=${this.avatarBackground}></fw-avatar>
                     
@@ -124,14 +124,14 @@ export class FwAvatarGroup extends LitElement {
                     <div class="list-item">
                       ${this.emptyStateMessage ? this.emptyStateMessage : "Couldn't find anything"}<br>
                       ${this.emptyStateAction && this.emptyStateAction.title ? html`
-                        <paper-button class="secondary-text-underlined" @tap=${(e) => {this.fireEvent("empty-state-action-clicked",{value: this.searchInputValue}); this.emptyStateAction.closeDialog && this.closeAvatarDialog()}} style="margin: 10px 0">${this.emptyStateAction.title}</paper-button>
+                        <paper-button class="secondary-text-underlined" @tap=${(e) => {this.emptyStateAction.closeDialog && this.closeAvatarDialog(); this.fireEvent("empty-state-action-clicked",{value: this.searchInputValue})}} style="margin: 10px 0">${this.emptyStateAction.title}</paper-button>
                       ` : null}
                     </div>
                 `}
                 
                 ${this.secondaryAction && this.secondaryAction.title && this._filteredItems  && this._filteredItems.length ? html`
                   <div class="list-item">
-                    <paper-button class="secondary-text-underlined" @tap=${(e) => {this.fireEvent("secondary-action-clicked",{value: this.searchInputValue}); this.secondaryAction.closeDialog && this.closeAvatarDialog()}} style="margin: 10px 0">${this.secondaryAction.title}</paper-button>
+                    <paper-button class="secondary-text-underlined" @tap=${(e) => {this.secondaryAction.closeDialog && this.closeAvatarDialog(); this.fireEvent("secondary-action-clicked",{value: this.searchInputValue})}} style="margin: 10px 0">${this.secondaryAction.title}</paper-button>
                   </div>
                 ` : null}
 
