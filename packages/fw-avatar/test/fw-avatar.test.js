@@ -17,7 +17,7 @@ describe("Fw-Avatar Tests", async () => {
         name="Richard Hendrickson"
         title="CEO"
         type="initials"
-        color="red"
+        color="blue"
       ></fw-avatar>`
     );
   });
@@ -26,14 +26,14 @@ describe("Fw-Avatar Tests", async () => {
     assert.instanceOf(ele, FwAvatar);
   });
 
-  it("checking title property", async () => {
+  it("checks the title property", async () => {
     expect(ele.title).to.equal("CEO");
     expect(
       ele.shadowRoot.querySelector(".avatar").getAttribute("title")
     ).to.equal("CEO");
   });
 
-  it("checking type property", async () => {
+  it("checks the type property", async () => {
     expect(ele.type).to.equal("initials");
     expect(ele.shadowRoot.querySelector(".avatar")).to.have.trimmed.text("RH");
     expect(ele.shadowRoot.querySelector(".avatar")).not.to.have.trimmed.text(
@@ -41,14 +41,14 @@ describe("Fw-Avatar Tests", async () => {
     );
   });
 
-  it("checking color property", async () => {
-    expect(ele.color).to.equal("red");
+  it("checks the color property", async () => {
+    expect(ele.color).to.equal("blue");
     expect(ele.shadowRoot.querySelector(".avatar").style.background).to.equal(
-      "red"
+      "blue"
     );
   });
 
-  it("checking name property", async () => {
+  it("checks the name property", async () => {
     ele.removeAttribute("type");
     await ele.elementUpdated;
 
@@ -60,7 +60,7 @@ describe("Fw-Avatar Tests", async () => {
     );
   });
 
-  it("checking Image Source property", async () => {
+  it("checks the Image Source property", async () => {
     let imgUrl =
       "https://img.favpng.com/17/0/0/thor-superhero-icon-png-favpng-LeMG9gL7C2w6Zn569zHSHzFrW.jpg";
     const el = await fixture(
@@ -75,5 +75,14 @@ describe("Fw-Avatar Tests", async () => {
       `url("${imgUrl}")`
     );
   });
-  fixtureCleanup();
+
+  it("checks the luminance property",async()=>{
+    const luminance = "30%";
+    ele.removeAttribute("color");
+    ele.setAttribute("luminance",`${luminance}`)
+    await ele.elementUpdated;
+
+    expect(ele.shadowRoot.querySelector(".avatar").style.background).to.equal(`var(--avatar-background,hsl(31, 50%, ${luminance}))`)
+
+  })
 });

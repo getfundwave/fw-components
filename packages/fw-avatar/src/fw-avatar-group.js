@@ -122,7 +122,7 @@ export class FwAvatarGroup extends LitElement {
                   `)}
                 `:html`
                     <div class="list-item">
-                      ${this.emptyStateMessage ? this.emptyStateMessage : "Couldn't find anything"}<br>
+                      <span>${this.emptyStateMessage ? this.emptyStateMessage : "Couldn't find anything"}</span><br>
                       ${this.emptyStateAction && this.emptyStateAction.title ? html`
                         <paper-button class="secondary-text-underlined" @tap=${(e) => {this.emptyStateAction.closeDialog && this.closeAvatarDialog(); this.fireEvent("empty-state-action-clicked",{value: this.searchInputValue})}} style="margin: 10px 0">${this.emptyStateAction.title}</paper-button>
                       ` : null}

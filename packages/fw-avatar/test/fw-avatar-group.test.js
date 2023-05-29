@@ -120,7 +120,7 @@ describe("Fw-Avatar-Group Tests", async () => {
     setTimeout(() => {
       divBtn.click();
     });
-    const detail = await oneEvent(divBtn, "click");
+    const {} = await oneEvent(divBtn, "click");
 
     expect(
       ele.shadowRoot.querySelector("#menu").getAttributeNames()
@@ -165,11 +165,13 @@ describe("Fw-Avatar-Group Tests", async () => {
     <mwc-icon>${pAction["icon"]}</mwc-icon>`,
       { ignoreAttributes: ["slot"] }
     );
+
     setTimeout(() => {
       primaryBtnItem.click();
     });
     const event = await oneEvent(ele, "primary-action-clicked");
     expect(event.type).to.equal("primary-action-clicked");
+    
   });
 
   it("checks for secondary action property", async () => {
@@ -202,4 +204,39 @@ describe("Fw-Avatar-Group Tests", async () => {
       expect(menuEle.getAttributeNames()).to.include("open");
     }
   });
+
+  it("checks the empty state msg and action properties",async()=>{
+
+    const divBtn = ele.shadowRoot.querySelector(".group");
+    const menuEle = ele.shadowRoot.querySelector("#menu");
+
+    setTimeout(() => {
+      divBtn.click();
+    });
+    const {} = await oneEvent(divBtn, "click");
+    expect(menuEle.getAttributeNames()).to.include("open");
+
+    const searchBarEle = ele.shadowRoot.querySelector("#searchBar");
+    searchBarEle.value= "hashText";
+    ele.searchInputValueChanged(searchBarEle.value);
+    await ele.elementUpdated;
+    
+    const emptyActionDiv = ele.shadowRoot.querySelector("div.list-item");
+    expect(emptyActionDiv.querySelector("span").textContent).to.equal(emptyStatemsg);
+    
+    const emptyActionBtn =emptyActionDiv.querySelector("paper-button")
+    expect(emptyActionBtn.textContent).to.equal(emptyStateActionObj.title);
+   
+    setTimeout(() => {
+      emptyActionBtn.click();
+    });
+    const event = await oneEvent(ele, "empty-state-action-clicked");
+    expect(event.type).to.equal("empty-state-action-clicked");
+
+    if (emptyStateActionObj.closeDialog) {
+      expect(menuEle.getAttributeNames()).not.to.include("open");
+    } else {
+      expect(menuEle.getAttributeNames()).to.include("open");
+    } 
+  })
 });
