@@ -10,7 +10,7 @@ let users = [
   { name: "Gavin Belson", company: "Hooli" },
   { name: "Monica Hall", company: "Bream Hall" },
 ];
-let usersWoSecondryAttribute = [
+let usersWithOutSecondaryAttribute = [
   { name: "Richard" },
   { name: "Dinesh" },
   { name: "Jared" },
@@ -79,7 +79,7 @@ describe("Fw-Avatar-Group Tests", async () => {
   });
 
   it("checks for items(without secondary attr) content", async () => {
-    element.items = usersWoSecondryAttribute;
+    element.items = usersWithOutSecondaryAttribute;
     element.removeAttribute("secondaryAttribute");
     await element.elementUpdated;
 
@@ -93,8 +93,8 @@ describe("Fw-Avatar-Group Tests", async () => {
         name: String(itemsListHtml[i].textContent.trim()),
       });
     }
-    expect(element.items).to.equal(usersWoSecondryAttribute);
-    expect(tempArray).to.be.eql(usersWoSecondryAttribute);
+    expect(element.items).to.equal(usersWithOutSecondaryAttribute);
+    expect(tempArray).to.be.eql(usersWithOutSecondaryAttribute);
   });
 
   it("checks Max Count property", async () => {
@@ -113,12 +113,12 @@ describe("Fw-Avatar-Group Tests", async () => {
       element.shadowRoot.querySelector("#menu").getAttributeNames()
     ).not.to.include("open", "Menu in open mode without Click event \n");
 
-    const AvatarGroupButton = element.shadowRoot.querySelector(".group");
+    const avatarGroupButton = element.shadowRoot.querySelector(".group");
 
     setTimeout(() => {
-      AvatarGroupButton.click();
+      avatarGroupButton.click();
     });
-    const {} = await oneEvent(AvatarGroupButton, "click");
+    const {} = await oneEvent(avatarGroupButton, "click");
 
     expect(
       element.shadowRoot.querySelector("#menu").getAttributeNames()
@@ -161,18 +161,18 @@ describe("Fw-Avatar-Group Tests", async () => {
   });
 
   it("checks for primary action property", async () => {
-    const primaryBtnItem = element.shadowRoot.querySelector("#primary-action-item");
+    const primaryActionItem = element.shadowRoot.querySelector("#primary-action-item");
 
-    expect(primaryBtnItem.querySelector("span").textContent).to.equal(
+    expect(primaryActionItem.querySelector("span").textContent).to.equal(
       primaryAction["title"]
     );
-    expect(primaryBtnItem.querySelector("mwc-icon")).dom.to.equal(
+    expect(primaryActionItem.querySelector("mwc-icon")).dom.to.equal(
       `<mwc-icon>${primaryAction["icon"]}</mwc-icon>`,
       { ignoreAttributes: ["slot"] }
     );
 
     setTimeout(() => {
-      primaryBtnItem.click();
+      primaryActionItem.click();
     });
     const event = await oneEvent(element, "primary-action-clicked");
     expect(event.type).to.equal("primary-action-clicked");
@@ -180,24 +180,24 @@ describe("Fw-Avatar-Group Tests", async () => {
   });
 
   it("checks for secondary action property", async () => {
-    const AvatarGroupButton = element.shadowRoot.querySelector(".group");
+    const avatarGroupButton = element.shadowRoot.querySelector(".group");
     const menuElement = element.shadowRoot.querySelector("#menu");
 
     setTimeout(() => {
-      AvatarGroupButton.click();
+      avatarGroupButton.click();
     });
-    const {} = await oneEvent(AvatarGroupButton, "click");
+    const {} = await oneEvent(avatarGroupButton, "click");
 
     expect(menuElement.getAttributeNames()).to.include("open");
 
-    const secBtnElement = element.shadowRoot.querySelector(
+    const secondaryActionItem = element.shadowRoot.querySelector(
       ".secondary-text-underlined"
     );
 
-    expect(secBtnElement.textContent).to.equal(secondaryAction.title);
+    expect(secondaryActionItem.textContent).to.equal(secondaryAction.title);
 
     setTimeout(() => {
-      secBtnElement.click();
+      secondaryActionItem.click();
     });
     const event = await oneEvent(element, "secondary-action-clicked");
 
@@ -212,13 +212,13 @@ describe("Fw-Avatar-Group Tests", async () => {
 
   it("checks the empty state msg and action properties",async()=>{
 
-    const AvatarGroupButton = element.shadowRoot.querySelector(".group");
+    const avatarGroupButton = element.shadowRoot.querySelector(".group");
     const menuElement = element.shadowRoot.querySelector("#menu");
 
     setTimeout(() => {
-      AvatarGroupButton.click();
+      avatarGroupButton.click();
     });
-    const {} = await oneEvent(AvatarGroupButton, "click");
+    const {} = await oneEvent(avatarGroupButton, "click");
     expect(menuElement.getAttributeNames()).to.include("open");
 
     const searchBarElement = element.shadowRoot.querySelector("#searchBar");
