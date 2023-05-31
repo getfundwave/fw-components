@@ -132,7 +132,7 @@ export class Showcase extends LitElement {
     }
     `;
 
-    render() {
+    render () {
         return html`
         <main class="showcase-page">
             <div class="showcase-content">
