@@ -1,6 +1,5 @@
 import "../src/fw-avatar-group.js";
 import { FwAvatarGroup } from "../src/fw-avatar-group.js";
-
 import { fixture, html, expect, assert, oneEvent } from "@open-wc/testing";
 
 //constants
@@ -11,99 +10,98 @@ let users = [
   { name: "Gavin Belson", company: "Hooli" },
   { name: "Monica Hall", company: "Bream Hall" },
 ];
-let usersWoSecndryAttr = [
+let usersWoSecondryAttribute = [
   { name: "Richard" },
   { name: "Dinesh" },
   { name: "Jared" },
   { name: "Gavin Belson" },
   { name: "Monica Hall" },
 ];
-
-let pAction = {
+let primaryAction = {
   title: "Primary action Button",
-  icon: "->",
+  icon: "add",
 };
-let sAction = {
+let secondaryAction = {
   title: "Secondary action button",
   closeDialog: true,
 };
-let emptyStateActionObj = {
+let emptyStateAction = {
   title: "Empty State action button",
   closeDialog: true,
 };
 let maxCount = 3;
-let emptyStatemsg = "No Match Found";
+let emptyStateMessage = "No Match Found";
 let header = "Sillicon Valley";
-let nameAttr = "name";
-let secondaryAttr = "company";
+let nameAttribute = "name";
+let secondaryAttribute = "company";
 let showSearchBar = true;
 
 describe("Fw-Avatar-Group Tests", async () => {
-  let ele;
+  let element;
   beforeEach(async () => {
-    ele = await fixture(html` <fw-avatar-group
+    element = await fixture(html` <fw-avatar-group
       .items=${users}
-      nameAttribute=${nameAttr}
-      secondaryAttribute=${secondaryAttr}
+      nameAttribute=${nameAttribute}
+      secondaryAttribute=${secondaryAttribute}
       .maxCount=${maxCount}
       header=${header}
       .showSearchBar=${showSearchBar}
-      .primaryAction=${pAction}
-      .secondaryAction=${sAction}
-      emptyStateMessage=${emptyStatemsg}
-      .emptyStateAction=${emptyStateActionObj}
+      .primaryAction=${primaryAction}
+      .secondaryAction=${secondaryAction}
+      emptyStateMessage=${emptyStateMessage}
+      .emptyStateAction=${emptyStateAction}
       .absolute=${true}
     ></fw-avatar-group>`);
   });
 
   it("FwAvatarGroup instance check", () => {
     assert.instanceOf(
-      ele,
+      element,
       FwAvatarGroup,
       " The Element created from tag fw-avatar-group is not an instance of FWAvatarGroup class\n"
     );
   });
 
   it("checks for items(with secondary attr) content", async () => {
-    const renderedHtml = ele.shadowRoot.querySelectorAll(
+    const itemsListHtml = element.shadowRoot.querySelectorAll(
       "mwc-list-item.items-list-item > span"
     );
 
     let tempArray = Array();
-    for (let i = 0; i < renderedHtml.length; i = i + 2) {
+    for (let i = 0; i < itemsListHtml.length; i = i + 2) {
       tempArray.push({
-        name: String(renderedHtml[i].textContent.trim()),
-        company: String(renderedHtml[i + 1].textContent.trim()),
+        name: String(itemsListHtml[i].textContent.trim()),
+        company: String(itemsListHtml[i + 1].textContent.trim()),
       });
     }
-    expect(ele.items).to.equal(users);
+    expect(element.items).to.equal(users);
     expect(tempArray).to.be.eql(users);
   });
 
   it("checks for items(without secondary attr) content", async () => {
-    ele.items = usersWoSecndryAttr;
-    ele.removeAttribute("secondaryattribute");
-    await ele.elementUpdated;
+    element.items = usersWoSecondryAttribute;
+    element.removeAttribute("secondaryAttribute");
+    await element.elementUpdated;
 
-    const renderedHtml = ele.shadowRoot.querySelectorAll(
+    const itemsListHtml = element.shadowRoot.querySelectorAll(
       "mwc-list-item.items-list-item > span"
     );
 
     let tempArray = Array();
-    for (let i = 0; i < renderedHtml.length; i = i + 1) {
+    for (let i = 0; i < itemsListHtml.length; i = i + 1) {
       tempArray.push({
-        name: String(renderedHtml[i].textContent.trim()),
+        name: String(itemsListHtml[i].textContent.trim()),
       });
     }
-    expect(ele.items).to.equal(usersWoSecndryAttr);
-    expect(tempArray).to.be.eql(usersWoSecndryAttr);
+    expect(element.items).to.equal(usersWoSecondryAttribute);
+    expect(tempArray).to.be.eql(usersWoSecondryAttribute);
   });
 
   it("checks Max Count property", async () => {
-    const visibleAvatars = ele.shadowRoot
+    const visibleAvatars = element.shadowRoot
       .querySelector("#group")
       .querySelectorAll("fw-avatar[type='initials']");
-    expect(ele.maxCount).to.equal(maxCount);
+    expect(element.maxCount).to.equal(maxCount);
     expect(visibleAvatars.length).to.equal(
       Math.min(users.length, maxCount),
       "The number of avatars rendered in the group do not match with MaxCount\n"
@@ -112,131 +110,138 @@ describe("Fw-Avatar-Group Tests", async () => {
 
   it("checks menu visiblility on tap/Click event", async () => {
     expect(
-      ele.shadowRoot.querySelector("#menu").getAttributeNames()
+      element.shadowRoot.querySelector("#menu").getAttributeNames()
     ).not.to.include("open", "Menu in open mode without Click event \n");
 
-    const divBtn = ele.shadowRoot.querySelector(".group");
+    const AvatarGroupButton = element.shadowRoot.querySelector(".group");
 
     setTimeout(() => {
-      divBtn.click();
+      AvatarGroupButton.click();
     });
-    const {} = await oneEvent(divBtn, "click");
+    const {} = await oneEvent(AvatarGroupButton, "click");
 
     expect(
-      ele.shadowRoot.querySelector("#menu").getAttributeNames()
+      element.shadowRoot.querySelector("#menu").getAttributeNames()
     ).to.include("open", "Click even didn't triggered the menu to  open \n");
   });
 
   it("checks Header property", async () => {
-    const htmlText = ele.shadowRoot
+    let headertext = element.shadowRoot
       .querySelector(".dialog-header-span")
       .textContent.trim();
 
-    expect(ele.header).to.equal(header);
-    expect(htmlText).to.be.oneOf(
-      [header, "Members"],
-      "Header render do not match with given prop\n"
+    expect(element.header).to.equal(header);
+    expect(headertext).to.be.equal(
+      header,
+      "Header do not match with given prop\n"
     );
+    element.removeAttribute("header");
+    await element.elementUpdated;
+    headertext = element.shadowRoot
+    .querySelector(".dialog-header-span")
+    .textContent.trim();
+
+    expect(headertext).to.equal("Members","Default Header Value do not match");
+
   });
 
   it("checks for searchBar visibility", async () => {
-    const searchBarEle = ele.shadowRoot.querySelector("#searchBar");
+    const searchBarElement = element.shadowRoot.querySelector("#searchBar");
 
     if (!showSearchBar)
       expect(
-        searchBarEle,
+        searchBarElement,
         "Search Bar visible , even when false passed to showSearchBar\n"
       ).to.be.null;
     else
       expect(
-        searchBarEle,
+        searchBarElement,
         "Search Bar not visible when true passed to showSearchBar\n"
       ).not.to.be.null;
   });
 
   it("checks for primary action property", async () => {
-    const primaryBtnItem = ele.shadowRoot.querySelector("#primary-action-item");
+    const primaryBtnItem = element.shadowRoot.querySelector("#primary-action-item");
 
     expect(primaryBtnItem.querySelector("span").textContent).to.equal(
-      pAction["title"]
+      primaryAction["title"]
     );
     expect(primaryBtnItem.querySelector("mwc-icon")).dom.to.equal(
-      `
-    <mwc-icon>${pAction["icon"]}</mwc-icon>`,
+      `<mwc-icon>${primaryAction["icon"]}</mwc-icon>`,
       { ignoreAttributes: ["slot"] }
     );
 
     setTimeout(() => {
       primaryBtnItem.click();
     });
-    const event = await oneEvent(ele, "primary-action-clicked");
+    const event = await oneEvent(element, "primary-action-clicked");
     expect(event.type).to.equal("primary-action-clicked");
     
   });
 
   it("checks for secondary action property", async () => {
-    const divBtn = ele.shadowRoot.querySelector(".group");
-    const menuEle = ele.shadowRoot.querySelector("#menu");
+    const AvatarGroupButton = element.shadowRoot.querySelector(".group");
+    const menuElement = element.shadowRoot.querySelector("#menu");
 
     setTimeout(() => {
-      divBtn.click();
+      AvatarGroupButton.click();
     });
-    const {} = await oneEvent(divBtn, "click");
+    const {} = await oneEvent(AvatarGroupButton, "click");
 
-    expect(menuEle.getAttributeNames()).to.include("open");
+    expect(menuElement.getAttributeNames()).to.include("open");
 
-    const secBtnEle = ele.shadowRoot.querySelector(
+    const secBtnElement = element.shadowRoot.querySelector(
       ".secondary-text-underlined"
     );
 
-    expect(secBtnEle.textContent).to.equal(sAction.title);
+    expect(secBtnElement.textContent).to.equal(secondaryAction.title);
 
     setTimeout(() => {
-      secBtnEle.click();
+      secBtnElement.click();
     });
-    const event = await oneEvent(ele, "secondary-action-clicked");
+    const event = await oneEvent(element, "secondary-action-clicked");
 
     expect(event.type).to.equal("secondary-action-clicked");
 
-    if (sAction.closeDialog) {
-      expect(menuEle.getAttributeNames()).not.to.include("open");
+    if (secondaryAction.closeDialog) {
+      expect(menuElement.getAttributeNames()).not.to.include("open");
     } else {
-      expect(menuEle.getAttributeNames()).to.include("open");
+      expect(menuElement.getAttributeNames()).to.include("open");
     }
   });
 
   it("checks the empty state msg and action properties",async()=>{
 
-    const divBtn = ele.shadowRoot.querySelector(".group");
-    const menuEle = ele.shadowRoot.querySelector("#menu");
+    const AvatarGroupButton = element.shadowRoot.querySelector(".group");
+    const menuElement = element.shadowRoot.querySelector("#menu");
 
     setTimeout(() => {
-      divBtn.click();
+      AvatarGroupButton.click();
     });
-    const {} = await oneEvent(divBtn, "click");
-    expect(menuEle.getAttributeNames()).to.include("open");
+    const {} = await oneEvent(AvatarGroupButton, "click");
+    expect(menuElement.getAttributeNames()).to.include("open");
 
-    const searchBarEle = ele.shadowRoot.querySelector("#searchBar");
-    searchBarEle.value= "hashText";
-    ele.searchInputValueChanged(searchBarEle.value);
-    await ele.elementUpdated;
+    const searchBarElement = element.shadowRoot.querySelector("#searchBar");
+    searchBarElement.value= "hashText";
+    element.searchInputValueChanged(searchBarElement.value);
+    await element.elementUpdated;
     
-    const emptyActionDiv = ele.shadowRoot.querySelector("div.list-item");
-    expect(emptyActionDiv.querySelector("span").textContent).to.equal(emptyStatemsg);
+    const emptyActionDiv = element.shadowRoot.querySelector("div.list-item");
+    expect(emptyActionDiv.querySelector("span").textContent).to.equal(emptyStateMessage);
     
-    const emptyActionBtn =emptyActionDiv.querySelector("paper-button")
-    expect(emptyActionBtn.textContent).to.equal(emptyStateActionObj.title);
+    const emptyActionButton = emptyActionDiv.querySelector("paper-button")
+    expect(emptyActionButton.textContent).to.equal(emptyStateAction.title);
    
     setTimeout(() => {
-      emptyActionBtn.click();
+      emptyActionButton.click();
     });
-    const event = await oneEvent(ele, "empty-state-action-clicked");
+    const event = await oneEvent(element, "empty-state-action-clicked");
     expect(event.type).to.equal("empty-state-action-clicked");
 
-    if (emptyStateActionObj.closeDialog) {
-      expect(menuEle.getAttributeNames()).not.to.include("open");
+    if (emptyStateAction.closeDialog) {
+      expect(menuElement.getAttributeNames()).not.to.include("open");
     } else {
-      expect(menuEle.getAttributeNames()).to.include("open");
+      expect(menuElement.getAttributeNames()).to.include("open");
     } 
   })
 });
