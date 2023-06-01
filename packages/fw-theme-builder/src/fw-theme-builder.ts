@@ -9,8 +9,13 @@ class FwThemeBuilder extends LitElement {
         //     node?.childNodes[3]?.addEventListener('input', this.handleColorChange);
         // });
     }
+
     handleColorChange(e: Event) {
-        document.getElementsByTagName("html")[0]?.style.setProperty(("--" + (e.target as HTMLInputElement).parentElement?.classList[0]), (e.target as HTMLInputElement)?.value);
+        let clr = (e.target as HTMLInputElement)?.value;
+        document.getElementsByTagName("html")[0]?.style.setProperty(("--" + (e.target as HTMLInputElement).parentElement?.classList[0]), clr);
+        let rgb = hexToRgbNew(clr);
+        let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
+        (e.target as HTMLInputElement).parentElement?.style.setProperty("color", textClr);
     }
     static styles = css`
     .primary-color {
@@ -49,7 +54,7 @@ class FwThemeBuilder extends LitElement {
         position: absolute;
         bottom: 1rem;
         width: 70rem;
-        left: calc((100vw - 70rem)/2);
+        left: calc((100svw - 72rem)/2);
         height: max-content;
         background-color: #ffffff;
         z-index: 10;
@@ -88,7 +93,7 @@ class FwThemeBuilder extends LitElement {
         cursor: pointer;
     }
 
-    @media (max-width: 1160px) {
+    @media (max-width: 1200px) {
         .floating-container {
             width: 40rem;
             left: calc((100vw - 40rem)/2);
@@ -100,37 +105,94 @@ class FwThemeBuilder extends LitElement {
         <div class="floating-container">
             <span class="primary-color color-button">
                 <p>Primary</p>
-                <input class="colorpicker-hidden" type="color" value="#ff0000" @change="${this.handleColorChange}"/>
+                <input 
+                    class="colorpicker-hidden" 
+                    type="color" 
+                    value="#ff0000" 
+                    @change="${this.handleColorChange}"
+                />
             </span>
             <span class="secondary-color color-button">
                 <p>Secondary</p>
-                <input class="colorpicker-hidden" type="color" value="#ff0000" @change="${this.handleColorChange}"/>
+                <input 
+                    class="colorpicker-hidden" 
+                    type="color" 
+                    value="#ff0000" 
+                    @change="${this.handleColorChange}"
+                />
             </span>
             <span class="primary-btn-text-color color-button">
                 <p>Primary button text</p>
-                <input class="colorpicker-hidden" type="color" value="#ff0000" @change="${this.handleColorChange}"/>
+                <input 
+                    class="colorpicker-hidden" 
+                    type="color" 
+                    value="#ff0000" 
+                    @change="${this.handleColorChange}"
+                />
             </span>
             <span class="secondary-btn-text-color color-button">
                 <p>Secondary button text</p>
-                <input class="colorpicker-hidden" type="color" value="#ff0000" @change="${this.handleColorChange}"/>
+                <input 
+                    class="colorpicker-hidden" 
+                    type="color" 
+                    value="#ff0000" 
+                    @change="${this.handleColorChange}"
+                />
             </span>
             <span class="title-text-color color-button">
                 <p>Title text</p>
-                <input class="colorpicker-hidden" type="color" value="#ff0000" @change="${this.handleColorChange}"/>
+                <input 
+                    class="colorpicker-hidden" 
+                    type="color" 
+                    value="#ff0000" 
+                    @change="${this.handleColorChange}"
+                />
             </span>
             <span class="subtitle-text-color color-button">
                 <p>Subtitle text</p>
-                <input class="colorpicker-hidden" type="color" value="#ff0000" @change="${this.handleColorChange}"/>
+                <input 
+                    class="colorpicker-hidden" 
+                    type="color" 
+                    value="#ff0000" 
+                    @change="${this.handleColorChange}"
+                />
             </span>
             <span class="body-text-color color-button">
                 <p>Body text</p>
-                <input class="colorpicker-hidden" type="color" value="#ff0000" @change="${this.handleColorChange}"/>
+                <input 
+                    class="colorpicker-hidden" 
+                    type="color" 
+                    value="#ff0000" 
+                    @change="${this.handleColorChange}"
+                />
             </span>
             <span class="background-color color-button">
                 <p>Background</p>
-                <input class="colorpicker-hidden" type="color" value="#ff0000" @change="${this.handleColorChange}"/>
+                <input 
+                    class="colorpicker-hidden" 
+                    type="color" 
+                    value="#ff0000" 
+                    @change="${this.handleColorChange}"
+                />
             </span>
         </div>
         `;
     }
+}
+
+function hexToRgbNew(hex : string) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : {
+        r: 0,
+        g: 0,
+        b: 0
+    };
+}
+
+function rgbToHex(r : number, g: number, b: number) {
+    return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
 }
