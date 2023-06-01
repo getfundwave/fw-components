@@ -6,18 +6,6 @@ export class Showcase extends LitElement {
     static styles = css`
     @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
 
-    /* Declaration of CSS variables */
-    * {
-        --primary-color: #1c1cdb;
-        --secondary-color: #6565ff;
-        --primary-btn-text-color: #ffffff;
-        --secondary-btn-text-color: #cecedb;
-        --title-text-color: #1b1b1b; 
-        --subtitle-text-color: #1b1b1b; 
-        --body-text-color: #1b1b1b;
-        --background-color: #f0f0f0;
-    }
-
     body {
         margin: 0;
     }
@@ -71,32 +59,32 @@ export class Showcase extends LitElement {
         border-radius: 50%;
     }
 
-    #primary-circle {
-        background-color: var(--primary-color);
+    .primary-color {
+        background-color: var(--primary-color) !important;
     }
 
-    #secondary-circle {
-        background-color: var(--secondary-color);
+    .secondary-color {
+        background-color: var(--secondary-color) !important;
     }
 
-    #primary-txt-circle {
-        background-color: var(--primary-btn-text-color);
+    .primary-txt-color {
+        background-color: var(--primary-btn-text-color) !important;
     }
 
-    #secondary-txt-circle {
-        background-color: var(--secondary-btn-text-color);
+    .secondary-txt-color {
+        background-color: var(--secondary-btn-text-color) !important;
     }
 
-    #title-circle {
-        background-color: var(--title-text-color);
+    .title-color {
+        background-color: var(--title-text-color) !important;
     }
 
-    #subtitle-circle {
-        background-color: var(--subtitle-text-color);
+    .subtitle-color {
+        background-color: var(--subtitle-text-color) !important;
     }
 
-    #body-txt-circle {
-        background-color: var(--body-text-color);
+    .body-txt-color {
+        background-color: var(--body-text-color) !important;
     }
 
     .main-heading {
@@ -109,7 +97,7 @@ export class Showcase extends LitElement {
     .sub-heading {
         font-size: 1.5rem;
         font-weight: 400;
-        color: var(--title-text-color);
+        color: var(--subtitle-text-color);
         margin-bottom: 2rem;
     }
 
@@ -122,13 +110,35 @@ export class Showcase extends LitElement {
     }
 
     .primary-button {
+        transition: 0.2s ease-in-out;
         background-color: var(--primary-color);
         color: var(--primary-btn-text-color);
+    }
+    .primary-button:hover {
+        transition: 0.2s ease-in-out;
+        box-shadow: 0px 20px 80px -10px var(--primary-color);
     }
 
     .secondary-button {
         background-color: var(--secondary-color);
         color: var(--secondary-btn-text-color);
+    }
+
+    @media (max-width: 1160px) {
+        .showcase-content {
+            width: 45rem;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        .right-section {
+            width: 80%;
+        }
+        .left-section {
+            width: 80%;
+        }
     }
     `;
 
@@ -150,13 +160,13 @@ export class Showcase extends LitElement {
                 </section>
                 <section class="right-section">
                     <div class="circle-group">
-                        <span id="primary-circle" class="color-circle"></span>
-                        <span id="secondary-circle" class="color-circle"></span>
-                        <span id="primary-txt-circle" class="color-circle"></span>
-                        <span id="secondary-txt-circle" class="color-circle"></span>
-                        <span id="title-circle" class="color-circle"></span>
-                        <span id="subtitle-circle" class="color-circle"></span>
-                        <span id="body-circle" class="color-circle"></span>
+                        <span class="primary-color color-circle"></span>
+                        <span class="secondary-color color-circle"></span>
+                        <span class="primary-txt-color color-circle"></span>
+                        <span class="secondary-txt-color color-circle"></span>
+                        <span class="title-color color-circle"></span>
+                        <span class="subtitle-color color-circle"></span>
+                        <span class="body-txt-color color-circle"></span>
                     </div>
                 </section>
             </div>
