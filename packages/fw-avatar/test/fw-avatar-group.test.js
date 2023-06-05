@@ -1,6 +1,6 @@
 import "../src/fw-avatar-group.js";
-import { FwAvatarGroup } from "../src/fw-avatar-group.js";
-import { fixture, html, expect, assert, oneEvent } from "@open-wc/testing";
+import { FWAvatarGroup } from "../src/fw-avatar-group.js";
+import { fixture, html, expect, oneEvent } from "@open-wc/testing";
 
 //constants
 let users = [
@@ -55,11 +55,7 @@ describe("Fw-Avatar-Group Tests", async () => {
   });
 
   it("FwAvatarGroup instance check", () => {
-    assert.instanceOf(
-      element,
-      FwAvatarGroup,
-      " The Element created from tag fw-avatar-group is not an instance of FWAvatarGroup class\n"
-    );
+    expect(element).to.be.instanceOf(FWAvatarGroup," The Element created from tag fw-avatar-group is not an instance of FWAvatarGroup class");
   });
 
   it("checks for items(with secondary attr) content", async () => {
@@ -104,25 +100,25 @@ describe("Fw-Avatar-Group Tests", async () => {
     expect(element.maxCount).to.equal(maxCount);
     expect(visibleAvatars.length).to.equal(
       Math.min(users.length, maxCount),
-      "The number of avatars rendered in the group do not match with MaxCount\n"
+      "The number of avatars rendered in the group do not match with MaxCount"
     );
   });
 
   it("checks menu visiblility on tap/Click event", async () => {
     expect(
       element.shadowRoot.querySelector("#menu").getAttributeNames()
-    ).not.to.include("open", "Menu in open mode without Click event \n");
+    ).not.to.include("open", "Menu in open mode without Click event ");
 
     const avatarGroupButton = element.shadowRoot.querySelector(".group");
 
     setTimeout(() => {
       avatarGroupButton.click();
     });
-    const {} = await oneEvent(avatarGroupButton, "click");
+    await oneEvent(avatarGroupButton, "click");
 
     expect(
       element.shadowRoot.querySelector("#menu").getAttributeNames()
-    ).to.include("open", "Click even didn't triggered the menu to  open \n");
+    ).to.include("open", "Click event didn't triggered the menu to  open ");
   });
 
   it("checks Header property", async () => {
@@ -133,7 +129,7 @@ describe("Fw-Avatar-Group Tests", async () => {
     expect(element.header).to.equal(header);
     expect(headertext).to.be.equal(
       header,
-      "Header do not match with given prop\n"
+      "Header do not match with given prop"
     );
     element.removeAttribute("header");
     await element.elementUpdated;
@@ -151,12 +147,12 @@ describe("Fw-Avatar-Group Tests", async () => {
     if (!showSearchBar)
       expect(
         searchBarElement,
-        "Search Bar visible , even when false passed to showSearchBar\n"
+        "Search Bar visible , even when false passed to showSearchBar"
       ).to.be.null;
     else
       expect(
         searchBarElement,
-        "Search Bar not visible when true passed to showSearchBar\n"
+        "Search Bar not visible when true passed to showSearchBar"
       ).not.to.be.null;
   });
 
@@ -186,7 +182,7 @@ describe("Fw-Avatar-Group Tests", async () => {
     setTimeout(() => {
       avatarGroupButton.click();
     });
-    const {} = await oneEvent(avatarGroupButton, "click");
+    await oneEvent(avatarGroupButton, "click");
 
     expect(menuElement.getAttributeNames()).to.include("open");
 
@@ -218,7 +214,7 @@ describe("Fw-Avatar-Group Tests", async () => {
     setTimeout(() => {
       avatarGroupButton.click();
     });
-    const {} = await oneEvent(avatarGroupButton, "click");
+    await oneEvent(avatarGroupButton, "click");
     expect(menuElement.getAttributeNames()).to.include("open");
 
     const searchBarElement = element.shadowRoot.querySelector("#searchBar");

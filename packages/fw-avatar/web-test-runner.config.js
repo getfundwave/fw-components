@@ -1,6 +1,5 @@
 import { legacyPlugin } from "@web/dev-server-legacy";
 import { playwrightLauncher } from "@web/test-runner-playwright";
-import { summaryReporter } from '@web/test-runner';
 
 const mode = process.env.MODE || "dev";
 if (!["dev", "prod"].includes(mode)) {
@@ -28,10 +27,8 @@ try {
 const configObj = {
   rootDir: ".",
   files: ["./**/*test.js"],
-  nodeResolve: { exportConditions: mode === "dev" ? ["development"] : [] },
   preserveSymlinks: true,
   browsers: commandLineBrowsers ?? Object.values(browsers),
-  // reporters: [summaryReporter()],
   testFramework: {
     // https://mochajs.org/api/mocha
     config: {

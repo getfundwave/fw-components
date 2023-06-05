@@ -11,7 +11,7 @@ import { UnderlinedButtonStyles} from '@fw-components/styles/button-styles';
 import { MenuStyles} from '@fw-components/styles/meta-styles';
 import './fw-avatar';
 
-export class FwAvatarGroup extends LitElement {
+export class FWAvatarGroup extends LitElement {
   static get properties() {
     return {
       items: Object,
@@ -191,4 +191,4 @@ export class FwAvatarGroup extends LitElement {
 
 }
 
-customElements.define('fw-avatar-group', FwAvatarGroup);
+customElements.define('fw-avatar-group', FWAvatarGroup);

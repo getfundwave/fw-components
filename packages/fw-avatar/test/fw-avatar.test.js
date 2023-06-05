@@ -1,18 +1,16 @@
 import "../src/fw-avatar";
-import { FwAvatar } from "../src/fw-avatar";
+import { FWAvatar } from "../src/fw-avatar";
 
 import {
   fixture,
   html,
   expect,
-  assert,
-  fixtureCleanup,
 } from "@open-wc/testing";
 
-describe("Fw-Avatar Tests", async () => {
-  let ele;
+describe("FWAvatar Tests", async () => {
+  let element;
   beforeEach(async () => {
-    ele = await fixture(
+    element = await fixture(
       html`<fw-avatar
         name="Richard Hendrickson"
         title="CEO"
@@ -22,40 +20,40 @@ describe("Fw-Avatar Tests", async () => {
     );
   });
 
-  it("FwAvatar instance check", () => {
-    assert.instanceOf(ele, FwAvatar);
+  it("FWAvatar instance check", () => {
+    expect(element).to.be.instanceOf(FWAvatar);
   });
 
   it("checks the title property", async () => {
-    expect(ele.title).to.equal("CEO");
+    expect(element.title).to.equal("CEO");
     expect(
-      ele.shadowRoot.querySelector(".avatar").getAttribute("title")
+      element.shadowRoot.querySelector(".avatar").getAttribute("title")
     ).to.equal("CEO");
   });
 
   it("checks the type property", async () => {
-    expect(ele.type).to.equal("initials");
-    expect(ele.shadowRoot.querySelector(".avatar")).to.have.trimmed.text("RH");
-    expect(ele.shadowRoot.querySelector(".avatar")).not.to.have.trimmed.text(
+    expect(element.type).to.equal("initials");
+    expect(element.shadowRoot.querySelector(".avatar")).to.have.trimmed.text("RH");
+    expect(element.shadowRoot.querySelector(".avatar")).not.to.have.trimmed.text(
       "Richard Hendrickson"
     );
   });
 
   it("checks the color property", async () => {
-    expect(ele.color).to.equal("blue");
-    expect(ele.shadowRoot.querySelector(".avatar").style.background).to.equal(
+    expect(element.color).to.equal("blue");
+    expect(element.shadowRoot.querySelector(".avatar").style.background).to.equal(
       "blue"
     );
   });
 
   it("checks the name property", async () => {
-    ele.removeAttribute("type");
-    await ele.elementUpdated;
+    element.removeAttribute("type");
+    await element.elementUpdated;
 
-    expect(ele.shadowRoot.querySelector(".avatar")).to.have.trimmed.text(
+    expect(element.shadowRoot.querySelector(".avatar")).to.have.trimmed.text(
       "Richard Hendrickson"
     );
-    expect(ele.shadowRoot.querySelector(".avatar")).not.to.have.trimmed.text(
+    expect(element.shadowRoot.querySelector(".avatar")).not.to.have.trimmed.text(
       "RH"
     );
   });
@@ -63,7 +61,7 @@ describe("Fw-Avatar Tests", async () => {
   it("checks the Image Source property", async () => {
     let imgUrl =
       "https://img.favpng.com/17/0/0/thor-superhero-icon-png-favpng-LeMG9gL7C2w6Zn569zHSHzFrW.jpg";
-    const el = await fixture(
+    const imgElement = await fixture(
       html`<fw-avatar
         name="Richard Hendrickson"
         type="image"
@@ -71,18 +69,18 @@ describe("Fw-Avatar Tests", async () => {
       ></fw-avatar>`
     );
 
-    expect(el.shadowRoot.querySelector(".avatar").style.background).to.equal(
+    expect(imgElement.shadowRoot.querySelector(".avatar").style.background).to.equal(
       `url("${imgUrl}")`
     );
   });
 
   it("checks the luminance property",async()=>{
     const luminance = "30%";
-    ele.removeAttribute("color");
-    ele.setAttribute("luminance",`${luminance}`)
-    await ele.elementUpdated;
+    element.removeAttribute("color");
+    element.setAttribute("luminance",`${luminance}`)
+    await element.elementUpdated;
 
-    expect(ele.shadowRoot.querySelector(".avatar").style.background).to.equal(`var(--avatar-background,hsl(31, 50%, ${luminance}))`)
+    expect(element.shadowRoot.querySelector(".avatar").style.background).to.equal(`var(--avatar-background,hsl(31, 50%, ${luminance}))`)
 
   })
 });
