@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "web-dev-server",
-    "test": "web-test-runner \"test/**/*.test.js\" --node-resolve",
-    "test:coverage": "web-test-runner \"test/**/*.test.js\" --node-resolve --coverage",
-    "test:watch": "web-test-runner \"test/**/*.test.js\" --node-resolve --watch"
+    "test": "web-test-runner",
+    "test:coverage": "web-test-runner  --coverage",
+    "test:watch": "web-test-runner  --watch"
   },
   "dependencies": {
     "@fw-components/styles": "*",
