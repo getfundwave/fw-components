@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit';
 
-export class FwAvatar extends LitElement {
+export class FWAvatar extends LitElement {
   static get properties() {
     return {
       name: Object,
@@ -67,4 +67,4 @@ export class FwAvatar extends LitElement {
 
 }
 
-customElements.define('fw-avatar', FwAvatar);
+customElements.define('fw-avatar', FWAvatar);
