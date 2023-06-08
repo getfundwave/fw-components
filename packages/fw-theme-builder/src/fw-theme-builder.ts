@@ -9,29 +9,83 @@ class FwThemeBuilder extends LitElement {
         //     node?.childNodes[3]?.addEventListener('input', this.handleColorChange);
         // });
     }
+    @property()
+    theme = {
+        fonts : {
+            primary : {
+                "name" : "",
+                "import" : "",
+            },
+            secondary : {
+                "name" : "",
+                "import" : "",
+            }
+        },
+        sizes : {
+            "font-tiny" : "",
+            "font-xs" : "",
+            "font-s" : "",
+            "font-m" : "",
+            "font-l" : "",
+            "font-xl" : "",
+            "font-huge" : "",
+        },
+        colors : {
+            "primary" : {
+                "hex" : "",
+                "rgb" : "",
+                "l1" : "",
+                "l2" : "",
+                "l3" : "",
+                "contrast" : "",
+            },
+            "secondary" : {
+                "hex" : "",
+                "rgb" : "",
+                "l1" : "",
+                "l2" : "",
+                "l3" : "",
+                "contrast" : "",
+            },
+            "background" : {
+                "hex" : "",
+                "rgb" : "",
+            },
+            "error" : {
+                "hex" : "",
+                "rgb" : "",
+                "l1" : "",
+            }
+        }
+    }
 
     handleColorChange(e: Event) {
         let clr = (e.target as HTMLInputElement)?.value;
+        console.log(123, clr);
+        if (clr == "rgba(0, 0, 0, 0)")
+            return;
         document.getElementsByTagName("html")[0]?.style.setProperty(("--" + (e.target as HTMLInputElement).parentElement?.classList[0]), clr);
-        let rgb = hexToRgbNew(clr);
+        let rgb = hexToRgb(clr);
         let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
+        console.log(321, rgb);
+        console.log(123, textClr);
         (e.target as HTMLInputElement).parentElement?.style.setProperty("color", textClr);
     }
     static styles = css`
     .primary-color {
-        background-color: var(--primary-color) !important;
+        background-color: var(--primary) !important;
     }
 
     .secondary-color {
-        background-color: var(--secondary-color) !important;
+        background-color: var(--secondary) !important;
     }
 
     .primary-btn-text-color {
-        background-color: var(--primary-btn-text-color) !important;
+        background-color: var(--primary-contrast) !important;
     }
 
     .secondary-btn-text-color {
-        background-color: var(--secondary-btn-text-color) !important;
+        background-color: var(--secondary-contrast) !important;
     }
 
     .title-text-color {
@@ -71,7 +125,6 @@ class FwThemeBuilder extends LitElement {
     .color-button {
         position: relative;
         background-color: #afafaf;
-        /* color: cyan; */
         border-radius: 4px;
         padding: 0.2rem 0.5rem;
         font-family: "DM Sans", sans-serif;
@@ -180,7 +233,7 @@ class FwThemeBuilder extends LitElement {
     }
 }
 
-function hexToRgbNew(hex : string) {
+function hexToRgb(hex : string) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
       r: parseInt(result[1], 16),
