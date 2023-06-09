@@ -1,14 +1,13 @@
 import {html, css, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import "./fw-color-pick";
 
 @customElement('fw-theme-builder')
 class FwThemeBuilder extends LitElement {
     constructor() {
         super();
-        // this.shadowRoot?.childNodes[2]?.childNodes.forEach(node => {
-        //     node?.childNodes[3]?.addEventListener('input', this.handleColorChange);
-        // });
     }
+    
     @property()
     theme = {
         fonts : {
@@ -59,12 +58,12 @@ class FwThemeBuilder extends LitElement {
         }
     }
 
-    handleColorChange(e: Event) {
+    handleColorChange(e : Event, CSSclass : string) {
         let clr = (e.target as HTMLInputElement)?.value;
         console.log(123, clr);
         if (clr == "rgba(0, 0, 0, 0)")
             return;
-        document.getElementsByTagName("html")[0]?.style.setProperty(("--" + (e.target as HTMLInputElement).parentElement?.classList[0]), clr);
+        document.body.style.setProperty(("--" + (e.target as HTMLInputElement).parentElement?.classList[0]), clr);
         let rgb = hexToRgb(clr);
         let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
         console.log(321, rgb);
@@ -73,11 +72,11 @@ class FwThemeBuilder extends LitElement {
     }
     static styles = css`
     .primary-color {
-        background-color: var(--primary) !important;
+        background-color: var(--primary-color) !important;
     }
 
     .secondary-color {
-        background-color: var(--secondary) !important;
+        background-color: var(--secondary-color) !important;
     }
 
     .primary-btn-text-color {
@@ -156,6 +155,13 @@ class FwThemeBuilder extends LitElement {
     render () {
         return html`
         <div class="floating-container">
+            <!-- <fw-color-pick
+                label="Primary"
+                CSSvariable="--primary"
+                value="${this.theme.colors.primary.hex}"  
+                handleChange=${this.handleColorChange}  
+            >
+            </fw-color-pick> -->
             <span class="primary-color color-button">
                 <p>Primary</p>
                 <input 
@@ -225,7 +231,7 @@ class FwThemeBuilder extends LitElement {
                     class="colorpicker-hidden" 
                     type="color" 
                     value="#ff0000" 
-                    @change="${this.handleColorChange}"
+                    @change="${(e : any) => {this.handleColorChange(e, "asdas")}}"
                 />
             </span>
         </div>

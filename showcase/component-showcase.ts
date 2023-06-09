@@ -58,13 +58,13 @@ export class Showcase extends LitElement {
     .circle-group {
         width: 100%;
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         gap: 1rem;
     }
 
     .color-circle {
-        width: 3rem;
-        height: 3rem;
+        width: 2rem;
+        height: 2rem;
         border-radius: 50%;
     }
 
@@ -166,12 +166,23 @@ export class Showcase extends LitElement {
         border-radius: 0.5rem;
     }
 
+    .secondary-colors {
+        background-color: var(--secondary-l3) !important;
+        border: 2px solid var(--secondary-l2) !important;
+    }
+
+
     .features > section > h4 {
         font-size: var(--font-l);
         margin: 0.2rem 0rem;
         font-weight: 400;
-        color: var(--primary);
+        color: var(--primary-l1);
     }
+
+    .secondary-colors > h4 {
+        color: var(--secondary-l1) !important;
+    }
+
     .features > section > p {
         font-size: var(--font-xs);
         margin: 0.5rem 0rem;
@@ -251,7 +262,7 @@ export class Showcase extends LitElement {
                     </section>
                 </div>
                 <div class="features">
-                    <section>
+                    <section class="secondary-colors">
                         <h4>Build your design system</h4>
                         <p>In eu sapien risus. Nulla vel lectus faucibus, tincidunt massa at, pulvinar metus. Phasellus vitae elit in mi ullamcorper commodo. Vivamus consequat eu nunc at auctor.</p>
                     </section>

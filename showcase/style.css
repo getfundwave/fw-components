@@ -3,7 +3,7 @@ body {
 }
 
 /* Declaration of CSS variables */
-html {
+body {
     --primary-color: #1c1cdb;
     --secondary-color: #6565ff;
     --primary-btn-text-color: #ffffff;
