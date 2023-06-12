@@ -8,10 +8,6 @@ body {
     --secondary-color: #6565ff;
     --primary-btn-text-color: #ffffff;
     --secondary-btn-text-color: #cecedb;
-    --title-text-color: #1b1b1b; 
-    --subtitle-text-color: #1b1b1b; 
-    --body-text-color: #1b1b1b;
-    --text-body-l1: #363636;
     --background-color: #f0f0f0;
 
     /* Fonts */
@@ -52,4 +48,10 @@ body {
     --error: #e61e1e;
     --error-rgb: rgb(230, 30, 30);
     --error-l1: #f1b4b4;
+
+    /* Text Colors */
+    --text-title: #1b1b1b; 
+    --text-subtitle: #1b1b1b; 
+    --text-body: #1b1b1b;
+    --text-body-l1: #363636;
 }

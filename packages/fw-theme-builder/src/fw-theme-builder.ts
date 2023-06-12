@@ -1,5 +1,5 @@
 import {html, css, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {customElement, property, state} from 'lit/decorators.js';
 import "./fw-color-pick";
 
 @customElement('fw-theme-builder')
@@ -8,6 +8,9 @@ class FwThemeBuilder extends LitElement {
         super();
     }
     
+    @state()
+    nav = "home";
+
     @property()
     theme = {
         fonts : {
@@ -21,62 +24,56 @@ class FwThemeBuilder extends LitElement {
             }
         },
         sizes : {
-            "font-tiny" : "",
-            "font-xs" : "",
-            "font-s" : "",
-            "font-m" : "",
-            "font-l" : "",
-            "font-xl" : "",
-            "font-huge" : "",
+            "font-tiny" : "10px",
+            "font-xs" : "14px",
+            "font-s" : "16px",
+            "font-m" : "18px",
+            "font-l" : "20px",
+            "font-xl" : "22px",
+            "font-huge" : "48px",
         },
         colors : {
             "primary" : {
-                "hex" : "",
-                "rgb" : "",
-                "l1" : "",
-                "l2" : "",
-                "l3" : "",
-                "contrast" : "",
+                "hex" : "#ad38d1",
+                "rgb" : "rgb(173, 56, 209)",
+                "l1" : "#ba68d3",
+                "l2" : "#dcb5e7",
+                "l3" : "#e5d3eb",
+                "contrast" : "#f0f0f0",
             },
             "secondary" : {
-                "hex" : "",
-                "rgb" : "",
-                "l1" : "",
-                "l2" : "",
-                "l3" : "",
-                "contrast" : "",
+                "hex" : "#4a48c7",
+                "rgb" : "rgb(74, 72, 199)",
+                "l1" : "#5f5dce",
+                "l2" : "#706fd1",
+                "l3" : "#9190df",
+                "contrast" : "#ebdbdb",
             },
             "background" : {
-                "hex" : "",
-                "rgb" : "",
+                "hex" : "#eeeeee",
+                "rgb" : "rgb(238, 238, 238)",
             },
             "error" : {
-                "hex" : "",
-                "rgb" : "",
-                "l1" : "",
+                "hex" : "#e61e1e",
+                "rgb" : "rgb(230, 30, 30)",
+                "l1" : "#f1b4b4",
+            },
+            "text" : {
+                "title" : "#1b1b1b",
+                "subtitle" : "#1b1b1b",
+                "body" : "#1b1b1b",
+                "body-l1" : "#363636",
             }
         }
     }
 
-    handleColorChange(e : Event, CSSclass : string) {
-        let clr = (e.target as HTMLInputElement)?.value;
-        console.log(123, clr);
-        if (clr == "rgba(0, 0, 0, 0)")
-            return;
-        document.body.style.setProperty(("--" + (e.target as HTMLInputElement).parentElement?.classList[0]), clr);
-        let rgb = hexToRgb(clr);
-        let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
-        console.log(321, rgb);
-        console.log(123, textClr);
-        (e.target as HTMLInputElement).parentElement?.style.setProperty("color", textClr);
-    }
     static styles = css`
     .primary-color {
-        background-color: var(--primary-color) !important;
+        background-color: var(--primary) !important;
     }
 
     .secondary-color {
-        background-color: var(--secondary-color) !important;
+        background-color: var(--secondary) !important;
     }
 
     .primary-btn-text-color {
@@ -121,9 +118,10 @@ class FwThemeBuilder extends LitElement {
         padding: 1rem 1rem;
     }
 
-    .color-button {
-        position: relative;
-        background-color: #afafaf;
+    .theme-button {
+        width: 4rem;
+        text-align: center;
+        background-color: #f5e6e6;
         border-radius: 4px;
         padding: 0.2rem 0.5rem;
         font-family: "DM Sans", sans-serif;
@@ -133,18 +131,6 @@ class FwThemeBuilder extends LitElement {
         box-shadow: #1b1b1b3b 0px 4px 10px;
     }
 
-    .colorpicker-hidden {
-        opacity: 0;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 20;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
     @media (max-width: 1200px) {
         .floating-container {
             width: 40rem;
@@ -152,106 +138,63 @@ class FwThemeBuilder extends LitElement {
         }
     }
     `;
+    
     render () {
-        return html`
-        <div class="floating-container">
+        if (this.nav == "home")
+            return html`
+            <div class="floating-container">
+                <span class="theme-button">
+                    <p>Colors</p>
+                </span>
+                <span class="theme-button">
+                    <p>Sizes</p>
+                </span>
+                <span class="theme-button">
+                    <p>Fonts</p>
+                </span>
+            </div>
             <!-- <fw-color-pick
                 label="Primary"
-                CSSvariable="--primary"
-                value="${this.theme.colors.primary.hex}"  
-                handleChange=${this.handleColorChange}  
+                cssvariable="--primary"
+                .value="${this.theme.colors.primary.hex}"
+                style="display:flex"
             >
             </fw-color-pick> -->
-            <span class="primary-color color-button">
-                <p>Primary</p>
-                <input 
-                    class="colorpicker-hidden" 
-                    type="color" 
-                    value="#ff0000" 
-                    @change="${this.handleColorChange}"
-                />
-            </span>
-            <span class="secondary-color color-button">
-                <p>Secondary</p>
-                <input 
-                    class="colorpicker-hidden" 
-                    type="color" 
-                    value="#ff0000" 
-                    @change="${this.handleColorChange}"
-                />
-            </span>
-            <span class="primary-btn-text-color color-button">
-                <p>Primary button text</p>
-                <input 
-                    class="colorpicker-hidden" 
-                    type="color" 
-                    value="#ff0000" 
-                    @change="${this.handleColorChange}"
-                />
-            </span>
-            <span class="secondary-btn-text-color color-button">
-                <p>Secondary button text</p>
-                <input 
-                    class="colorpicker-hidden" 
-                    type="color" 
-                    value="#ff0000" 
-                    @change="${this.handleColorChange}"
-                />
-            </span>
-            <span class="title-text-color color-button">
-                <p>Title text</p>
-                <input 
-                    class="colorpicker-hidden" 
-                    type="color" 
-                    value="#ff0000" 
-                    @change="${this.handleColorChange}"
-                />
-            </span>
-            <span class="subtitle-text-color color-button">
-                <p>Subtitle text</p>
-                <input 
-                    class="colorpicker-hidden" 
-                    type="color" 
-                    value="#ff0000" 
-                    @change="${this.handleColorChange}"
-                />
-            </span>
-            <span class="body-text-color color-button">
-                <p>Body text</p>
-                <input 
-                    class="colorpicker-hidden" 
-                    type="color" 
-                    value="#ff0000" 
-                    @change="${this.handleColorChange}"
-                />
-            </span>
-            <span class="background-color color-button">
-                <p>Background</p>
-                <input 
-                    class="colorpicker-hidden" 
-                    type="color" 
-                    value="#ff0000" 
-                    @change="${(e : any) => {this.handleColorChange(e, "asdas")}}"
-                />
-            </span>
-        </div>
-        `;
+            `;
+        if (this.nav == "colors")
+            return html`
+            <div class="floating-container">
+                <span class="theme-button">
+                    <p>Primary</p>
+                </span>
+                <span class="theme-button">
+                    <p>Secondary</p>
+                </span>
+                <span class="theme-button">
+                    <p>Background</p>
+                </span>
+                <span class="theme-button">
+                    <p>Error</p>
+                </span>
+                <span class="theme-button">
+                    <p>Text</p>
+                </span>
+            </div>
+            `;
+        if (this.nav == "sizes")
+            return html``;
+        if (this.nav == "fonts")
+            return html``;
+
+        if (this.nav == "colors-primary")
+            return html``;
+        if (this.nav == "colors-secondary")
+            return html``;
+        if (this.nav == "colors-background")
+            return html``;
+        if (this.nav == "colors-error")
+            return html``;
+        if (this.nav == "colors-text")
+            return html``;
     }
-}
-
-function hexToRgb(hex : string) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : {
-        r: 0,
-        g: 0,
-        b: 0
-    };
-}
-
-function rgbToHex(r : number, g: number, b: number) {
-    return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
 }

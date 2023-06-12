@@ -11,7 +11,7 @@ export class Showcase extends LitElement {
     }
 
     p {
-        color: var(--primary-color);
+        color: var(--text-body);
     }
 
     .showcase-page {
@@ -69,11 +69,11 @@ export class Showcase extends LitElement {
     }
 
     .primary-color {
-        background-color: var(--primary-color) !important;
+        background-color: var(--primary) !important;
     }
 
     .secondary-color {
-        background-color: var(--secondary-color) !important;
+        background-color: var(--secondary) !important;
     }
 
     .primary-txt-color {
@@ -85,22 +85,22 @@ export class Showcase extends LitElement {
     }
 
     .title-color {
-        background-color: var(--title-text-color) !important;
+        background-color: var(--text-title) !important;
     }
 
     .subtitle-color {
-        background-color: var(--subtitle-text-color) !important;
+        background-color: var(--text-subtitle) !important;
     }
 
     .body-txt-color {
-        background-color: var(--body-text-color) !important;
+        background-color: var(--text-body) !important;
     }
 
     .main-heading {
         font-size: var(--font-huge);
         font-weight: 700;
         margin-bottom: 1rem;
-        color: var(--title-text-color);
+        color: var(--text-title);
         display: flex;
         align-items: flex-start
     }
@@ -122,23 +122,23 @@ export class Showcase extends LitElement {
 
     .primary-button {
         transition: 0.2s ease-in-out;
-        background-color: var(--primary-color);
+        background-color: var(--primary);
         color: var(--primary-btn-text-color);
         font-size: var(--font-m);
     }
     .primary-button:hover {
         transition: 0.2s ease-in-out;
-        box-shadow: 0px 20px 80px -10px var(--primary-color);
+        box-shadow: 0px 20px 80px -10px var(--primary);
     }
 
     .secondary-button {
-        background-color: var(--secondary-color);
+        background-color: var(--secondary);
         color: var(--secondary-btn-text-color);
         font-size: var(--font-m);
     }
     
     .body-text {
-        color: var(--body-text-color);
+        color: var(--text-body);
         font-size: var(--font-s);
     }
 
