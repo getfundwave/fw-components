@@ -7,9 +7,13 @@ class FwThemeBuilder extends LitElement {
     constructor() {
         super();
     }
-    
+
     @state()
     nav = "home";
+
+    sectionChangeHandler (e : any, s : string) {
+        this.nav = s;
+    }
 
     @property()
     theme = {
@@ -119,7 +123,7 @@ class FwThemeBuilder extends LitElement {
     }
 
     .theme-button {
-        width: 4rem;
+        width: 6rem;
         text-align: center;
         background-color: #f5e6e6;
         border-radius: 4px;
@@ -143,7 +147,7 @@ class FwThemeBuilder extends LitElement {
         if (this.nav == "home")
             return html`
             <div class="floating-container">
-                <span class="theme-button">
+                <span class="theme-button" @click=${(e : any) => this.sectionChangeHandler(e, "colors")}>
                     <p>Colors</p>
                 </span>
                 <span class="theme-button">
