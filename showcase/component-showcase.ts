@@ -21,7 +21,7 @@ export class Showcase extends LitElement {
         align-items: center;
         justify-content: center;
         font-family: "DM Sans", sans-serif;
-        background-color: var(--background-color)
+        background-color: var(--background);
     }
 
     .content-container {
@@ -69,30 +69,37 @@ export class Showcase extends LitElement {
     }
 
     .primary-color {
+        transition: all 0.1s ease-in-out;
         background-color: var(--primary) !important;
     }
 
     .secondary-color {
+        transition: all 0.1s ease-in-out;
         background-color: var(--secondary) !important;
     }
 
     .primary-txt-color {
-        background-color: var(--primary-btn-text-color) !important;
+        transition: all 0.1s ease-in-out;
+        background-color: var(--primary-contrast) !important;
     }
 
     .secondary-txt-color {
-        background-color: var(--secondary-btn-text-color) !important;
+        transition: all 0.1s ease-in-out;
+        background-color: var(--secondary-contrast) !important;
     }
 
     .title-color {
+        transition: all 0.1s ease-in-out;
         background-color: var(--text-title) !important;
     }
 
     .subtitle-color {
+        transition: all 0.1s ease-in-out;
         background-color: var(--text-subtitle) !important;
     }
 
     .body-txt-color {
+        transition: all 0.1s ease-in-out;
         background-color: var(--text-body) !important;
     }
 
@@ -102,14 +109,21 @@ export class Showcase extends LitElement {
         margin-bottom: 1rem;
         color: var(--text-title);
         display: flex;
-        align-items: flex-start
+        align-items: flex-start;
+        overflow-x: visible;
+        white-space: nowrap;
     }
 
     .sub-heading {
         font-size: var(--font-xl);
         font-weight: 400;
-        color: var(--subtitle-text-color);
+        color: var(--text-subtitle);
         margin-bottom: 2rem;
+    }
+
+    .main-buttons {
+        overflow-x: visible;
+        white-space: nowrap;
     }
 
     .button {
@@ -123,7 +137,7 @@ export class Showcase extends LitElement {
     .primary-button {
         transition: 0.2s ease-in-out;
         background-color: var(--primary);
-        color: var(--primary-btn-text-color);
+        color: var(--primary-contrast);
         font-size: var(--font-m);
     }
     .primary-button:hover {
@@ -133,7 +147,7 @@ export class Showcase extends LitElement {
 
     .secondary-button {
         background-color: var(--secondary);
-        color: var(--secondary-btn-text-color);
+        color: var(--secondary-contrast);
         font-size: var(--font-m);
     }
     
@@ -146,8 +160,8 @@ export class Showcase extends LitElement {
         background-color: var(--primary-l3);
         color: var(--primary);
         font-size: var(--font-tiny);
-        padding: 4px 6px 4px 6px;
-        border-radius: 0.6rem;
+        padding: calc(var(--font-tiny)/2) calc(var(--font-tiny)/2);
+        border-radius: calc(var(--font-tiny));
         font-weight: 400;
     }
 
@@ -192,6 +206,7 @@ export class Showcase extends LitElement {
 
     .error-text {
         color: var(--error);
+        font-size: var(--font-xs);
     }
     .error-text > strong {
         user-select: none;
@@ -238,7 +253,7 @@ export class Showcase extends LitElement {
                             <span class="alpha-pill">Alpha</span>
                         </span>
                         <span class="sub-heading">Build and customize your own theme, effortlessly.</span>
-                        <span>
+                        <span class="main-buttons">
                             <button class="button primary-button">
                                 See all components
                             </button>

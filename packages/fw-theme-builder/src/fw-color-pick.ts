@@ -33,6 +33,11 @@ class FwColorPick extends LitElement {
   firstUpdated() {
     this.styling = `
     .color-button {
+      min-width: 6rem;
+      height: 3.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: relative;
       background-color: var(${this.CSSvariable}) !important;
       border-radius: 4px;
@@ -42,6 +47,10 @@ class FwColorPick extends LitElement {
       color: #2b2b2b;
       cursor: pointer;
       box-shadow: #1b1b1b3b 0px 4px 10px;
+    }
+    .color-button > p {
+      margin: 0;
+      font-family: "DM Sans", sans-serif;
     }
     .colorpicker-hidden {
       opacity: 0;
@@ -59,15 +68,15 @@ class FwColorPick extends LitElement {
   render () {
     return html`
     <style>${this.styling}</style>
-      <span class="color-button" >
-        <p>${this.label}</p>
-        <input 
-          class="colorpicker-hidden"
-          type="color"
-          value=${this.value || "ERROR"}
-          @change=${this.handleChange}
-        />
-      </span>
+    <span class="color-button" >
+      <p>${this.label}</p>
+      <input 
+        class="colorpicker-hidden"
+        type="color"
+        value=${this.value || "ERROR"}
+        @change=${this.handleChange}
+      />
+    </span>
     `;
   }
 }

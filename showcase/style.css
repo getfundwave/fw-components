@@ -1,15 +1,8 @@
 body {
     margin: 0;
 }
-
 /* Declaration of CSS variables */
 body {
-    --primary-color: #1c1cdb;
-    --secondary-color: #6565ff;
-    --primary-btn-text-color: #ffffff;
-    --secondary-btn-text-color: #cecedb;
-    --background-color: #f0f0f0;
-
     /* Fonts */
     --title-font: ;
     --body-font: ;
