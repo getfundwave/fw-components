@@ -1,0 +1,40 @@
+{
+  "name": "@fw-components/showcase-gallery",
+  "version": "0.0.0-alpha.1",
+  "type": "module",
+  "description": "A WYSIWYG type formula editor",
+  "main": "dist/src/showcase-gallery.js",
+  "scripts": {
+    "start": "es-dev-server --app-index index.html --node-resolve --watch --open",
+    "build": "webpack --mode production --stats-error-details",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@fw-components/formula-editor": "file:../packages/formula-editor/dist/index.js",
+    "@fw-components/fw-avatar": "*",
+    "@fw-components/styles": "*",
+    "@types/estree": "^1.0.1",
+    "lit": "^2.1.2",
+    "lit-element": "^3.3.2",
+    "typescript": "^5.0.4"
+  },
+  "author": "The Fundwave Authors",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/big.js": "^6.1.6",
+    "@webcomponents/webcomponentsjs": "^2.8.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^5.1.1",
+    "css-loader": "^6.8.1",
+    "es-dev-server": "^2.1.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.1",
+    "sass-loader": "^13.3.1",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.4.3",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.85.0",
+    "webpack-cli": "^5.1.1",
+    "webpack-dev-server": "^4.15.0"
+  }
+}

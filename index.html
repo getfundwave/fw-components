@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <script type="module" src="./dist/packages/formula-editor/src/formula-editor.js"></script>
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            font-family: 'Fira Code', sans-serif;
+            font-size: 80%;
+        }
+    </style>
+    <formula-editor class="fe" minSuggestionLen="1"
+        variables='[["sales_expense",2],["sales_in_quarter",3],["sales_cummulative",3],["cummulative_sum",4],["mohit",0],["mohini",0.2],["ravi",7],["ravipandey",8]]'>
+    </formula-editor>
+</body>
+
+</html>
