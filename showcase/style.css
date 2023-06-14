@@ -4,8 +4,8 @@ body {
 /* Declaration of CSS variables */
 body {
     /* Fonts */
-    --title-font: ;
-    --body-font: ;
+    --title-font: "'DM Sans', sans-serif";
+    --body-font: "'DM Sans', sans-serif";
 
     /* Sizes */
     --font-tiny: 10px;

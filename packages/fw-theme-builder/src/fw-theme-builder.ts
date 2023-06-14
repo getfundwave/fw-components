@@ -2,6 +2,7 @@ import {html, css, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import "./fw-color-pick";
 import "./fw-size-pick";
+import "./fw-font-pick";
 
 @customElement('fw-theme-builder')
 class FwThemeBuilder extends LitElement {
@@ -12,30 +13,112 @@ class FwThemeBuilder extends LitElement {
     @state()
     nav = "home";
 
-    sectionChangeHandler (e : any, s : string) {
-        this.nav = s;
-    }
+    @property()
+    fontOptions = [
+        {
+            name : "Archivo",
+            url: 'https://fonts.googleapis.com/css2?family=Archivo:wght@400;500',
+            style: "'Geologica', sans-serif",
+        },
+        {
+            name : "Barlow",
+            url: 'https://fonts.googleapis.com/css2?family=Barlow:wght@400;500',
+            style: "'Barlow', sans-serif",
+        },
+        {
+            name : "Cabin",
+            url: 'https://fonts.googleapis.com/css2?family=Cabin:wght@400;500',
+            style: "'Cabin', sans-serif",
+        },
+        {
+            name : "DM Sans",
+            url: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500',
+            style: "'DM Sans', sans-serif",
+        },
+        {
+            name : "Geologica",
+            url: 'https://fonts.googleapis.com/css2?family=Geologica:wght@400;500',
+            style: "'Geologica', sans-serif",
+        },
+        {
+            name : "Inter",
+            url: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500',
+            style: "'Inter', sans-serif",
+        },
+        {
+            name : "Karla",
+            url: 'https://fonts.googleapis.com/css2?family=Karla:wght@400;500',
+            style: "'Karla', sans-serif",
+        },
+        {
+            name : "Nunito Sans",
+            url: 'https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500',
+            style: "'Nunito Sans', sans-serif",
+        },
+        {
+            name : "Playfair Display",
+            url: 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500',
+            style: "'Playfair Display', serif",
+        },
+        {
+            name : "Poppins",
+            url: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500',
+            style: "'Poppins', sans-serif",
+        },
+        {
+            name : "Public Sans",
+            url: 'https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500',
+            style: "'Public Sans', sans-serif",
+        },
+        {
+            name : "Raleway",
+            url: 'https://fonts.googleapis.com/css2?family=Raleway:wght@400;500',
+            style: "'Raleway', sans-serif",
+        },
+        {
+            name : "Roboto",
+            url: 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500',
+            style: "'Roboto', sans-serif",
+        },
+        {
+            name : "Roboto Slab",
+            url: 'https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500',
+            style: "'Roboto Slab', serif",
+        },
+        {
+            name : "Rubik",
+            url: 'https://fonts.googleapis.com/css2?family=Rubik:wght@400;500',
+            style: "'Rubik', sans-serif",
+        },
+        {
+            name : "Tajawal",
+            url: 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500',
+            style: "'Tajawal', sans-serif",
+        },
+    ]
 
     @property()
     theme = {
         fonts : {
-            "primary" : {
-                "name" : "",
-                "import" : "",
+            "title" : {
+                name : "DM Sans",
+                url: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500',
+                style: "'DM Sans', sans-serif",
             },
-            "secondary" : {
-                "name" : "",
-                "import" : "",
+            "body" : {
+                name : "DM Sans",
+                url: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500',
+                style: "'DM Sans', sans-serif",
             }
         },
         sizes : {
-            "tiny" : "10px",
-            "xs" : "14px",
-            "s" : "16px",
-            "m" : "18px",
-            "l" : "20px",
-            "xl" : "22px",
-            "huge" : "48px",
+            "tiny"  : "10px",
+            "xs"    : "14px",
+            "s"     : "16px",
+            "m"     : "18px",
+            "l"     : "20px",
+            "xl"    : "22px",
+            "huge"  : "48px",
         },
         colors : {
             "primary" : {
@@ -195,6 +278,10 @@ class FwThemeBuilder extends LitElement {
     }
     `;
 
+    sectionChangeHandler (e : any, s : string) {
+        this.nav = s;
+    }
+
     navigateBack() {
         if (this.nav == "home")
             return; 
@@ -300,7 +387,26 @@ class FwThemeBuilder extends LitElement {
                 `;
             break;
             case "fonts":
-                content = html``;
+                content = html`
+                <span class="content-container">
+                    <fw-font-pick
+                        label="Title"
+                        cssvariable="--title-font"
+                        .value="${this.theme.fonts.title}"
+                        .options="${this.fontOptions}"
+                        style="display:flex"
+                    >
+                    </fw-font-pick>
+                    <fw-font-pick
+                        label="Body"
+                        cssvariable="--body-font"
+                        .value="${this.theme.fonts.body}"
+                        .options="${this.fontOptions}"
+                        style="display:flex"
+                    >
+                    </fw-font-pick>
+                </span>
+                `;
             break;
 
             case "colors-primary":
