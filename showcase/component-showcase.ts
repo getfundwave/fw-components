@@ -20,7 +20,7 @@ export class Showcase extends LitElement {
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: "DM Sans", sans-serif;
+        font-family: var(--body-font);
         background-color: var(--background);
     }
 
@@ -104,6 +104,7 @@ export class Showcase extends LitElement {
     }
 
     .main-heading {
+        font-family: var(--title-font);
         font-size: var(--font-huge);
         font-weight: 700;
         margin-bottom: 1rem;
