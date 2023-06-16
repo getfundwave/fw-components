@@ -1,5 +1,5 @@
 import {html, css, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {customElement, property, state} from 'lit/decorators.js';
 
 @customElement("fw-color-pick")
 class FwColorPick extends LitElement {
@@ -15,22 +15,25 @@ class FwColorPick extends LitElement {
   @property() 
   styling = "";
 
+  @state()
+  textColor = "";
+
+
   handleChange(e : any) {
-    console.log(e);
     let clr = (e.target as HTMLInputElement)?.value;
-    console.log("color", clr);
     if (clr == "rgba(0, 0, 0, 0)")
-        return;
+      return;
     document.body.style.setProperty(this.CSSvariable, clr);
     this.value = clr;
     let rgb = hexToRgb(clr);
     let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
-    console.log(rgb);
-    console.log("textColor", textClr);
     (e.target as HTMLInputElement).parentElement?.style.setProperty("color", textClr);
   }
 
   firstUpdated() {
+    let rgb = hexToRgb(this.value || "#ffffff");
+    let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
+    this.textColor = textClr;
     this.styling = `
     .color-button {
       min-width: 6rem;
@@ -44,7 +47,7 @@ class FwColorPick extends LitElement {
       padding: 0.2rem 0.5rem;
       font-family: "DM Sans", sans-serif;
       font-weight: 400;
-      color: #2b2b2b;
+      color: ${this.textColor};
       cursor: pointer;
       box-shadow: #1b1b1b3b 0px 4px 10px;
     }

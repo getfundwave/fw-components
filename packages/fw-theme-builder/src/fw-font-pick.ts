@@ -46,9 +46,6 @@ class FwFontPick extends LitElement {
     height: 3.2rem;
     padding: 0.2rem 0.5rem;
   }
-  .fp-label {
-    
-  }
   .fp-dropdown {
     position: absolute;
     bottom: 2.4rem;
