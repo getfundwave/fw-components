@@ -3,6 +3,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import "./fw-color-pick";
 import "./fw-size-pick";
 import "./fw-font-pick";
+import { home, colors, sizes, fonts, pallette, textColors } from "./models";
 
 @customElement('fw-theme-builder')
 class FwThemeBuilder extends LitElement {
@@ -297,114 +298,72 @@ class FwThemeBuilder extends LitElement {
         switch (this.nav) {
             case "home":
                 content = html`
-            <div class="content-container">
-                <span class="theme-button" @click=${(e : any) => this.sectionChangeHandler(e, "colors")}>
-                    <p>Colors</p>
-                </span>
-                <span class="theme-button" @click="${(e : any) => {this.sectionChangeHandler(e, "sizes")}}">
-                    <p>Sizes</p>
-                </span>
-                <span class="theme-button" @click="${(e : any) => {this.sectionChangeHandler(e, "fonts")}}">
-                    <p>Fonts</p>
-                </span>
-            </div>
+                <div class="content-container">
+                    ${
+                        home.map((section) => (
+                            html`
+                            <span class="theme-button" @click=${(e : any) => this.sectionChangeHandler(e, `${section.value}`)}>
+                                <p>${section.label}</p>
+                            </span>
+                            `
+                        ))
+                    }
+                </div>
             `;    
             break;
             case "colors":
                 content = html`
                 <div class="content-container">
-                    <span class="theme-button" @click="${(e : any) => {this.sectionChangeHandler(e, "colors-primary")}}">
-                        <p>Primary</p>
-                    </span>
-                    <span class="theme-button" @click="${(e : any) => {this.sectionChangeHandler(e, "colors-secondary")}}">
-                        <p>Secondary</p>
-                    </span>
-                    <span class="theme-button" @click="${(e : any) => {this.sectionChangeHandler(e, "colors-background")}}">
-                        <p>Background</p>
-                    </span>
-                    <span class="theme-button" @click="${(e : any) => {this.sectionChangeHandler(e, "colors-error")}}">
-                        <p>Error</p>
-                    </span>
-                    <span class="theme-button" @click="${(e : any) => {this.sectionChangeHandler(e, "colors-text")}}">
-                        <p>Text</p>
-                    </span>
+                    ${
+                        colors.map((clr) => (
+                            html`
+                            <span class="theme-button" @click=${(e : any) => {this.sectionChangeHandler(e, `colors-${clr.value}`)}}>
+                                <p>${clr.label}</p>
+                            </span>
+                            `
+                        ))
+                    }
                 </div>
                 `;
             break;
             case "sizes":
                 content = html`
                 <span class="content-container">
-                    <fw-size-pick
-                        label="Tiny"
-                        cssvariable="--font-tiny"
-                        .value="${this.theme.sizes.tiny}"
-                        style="display:flex"
-                    >
-                    </fw-size-pick>
-                    <fw-size-pick
-                        label="XS"
-                        cssvariable="--font-xs"
-                        .value="${this.theme.sizes.xs}"
-                        style="display:flex"
-                    >
-                    </fw-size-pick>
-                    <fw-size-pick
-                        label="S"
-                        cssvariable="--font-s"
-                        .value="${this.theme.sizes.s}"
-                        style="display:flex"
-                    >
-                    </fw-size-pick>
-                    <fw-size-pick
-                        label="M"
-                        cssvariable="--font-m"
-                        .value="${this.theme.sizes.m}"
-                        style="display:flex"
-                    >
-                    </fw-size-pick>
-                    <fw-size-pick
-                        label="L"
-                        cssvariable="--font-l"
-                        .value="${this.theme.sizes.l}"
-                        style="display:flex"
-                    >
-                    </fw-size-pick>
-                    <fw-size-pick
-                        label="XL"
-                        cssvariable="--font-xl"
-                        .value="${this.theme.sizes.xl}"
-                        style="display:flex"
-                    >
-                    </fw-size-pick>
-                    <fw-size-pick
-                        label="Huge"
-                        cssvariable="--font-huge"
-                        .value="${this.theme.sizes.huge}"
-                        style="display:flex"
-                    >
-                    </fw-size-pick>
+                    ${
+                        sizes.map((size) => (
+                            html`
+                            <fw-size-pick
+                                label="${size.label}"
+                                cssvariable="--font-${size.value}"
+                                .theme="${this.theme}"
+                                style="display:flex"
+                                value="${size.value}"
+                            >
+                            </fw-size-pick>
+                            `
+                        ))
+                    }
                 </span>
                 `;
             break;
             case "fonts":
                 content = html`
                 <span class="content-container">
-                    <fw-font-pick
-                        label="Title"
-                        cssvariable="--title-font"
-                        .value="${this.theme.fonts.title}"
-                        .options="${this.fontOptions}"
-                        style="display:flex"
-                    >
-                    </fw-font-pick>
-                    <fw-font-pick
-                        label="Body"
-                        cssvariable="--body-font"
-                        .value="${this.theme.fonts.body}"
-                        .options="${this.fontOptions}"
-                        style="display:flex"
-                    >
-                    </fw-font-pick>
+                    ${
+                        fonts.map((font) => (
+                            html`
+                            <fw-font-pick
+                                label="${font.label}"
+                                cssvariable="--${font.value}-font"
+                                value="${font.value}"
+                                .theme="${this.theme}"
+                                .options="${this.fontOptions}"
+                                style="display:flex"
+                            >
+                            </fw-font-pick>
+                            `
+                        ))
+                    }
                 </span>
                 `;
             break;
@@ -412,83 +371,44 @@ class FwThemeBuilder extends LitElement {
             case "colors-primary":
                 content = html`
                 <span class="content-container">
-                    <fw-color-pick
-                        label="Primary"
-                        cssvariable="--primary"
-                        .value="${this.theme.colors.primary.hex}"
-                        style="display:flex"
-                    >
-                    </fw-color-pick>
-                    <fw-color-pick
-                        label="Primary Light 1"
-                        cssvariable="--primary-l1"
-                        .value="${this.theme.colors.primary.l1}"
-                        style="display:flex"
-                    >
-                    </fw-color-pick>
-                    <fw-color-pick
-                        label="Primary Light 2"
-                        cssvariable="--primary-l2"
-                        .value="${this.theme.colors.primary.l2}"
-                        style="display:flex"
-                    >
-                    </fw-color-pick>
-                    <fw-color-pick
-                        label="Primary Light 3"
-                        cssvariable="--primary-l3"
-                        .value="${this.theme.colors.primary.l3}"
-                        style="display:flex"
-                    >
-                    </fw-color-pick>
-                    <fw-color-pick
-                        label="Primary Contrast"
-                        cssvariable="--primary-contrast"
-                        .value="${this.theme.colors.primary.contrast}"
-                        style="display:flex"
-                    >
-                    </fw-color-pick>
+                    ${
+                        pallette.map((item) => (
+                            html`
+                                <fw-color-pick
+                                    label="Primary${item.label}"
+                                    cssvariable="${item.value == "hex" ? `--primary`: `--primary-${item.value}`}"
+                                    .theme="${this.theme}"
+                                    value="${item.value}"
+                                    type="primary"
+                                    style="display:flex"
+                                >
+                                </fw-color-pick>
+                            `
+                        ))
+                    }
                 </span> 
                 `;
             break;
             case "colors-secondary":
                 content = html`
                 <span class="content-container">
-                    <fw-color-pick
-                        label="Secondary"
-                        cssvariable="--secondary"
-                        .value="${this.theme.colors.secondary.hex}"
-                        style="display:flex"
-                    >
-                    </fw-color-pick>
-                    <fw-color-pick
-                        label="Secondary Light 1"
-                        cssvariable="--secondary-l1"
-                        .value="${this.theme.colors.secondary.l1}"
-                        style="display:flex"
-                    >
-                    </fw-color-pick>
-                    <fw-color-pick
-                        label="Secondary Light 2"
-                        cssvariable="--secondary-l2"
-                        .value="${this.theme.colors.secondary.l2}"
-                        style="display:flex"
-                    >
-                    </fw-color-pick>
-                    <fw-color-pick
-                        label="Secondary Light 3"secondary
-                        cssvariable="--secondary-l3"
-                        .value="${this.theme.colors.secondary.l3}"
-                        style="display:flex"
-                    >
-                    </fw-color-pick>
-                    <fw-color-pick
-                        label="Secondary Contrast"
-                        cssvariable="--secondary-contrast"
-                        .value="${this.theme.colors.secondary.contrast}"
-                        style="display:flex"
-                    >
-                    </fw-color-pick>
-                </span> `;
+                    ${
+                        pallette.map((item) => (
+                            html`
+                                <fw-color-pick
+                                    label="Secondary${item.label}"
+                                    cssvariable="${item.value == "hex" ? `--secondary`: `--secondary-${item.value}`}"
+                                    .theme="${this.theme}"
+                                    value="${item.value}"
+                                    type="secondary"
+                                    style="display:flex"
+                                >
+                                </fw-color-pick>
+                            `
+                        ))
+                    }
+                </span> 
+                `;
             break;
             case "colors-background":
                 content = html`
@@ -496,7 +416,9 @@ class FwThemeBuilder extends LitElement {
                     <fw-color-pick
                         label="Background"
                         cssvariable="--background"
-                        .value="${this.theme.colors.background.hex}"
+                        .theme="${this.theme}"
+                        value="hex"
+                        type="background"
                         style="display:flex"
                     >
                     </fw-color-pick>
@@ -508,14 +430,18 @@ class FwThemeBuilder extends LitElement {
                     <fw-color-pick
                         label="Error"
                         cssvariable="--error"
-                        .value="${this.theme.colors.error.hex}"
+                        .theme="${this.theme}"
+                        value="hex"
+                        type="error"
                         style="display:flex"
                     >
                     </fw-color-pick>
                     <fw-color-pick
                         label="Error Light 1"
                         cssvariable="--error-l1"
-                        .value="${this.theme.colors.error.l1}"
+                        .theme="${this.theme}"
+                        value="l1"
+                        type="error"
                         style="display:flex"
                     >
                     </fw-color-pick>
@@ -524,34 +450,21 @@ class FwThemeBuilder extends LitElement {
             case "colors-text":
                 content = html`
                 <span class="content-container">
-                    <fw-color-pick
-                        label="Title"
-                        cssvariable="--text-title"
-                        .value="${this.theme.colors.text.title}"
-                        style="display:flex"
-                    >
-                    </fw-color-pick>
-                    <fw-color-pick
-                        label="Subtitle"
-                        cssvariable="--text-subtitle"
-                        .value="${this.theme.colors.text.subtitle}"
-                        style="display:flex"
-                    >
-                    </fw-color-pick>
-                    <fw-color-pick
-                        label="Body"
-                        cssvariable="--text-body"
-                        .value="${this.theme.colors.text.body}"
-                        style="display:flex"
-                    >
-                    </fw-color-pick>
-                    <fw-color-pick
-                        label="Body Light 1"
-                        cssvariable="--text-body-l1"
-                        .value="${this.theme.colors.text['body-l1']}"
-                        style="display:flex"
-                    >
-                    </fw-color-pick>
+                    ${
+                        textColors.map((clr) => (
+                            html`
+                                <fw-color-pick
+                                    label="${clr.label}"
+                                    cssvariable="--text-${clr.value}"
+                                    .theme="${this.theme}"
+                                    value="${clr.value}"
+                                    type="text"
+                                    style="display:flex"
+                                >
+                                </fw-color-pick>
+                            `
+                        ))
+                    }
                 </span>`;
             break;
         }

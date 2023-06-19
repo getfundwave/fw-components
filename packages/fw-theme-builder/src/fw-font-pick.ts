@@ -11,7 +11,10 @@ class FwFontPick extends LitElement {
   label = "";
 
   @property()
-  value : any;
+  value = "";
+
+  @property()
+  theme : any;
 
   @property()
   options : any;
@@ -28,8 +31,7 @@ class FwFontPick extends LitElement {
   }
 
   async optionSelectHandler (selection : any) {
-    this.value = selection;
-    this.dropdown = false;
+    this.theme.fonts[this.value] = selection;
     const selectedFont = new FontFace(selection.name, `url(${selection.url})`);
     (document as any).fonts.add(selectedFont);
     await selectedFont.load();
@@ -124,13 +126,13 @@ class FwFontPick extends LitElement {
         <div class="fp-dropdown ${this.dropdown?"fp-dropdown-show":""}">
         ${
           this.options.filter((option : any) => {
-            if (option.name != this.value.name) {
+            if (option.name != this.theme.fonts[this.value].name) {
               return option;
             }
           }).map((option : any) => (html`<div @click="${(e : any) => this.optionSelectHandler(option)}" class="fp-option-unselected">${option.name}</div>`))
         }
         </div>
-        <p class="fp-button-fontname">${this.value.name}</p>
+        <p class="fp-button-fontname">${this.theme.fonts[this.value].name}</p>
         <img class="fp-icon ${this.dropdown?"fp-icon-selected":""}" src="./up-arrow.svg"/>
       </div>
     </span> 

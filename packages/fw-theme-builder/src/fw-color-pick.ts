@@ -8,10 +8,19 @@ class FwColorPick extends LitElement {
   }
   @property() 
   label? : string;
+
   @property() 
   CSSvariable = "";
+
   @property() 
-  value? : string;
+  value = "";
+
+  @property() 
+  type = "";
+
+  @property() 
+  theme? : any;
+
   @property() 
   styling = "";
 
@@ -24,14 +33,14 @@ class FwColorPick extends LitElement {
     if (clr == "rgba(0, 0, 0, 0)")
       return;
     document.body.style.setProperty(this.CSSvariable, clr);
-    this.value = clr;
+    this.theme.colors[this.type][this.value] = clr;
     let rgb = hexToRgb(clr);
     let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
     (e.target as HTMLInputElement).parentElement?.style.setProperty("color", textClr);
   }
 
   firstUpdated() {
-    let rgb = hexToRgb(this.value || "#ffffff");
+    let rgb = hexToRgb(this.theme.colors[this.type][this.value] ?? "#ffffff");
     let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
     this.textColor = textClr;
     this.styling = `
@@ -76,7 +85,7 @@ class FwColorPick extends LitElement {
       <input 
         class="colorpicker-hidden"
         type="color"
-        value=${this.value || "ERROR"}
+        value=${this.theme.colors[this.type][this.value] || "ERROR"}
         @change=${this.handleChange}
       />
     </span>

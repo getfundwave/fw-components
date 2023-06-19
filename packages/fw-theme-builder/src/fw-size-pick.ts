@@ -12,14 +12,14 @@ class FwSizePick extends LitElement {
   @property() 
   CSSvariable = "";
   @property() 
-  value? : string;
+  theme? : any;
+  @property()
+  value = "";
 
   handleChange(e : any) {
-    console.log(e);
     let size = (e.target as HTMLInputElement)?.value;
-    console.log("size", size);
     document.body.style.setProperty(this.CSSvariable, size + "px");
-    this.value = size;
+    this.theme.sizes[this.value] = size;
   }
 
   static styles = css`
@@ -56,7 +56,7 @@ class FwSizePick extends LitElement {
       <p>${this.label}</p>
       <input
         type="number"
-        value="${(this.value)?.slice(0, -2) || -1}"
+        value="${(this.theme.sizes[this.value])?.slice(0, -2) || -1}"
         @change="${this.handleChange}"
       />
     </span>
