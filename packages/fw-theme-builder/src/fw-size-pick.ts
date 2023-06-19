@@ -19,7 +19,7 @@ class FwSizePick extends LitElement {
   handleChange(e : any) {
     let size = (e.target as HTMLInputElement)?.value;
     document.body.style.setProperty(this.CSSvariable, size + "px");
-    this.theme.sizes[this.value] = size;
+    this.theme.sizes[this.value] = size + "px";
   }
 
   static styles = css`
