@@ -3,9 +3,6 @@ import {customElement, property, state} from 'lit/decorators.js';
 
 @customElement("fw-color-pick")
 class FwColorPick extends LitElement {
-  constructor() {
-    super();
-  }
   @property() 
   label? : string;
 
@@ -27,13 +24,26 @@ class FwColorPick extends LitElement {
   @state()
   textColor = "";
 
-
   handleChange(e : any) {
     let clr = (e.target as HTMLInputElement)?.value;
     if (clr == "rgba(0, 0, 0, 0)")
       return;
+
+    let detail = {
+      "section" : this.type,
+      "type"    : this.value,
+      "value"   : clr,
+    }
+    const event = new CustomEvent('color-change', { detail, bubbles : true, composed : true });
+    this.dispatchEvent(event);
+
     document.body.style.setProperty(this.CSSvariable, clr);
     this.theme.colors[this.type][this.value] = clr;
+
+    detail = {...(this.theme)}
+    const event2 = new CustomEvent('theme-change', { detail, bubbles : true, composed : true });
+    this.dispatchEvent(event2);
+    
     let rgb = hexToRgb(clr);
     let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
     (e.target as HTMLInputElement).parentElement?.style.setProperty("color", textClr);

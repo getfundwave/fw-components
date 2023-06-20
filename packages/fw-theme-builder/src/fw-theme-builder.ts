@@ -7,10 +7,6 @@ import { home, colors, sizes, fonts, pallette, textcolors, fontoptions, initialt
 
 @customElement('fw-theme-builder')
 class FwThemeBuilder extends LitElement {
-    constructor() {
-        super();
-    }
-
     @state()
     nav = "home";
 
@@ -91,21 +87,26 @@ class FwThemeBuilder extends LitElement {
         height: 1rem;
     }
     
-    .save-button {
+    .action-button {
         transition: all 0.1s ease-in-out;
         cursor: pointer;
-        width: 5rem;
+        width: 3.5rem;
         user-select: none;
         text-align: center;
-        background-color: #aaf16f;
         border-radius: 4px;
         font-family: "DM Sans", sans-serif;
         padding: 0.5rem 0.5rem;
         box-shadow: #1b1b1b3b 0px 4px 2px;
     }
-    .save-button:active {
+    .save-btn {
+        background-color: #aaf16f;
+    }
+    .discard-btn {
+        background-color: #e7e7e7;
+    }
+    .action-button:active {
         box-shadow: none;
-        transform: translateY(2px)
+        transform: translateY(-2px);
     }
     
 
@@ -339,7 +340,10 @@ class FwThemeBuilder extends LitElement {
                     <img class="back-icon" src="back-arrow.svg" />    
                 </span>
                 ${content}
-                <span class="save-button">Save</span>
+                <span>
+                    <span class="action-button discard-btn">Discard</span>
+                    <span class="action-button save-btn">Save</span>
+                </span>
             </div>
         `;
     }

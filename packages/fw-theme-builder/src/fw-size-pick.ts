@@ -3,23 +3,35 @@ import { customElement, property } from "lit/decorators.js";
 
 @customElement("fw-size-pick")
 class FwSizePick extends LitElement {
-  constructor() {
-    super();
-  } 
-
   @property() 
   label? : string;
+
   @property() 
   CSSvariable = "";
+
   @property() 
   theme? : any;
+
   @property()
   value = "";
 
   handleChange(e : any) {
     let size = (e.target as HTMLInputElement)?.value;
+
+    let detail = {
+      "section" : this.value,
+      "value"   : (size + "px"),
+    }
+    const event = new CustomEvent('size-change', { detail, bubbles : true, composed : true });
+    this.dispatchEvent(event);
+
     document.body.style.setProperty(this.CSSvariable, size + "px");
     this.theme.sizes[this.value] = size + "px";
+
+
+    detail = {...(this.theme)}
+    const event2 = new CustomEvent('theme-change', { detail, bubbles : true, composed : true });
+    this.dispatchEvent(event2);
   }
 
   static styles = css`
