@@ -38,11 +38,6 @@ class FwColorPick extends LitElement {
     this.dispatchEvent(event);
 
     document.body.style.setProperty(this.CSSvariable, clr);
-    this.theme.colors[this.type][this.value] = clr;
-
-    detail = {...(this.theme)}
-    const event2 = new CustomEvent('theme-change', { detail, bubbles : true, composed : true });
-    this.dispatchEvent(event2);
     
     let rgb = hexToRgb(clr);
     let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));

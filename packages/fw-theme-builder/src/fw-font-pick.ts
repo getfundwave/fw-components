@@ -27,18 +27,12 @@ class FwFontPick extends LitElement {
   }
 
   async optionSelectHandler (selection : any) {
-    this.theme.fonts[this.value] = selection;
-
     let detail = {
       "section" : this.value,
       "value"   : selection,
     }
     const event = new CustomEvent('font-change', { detail, bubbles : true, composed : true });
     this.dispatchEvent(event);
-
-    detail = {...(this.theme)}
-    const event2 = new CustomEvent('theme-change', { detail, bubbles : true, composed : true });
-    this.dispatchEvent(event2);
     
     const selectedFont = new FontFace(selection.name, `url(${selection.url})`);
     (document as any).fonts.add(selectedFont);

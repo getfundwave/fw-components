@@ -26,12 +26,6 @@ class FwSizePick extends LitElement {
     this.dispatchEvent(event);
 
     document.body.style.setProperty(this.CSSvariable, size + "px");
-    this.theme.sizes[this.value] = size + "px";
-
-
-    detail = {...(this.theme)}
-    const event2 = new CustomEvent('theme-change', { detail, bubbles : true, composed : true });
-    this.dispatchEvent(event2);
   }
 
   static styles = css`
