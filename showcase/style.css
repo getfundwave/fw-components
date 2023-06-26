@@ -68,8 +68,8 @@ p {
 }
 
 .showcase-page {
-    width: 100svw;
-    height: 100svh;
+    width: 100%;
+    min-height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -278,6 +278,37 @@ p {
 }
 
 
+fw-theme-builder::part(container) {
+    position: fixed;
+    bottom: 1rem;
+    width: 70rem;
+    left: calc((100svw - 72rem)/2);
+    height: max-content;
+    background-color: #ffffff67;
+    z-index: 10;
+    border-radius: 10px;
+    box-shadow: 0px 10px 40px -10px #1b1b1b4c;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1rem;
+}
+
+fw-theme-builder::part(content-span) {
+    display: flex;
+    width: 90%;
+    flex-direction: row;
+    justify-content: center;
+    margin-right: 3rem;
+}
+
+fw-theme-builder::part(content-container) {
+    display: flex;
+    gap: 1rem;
+}
+
 @media (max-width: 1160px) {
     .showcase-content {
         width: 60rem;
@@ -293,6 +324,10 @@ p {
     }
     .left-section {
         width: 80%;
+    }
+    fw-theme-builder::part(container) {
+        width: 44rem;
+        left: calc((100vw - 46rem)/2);
     }
 }
 
@@ -312,9 +347,24 @@ p {
     }
     .right-section {
         width: 100%;
+        justify-content: center;
+        text-align: center;
     }
     .left-section {
         width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+    .main-heading {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    .main-buttons {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        gap: 0.5rem;
     }
     .hide-on-phone {
         display: none !important;
@@ -325,10 +375,13 @@ p {
         justify-content: center;
         align-items: center;
     }
-    fw-theme-builder {
-        position: fixed;
-        width: 100svw;
-        bottom: 0.5rem;
-        left: 0;
+    fw-theme-builder::part(container) {
+        width: calc(100% - 4rem);
+        left: 1rem;
+    }
+    fw-theme-builder::part(content-container) {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
 }

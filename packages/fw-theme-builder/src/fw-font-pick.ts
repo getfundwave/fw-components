@@ -14,7 +14,7 @@ class FwFontPick extends LitElement {
 
   @property()
   options : any;
-  
+
   @state()
   dropdown = false;
 
@@ -114,20 +114,20 @@ class FwFontPick extends LitElement {
 
   render() {
     return html`
-    <span class="fp-container">
-      <p class="fp-label">${this.label}</p>
-      <div class="fp-button" @click="${this.buttonClickHandler}">
-        <div class="fp-dropdown ${this.dropdown?"fp-dropdown-show":""}">
+    <span part="font-container" class="fp-container">
+      <p part="font-label" class="fp-label">${this.label}</p>
+      <div part="font-button" class="fp-button" @click="${this.buttonClickHandler}">
+        <div part="font-dropdown-container" class="fp-dropdown ${this.dropdown?"fp-dropdown-show":""}">
         ${
           this.options.filter((option : any) => {
             if (option.name != this.theme.fonts[this.value].name) {
               return option;
             }
-          }).map((option : any) => (html`<div @click="${(e : any) => this.optionSelectHandler(option)}" class="fp-option-unselected">${option.name}</div>`))
+          }).map((option : any) => (html`<div part="font-dropdown-option" @click="${(e : any) => this.optionSelectHandler(option)}" class="fp-option-unselected">${option.name}</div>`))
         }
         </div>
-        <p class="fp-button-fontname">${this.theme.fonts[this.value].name}</p>
-        <img class="fp-icon ${this.dropdown?"fp-icon-selected":""}" src="./up-arrow.svg"/>
+        <p part="font-dropdown-selected" class="fp-button-fontname">${this.theme.fonts[this.value].name}</p>
+        <img part="font-dropdown-icon" class="fp-icon ${this.dropdown?"fp-icon-selected":""}" src="./up-arrow.svg"/>
       </div>
     </span> 
     `;
