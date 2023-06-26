@@ -284,7 +284,7 @@ fw-theme-builder::part(container) {
     width: 70rem;
     left: calc((100svw - 72rem)/2);
     height: max-content;
-    background-color: #ffffff67;
+    background-color: #ffffff;
     z-index: 10;
     border-radius: 10px;
     box-shadow: 0px 10px 40px -10px #1b1b1b4c;
@@ -307,6 +307,13 @@ fw-theme-builder::part(content-span) {
 fw-theme-builder::part(content-container) {
     display: flex;
     gap: 1rem;
+}
+
+fw-theme-builder::part(font-dropdown-selected) {
+    margin: 6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 @media (max-width: 1160px) {
@@ -360,6 +367,17 @@ fw-theme-builder::part(content-container) {
         display: flex;
         justify-content: center;
     }
+    .sub-heading {
+        width: 100%;
+    }
+    .error-text {
+        width: 100%;
+    }
+    .circle-group {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
     .main-buttons {
         display: flex;
         justify-content: center;
@@ -378,6 +396,7 @@ fw-theme-builder::part(content-container) {
     fw-theme-builder::part(container) {
         width: calc(100% - 4rem);
         left: 1rem;
+        background-color: #ffffff67;
     }
     fw-theme-builder::part(content-container) {
         display: flex;

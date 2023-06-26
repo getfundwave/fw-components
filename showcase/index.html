@@ -7,7 +7,10 @@
         <script>
             window.addEventListener("color-change", (e) => {
                 console.log("Color:", e);
-                document.body.style.setProperty("--" + e.detail.section + "-" + e.detail.type, e.detail.value);
+                if (e.detail.type == "hex")
+                    document.body.style.setProperty("--" + e.detail.section, e.detail.value);
+                else
+                    document.body.style.setProperty("--" + e.detail.section + "-" + e.detail.type, e.detail.value);
             });
             window.addEventListener("size-change", (e) => {
                 console.log("Size:", e);
@@ -32,8 +35,7 @@
                         "rgb" : "rgb(173, 56, 209)",
                         "l1" : "#ba68d3",
                         "l2" : "#dcb5e7",
-                        "l3" : "#e5d3eb",
-                        "contrast" : "#f0f0f0",
+                        "l3" : null
                     },
                     "secondary" : {
                         "hex" : "#4a48c7",

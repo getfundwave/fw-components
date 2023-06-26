@@ -4,9 +4,13 @@ import "./fw-color-pick";
 import "./fw-size-pick";
 import "./fw-font-pick";
 import { home, colors, sizes, fonts, pallette, backgroundcolors, errorcolors, textcolors, fontoptions, initialtheme } from "./models";
+import '@material/mwc-icon/mwc-icon.js';
 
 @customElement('fw-theme-builder')
 class FwThemeBuilder extends LitElement {
+    constructor () {
+        super();
+    }
     @state()
     nav = "home";
 
@@ -47,6 +51,7 @@ class FwThemeBuilder extends LitElement {
         this.addEventListener('color-change', (e: any) => this.colorChangeCallback(e, this.theme));
         this.addEventListener("size-change", (e: any) => this.sizeChangeCallback(e, this.theme));
         this.addEventListener("font-change", (e: any) => this.fontChangeCallback(e, this.theme));
+
     }
 
     disconnectedCallback(): void {
@@ -153,6 +158,30 @@ class FwThemeBuilder extends LitElement {
     .theme-button > p {
         margin: 0;
     }
+    /* fallback */
+    @font-face {
+        font-family: 'Material Icons';
+        font-style: normal;
+        font-weight: 400;
+        font-display: block;
+        src: url(https://fonts.gstatic.com/s/materialicons/v140/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+    }
+
+    .material-icons {
+        font-family: 'Material Icons';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
+    }
     `;
 
     sectionChangeHandler (e : any, s : string) {
@@ -170,7 +199,6 @@ class FwThemeBuilder extends LitElement {
     }
     
     render () {
-        console.log(this.theme);
         let content;
         switch (this.nav) {
             case "home":
@@ -229,7 +257,7 @@ class FwThemeBuilder extends LitElement {
                         fonts.filter(obj => (this.theme.fonts?Object.keys(this.theme.fonts):[]).includes(obj.value)).map((font) => (
                             html`
                             <fw-font-pick
-                                exportparts="font-container, font-label, font-button, font-dropdown-container, font-dropdown-option, font-dropdown-selected, font-dropdown-selected"
+                                exportparts="font-container, font-label, font-button, font-dropdown-container, font-dropdown-option, font-dropdown-selected"
                                 label="${font.label}"
                                 value="${font.value}"
                                 .theme="${this.theme}"
@@ -350,8 +378,11 @@ class FwThemeBuilder extends LitElement {
 
         return html`
             <div part="container" >
+                <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
                 <span part="back-icon-container" class="back-button ${this.nav == "home" ? "back-hidden" : ""}" @click="${this.navigateBack}">
-                    <img part="back-icon-image" class="back-icon" src="back-arrow.svg" />
+                    <svg class="back-icon" width="46" height="80" viewBox="0 0 46 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M43.9567 77.8954C46.6811 75.1012 46.6811 70.5876 43.9567 67.7935L16.8527 39.9955L43.9567 12.1975C46.6811 9.40334 46.6811 4.88973 43.9567 2.0956C41.2324 -0.698533 36.8314 -0.698533 34.1071 2.0956L2.04329 34.9804C-0.681091 37.7745 -0.681092 42.2881 2.04328 45.0822L34.1071 77.967C36.7616 80.6895 41.2323 80.6895 43.9567 77.8954Z" fill="black"/>
+                    </svg>
                 </span>
                 <span part="content-span">
                     ${content}
