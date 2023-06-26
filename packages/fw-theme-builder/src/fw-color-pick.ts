@@ -37,7 +37,7 @@ class FwColorPick extends LitElement {
     const event = new CustomEvent('color-change', { detail, bubbles : true, composed : true });
     this.dispatchEvent(event);
 
-    document.body.style.setProperty(this.CSSvariable, clr);
+    // document.body.style.setProperty(this.CSSvariable, clr);
     
     let rgb = hexToRgb(clr);
     let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
@@ -85,9 +85,10 @@ class FwColorPick extends LitElement {
   render () {
     return html`
     <style>${this.styling}</style>
-    <span class="color-button" >
-      <p>${this.label}</p>
+    <span part="color-button" class="color-button" >
+      <p part="color-label">${this.label}</p>
       <input 
+        part="color-hidden-input"
         class="colorpicker-hidden"
         type="color"
         value=${this.theme.colors[this.type][this.value] || "ERROR"}

@@ -10,30 +10,41 @@ class FwThemeBuilder extends LitElement {
     @state()
     nav = "home";
 
-    @property({type : Array})
+    @property({type : Array, converter: {
+        fromAttribute: (value : string) => {
+            return JSON.parse(value);
+        },
+        toAttribute: (value : Object) => {
+            return JSON.stringify(value);
+        }
+    }})
     fontOptions = fontoptions;
 
-    @property({type : Object})
+    @property({type : Object, converter: {
+        fromAttribute: (value : string) => {
+            return JSON.parse(value);
+        },
+        toAttribute: (value : Object) => {
+            return JSON.stringify(value);
+        }
+    }})
     theme = initialtheme;
 
     colorChangeCallback (e : any, theme : Object) {
-        console.log(this.theme);
         this.theme.colors[e.detail.section][e.detail.type] = e.detail.value;
     }
 
     sizeChangeCallback (e : any, theme : Object) {
-        this.theme.sizes[e.detail.section] = e.detail.value;        console.log(this.theme);
-
+        this.theme.sizes[e.detail.section] = e.detail.value;
     }
 
     fontChangeCallback (e : any, theme : Object) {
-        this.theme.fonts[e.detail.section]= e.detail.value;        console.log(this.theme);
-
+        this.theme.fonts[e.detail.section]= e.detail.value;
     }
 
     connectedCallback(): void {
         super.connectedCallback();
-        window.addEventListener('color-change', (e: any) => this.colorChangeCallback(e, this.theme));
+        this.addEventListener('color-change', (e: any) => this.colorChangeCallback(e, this.theme));
         this.addEventListener("size-change", (e: any) => this.sizeChangeCallback(e, this.theme));
         this.addEventListener("font-change", (e: any) => this.fontChangeCallback(e, this.theme));
     }
@@ -148,7 +159,7 @@ class FwThemeBuilder extends LitElement {
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #f5e6e6;
+        background-color: #e2e2e2;
         border-radius: 4px;
         padding: 0.2rem 0.5rem;
         font-family: "DM Sans", sans-serif;
@@ -158,7 +169,7 @@ class FwThemeBuilder extends LitElement {
         box-shadow: #1b1b1b3b 0px 4px 10px;
     }
     .theme-button:hover {
-        background-color: #e4d5d5;
+        background-color: #dddddd;
     }
     .theme-button:active {
         box-shadow: none;
@@ -218,7 +229,7 @@ class FwThemeBuilder extends LitElement {
                 content = html`
                 <div class="content-container">
                     ${
-                        home.map((section) => (
+                        home.filter(obj => (this.theme?Object.keys(this.theme):[]).includes(obj.value)).map((section) => (
                             html`
                             <span class="theme-button" @click=${(e : any) => this.sectionChangeHandler(e, `${section.value}`)}>
                                 <p>${section.label}</p>
@@ -233,7 +244,7 @@ class FwThemeBuilder extends LitElement {
                 content = html`
                 <div class="content-container">
                     ${
-                        colors.map((clr) => (
+                        colors.filter(obj => (this.theme.colors?Object.keys(this.theme.colors):[]).includes(obj.value)).map((clr) => (
                             html`
                             <span class="theme-button" @click=${(e : any) => {this.sectionChangeHandler(e, `colors-${clr.value}`)}}>
                                 <p>${clr.label}</p>
@@ -248,12 +259,11 @@ class FwThemeBuilder extends LitElement {
                 content = html`
                 <span class="content-container">
                     ${
-                        sizes.map((size) => (
+                        sizes.filter(obj => (this.theme.sizes?Object.keys(this.theme.sizes):[]).includes(obj.value)).map((size) => (
                             html`
                             <fw-size-pick
                                 label="${size.label}"
-                                cssvariable="--font-${size.value}"
-                                .theme="${this.theme}"
+                                theme="${this.theme}"
                                 value="${size.value}"
                             >
                             </fw-size-pick>
@@ -267,13 +277,12 @@ class FwThemeBuilder extends LitElement {
                 content = html`
                 <span class="content-container">
                     ${
-                        fonts.map((font) => (
+                        fonts.filter(obj => (this.theme.fonts?Object.keys(this.theme.fonts):[]).includes(obj.value)).map((font) => (
                             html`
                             <fw-font-pick
                                 label="${font.label}"
-                                cssvariable="--${font.value}-font"
                                 value="${font.value}"
-                                .theme="${this.theme}"
+                                theme="${this.theme}"
                                 .options="${this.fontOptions}"
                             >
                             </fw-font-pick>
@@ -288,9 +297,10 @@ class FwThemeBuilder extends LitElement {
                 content = html`
                 <span class="content-container">
                     ${
-                        pallette.map((item) => (
+                        pallette.filter(obj => (this.theme.colors.primary?Object.keys(this.theme.colors.primary):[]).includes(obj.value)).map((item) => (
                             html`
                                 <fw-color-pick
+                                    exportparts="color-button, color-label, color-hidden-input"
                                     label="Primary${item.label}"
                                     cssvariable="${item.value == "hex" ? `--primary`: `--primary-${item.value}`}"
                                     .theme="${this.theme}"
@@ -308,9 +318,10 @@ class FwThemeBuilder extends LitElement {
                 content = html`
                 <span class="content-container">
                     ${
-                        pallette.map((item) => (
+                        pallette.filter(obj => (this.theme.colors.secondary?Object.keys(this.theme.colors.secondary):[]).includes(obj.value)).map((item) => (
                             html`
                                 <fw-color-pick
+                                    exportparts="color-button, color-label, color-hidden-input"
                                     label="Secondary${item.label}"
                                     cssvariable="${item.value == "hex" ? `--secondary`: `--secondary-${item.value}`}"
                                     .theme="${this.theme}"
@@ -328,9 +339,10 @@ class FwThemeBuilder extends LitElement {
                 content = html`
                 <span class="content-container">
                     ${
-                        backgroundcolors.map((item) => (
+                        backgroundcolors.filter(obj => (this.theme.colors.background?Object.keys(this.theme.colors.background):[]).includes(obj.value)).map((item) => (
                             html`
                                 <fw-color-pick
+                                    exportparts="color-button, color-label, color-hidden-input"
                                     label="Background${item.label}"
                                     cssvariable="${item.value == "hex" ? `--background`: `--background-${item.value}`}"
                                     .theme="${this.theme}"
@@ -348,9 +360,10 @@ class FwThemeBuilder extends LitElement {
                 content = html`
                 <span class="content-container">
                     ${
-                        errorcolors.map((item) => (
+                        errorcolors.filter(obj => (this.theme.colors.error?Object.keys(this.theme.colors.error):[]).includes(obj.value)).map((item) => (
                             html`
                                 <fw-color-pick
+                                    exportparts="color-button, color-label, color-hidden-input"
                                     label="Error${item.label}"
                                     cssvariable="${item.value == "hex" ? `--error`: `--error-${item.value}`}"
                                     .theme="${this.theme}"
@@ -367,9 +380,10 @@ class FwThemeBuilder extends LitElement {
                 content = html`
                 <span class="content-container">
                     ${
-                        textcolors.map((clr) => (
+                        textcolors.filter(obj => (this.theme.colors.text?Object.keys(this.theme.colors.text):[]).includes(obj.value)).map((clr) => (
                             html`
                                 <fw-color-pick
+                                    exportparts="color-button, color-label, color-hidden-input"
                                     label="${clr.label}"
                                     cssvariable="--text-${clr.value}"
                                     .theme="${this.theme}"
@@ -385,11 +399,11 @@ class FwThemeBuilder extends LitElement {
         }
 
         return html`
-            <div class="floating-container">
-                <span class="back-button ${this.nav == "home" ? "back-hidden" : ""}" @click="${this.navigateBack}">
-                    <img class="back-icon" src="back-arrow.svg" />    
+            <div part="container" class="floating-container">
+                <span part="back-icon-container" class="back-button ${this.nav == "home" ? "back-hidden" : ""}" @click="${this.navigateBack}">
+                    <img part="back-icon-image" class="back-icon" src="back-arrow.svg" />
                 </span>
-                <span class="contentspan">
+                <span part="content-container" class="contentspan">
                     ${content}
                 </span>
             </div>

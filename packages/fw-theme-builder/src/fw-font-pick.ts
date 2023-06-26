@@ -14,10 +14,7 @@ class FwFontPick extends LitElement {
 
   @property()
   options : any;
-
-  @property()
-  CSSvariable = "";
-
+  
   @state()
   dropdown = false;
 
@@ -33,11 +30,6 @@ class FwFontPick extends LitElement {
     }
     const event = new CustomEvent('font-change', { detail, bubbles : true, composed : true });
     this.dispatchEvent(event);
-    
-    const selectedFont = new FontFace(selection.name, `url(${selection.url})`);
-    (document as any).fonts.add(selectedFont);
-    await selectedFont.load();
-    document.body.style.setProperty(this.CSSvariable, selection.style);
   }
 
   static styles = css`

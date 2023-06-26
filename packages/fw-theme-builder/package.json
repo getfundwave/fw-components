@@ -10,6 +10,7 @@
   "author": "The Fundwave Authors",
   "license": "ISC",
   "dependencies": {
+    "@material/web": "^1.0.0-pre.11",
     "lit": "^2.1.2"
   },
   "devDependencies": {

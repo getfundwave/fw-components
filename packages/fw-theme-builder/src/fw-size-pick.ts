@@ -7,9 +7,6 @@ class FwSizePick extends LitElement {
   label? : string;
 
   @property() 
-  CSSvariable = "";
-
-  @property() 
   theme? : any;
 
   @property()
@@ -24,8 +21,6 @@ class FwSizePick extends LitElement {
     }
     const event = new CustomEvent('size-change', { detail, bubbles : true, composed : true });
     this.dispatchEvent(event);
-
-    document.body.style.setProperty(this.CSSvariable, size + "px");
   }
 
   static styles = css`

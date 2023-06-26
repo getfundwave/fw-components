@@ -6,17 +6,51 @@
         <script type="module" src="../packages/fw-theme-builder/dist/fw-theme-builder.js"></script>
         <script>
             window.addEventListener("color-change", (e) => {
-                console.log(1, e);
+                console.log("Color:", e);
+                document.body.style.setProperty("--" + e.detail.section + "-" + e.detail.type, e.detail.value);
             });
             window.addEventListener("size-change", (e) => {
-                console.log(2, e);
+                console.log("Size:", e);
+                document.body.style.setProperty("--font-" + e.detail.section, e.detail.value);
             });
-            window.addEventListener("font-change", (e) => {
-                console.log(3, e);
+            window.addEventListener("font-change", async (e) => {
+                console.log("Font:", e);
+                const selectedFont = new FontFace(e.detail.value.name, `url(${e.detail.value.url})`);
+                document.fonts.add(selectedFont);
+                await selectedFont.load();
+
+                document.body.style.setProperty("--" + e.detail.section + "-font", e.detail.value.name);
             });
             window.addEventListener("theme-change", (e) => {
-                console.log(0, e);
+                console.log("Theme:", e);
             });
+
+            let inputTheme = {
+                colors : {
+                    "primary" : {
+                        "hex" : "#ad38d1",
+                        "rgb" : "rgb(173, 56, 209)",
+                        "l1" : "#ba68d3",
+                        "l2" : "#dcb5e7",
+                        "l3" : "#e5d3eb",
+                        "contrast" : "#f0f0f0",
+                    },
+                    "secondary" : {
+                        "hex" : "#4a48c7",
+                        "rgb" : "rgb(74, 72, 199)",
+                        "l1" : "#5f5dce",
+                        "l2" : "#706fd1",
+                        "l3" : "#9190df",
+                        "contrast" : "#ebdbdb",
+                    },
+                    "background" : {
+                        "hex" : "#eeeeee",
+                        "rgb" : "rgb(238, 238, 238)",
+                    }
+                }
+            }
+            // console.log("Input Theme:", inputTheme);
+            // document.getElementsByTagName("fw-theme-builder")[0].setAttribute("theme", JSON.stringify(inputTheme));
         </script>
         <title>Component showcase </title>
     </head>
@@ -68,7 +102,8 @@
                     </section>
                 </div>
             </div>
-            <fw-theme-builder></fw-theme-builder>
+            <fw-theme-builder>
+            </fw-theme-builder>
         </main>
     </body>
 </html>

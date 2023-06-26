@@ -8,20 +8,20 @@ body {
     --body-font: "DM Sans", sans-serif;
 
     /* Sizes */
-    /* --font-tiny: 10px;
+    --font-tiny: 10px;
     --font-xs: 14px;
     --font-s: 16px;
     --font-m: 18px;
     --font-l: 20px;
     --font-xl: 22px;
-    --font-huge: 48px; */
-    --font-tiny: 0.75rem;
+    --font-huge: 48px;
+    /* --font-tiny: 0.75rem;
     --font-xs: 0.95rem;
     --font-s: 1rem;
     --font-m: 1.05rem;
     --font-l: 1.25rem;
     --font-xl: 1.3rem;
-    --font-huge: 3rem;
+    --font-huge: 3rem; */
 
     /* Colors */
     /* Primary Colors */
