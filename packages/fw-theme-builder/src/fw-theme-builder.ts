@@ -34,7 +34,11 @@ class FwThemeBuilder extends LitElement {
     theme = initialtheme;
 
     colorChangeCallback (e : any, theme : Object) {
-        this.theme.colors[e.detail.section][e.detail.type] = e.detail.value;
+        if (e.detail.type == "hex")
+            this.theme.colors[e.detail.section].rgb = e.detail.rgb;
+        else
+            this.theme.colors[e.detail.section][e.detail.type] = e.detail.value;
+        console.log(this.theme);
     }
 
     sizeChangeCallback (e : any, theme : Object) {

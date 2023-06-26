@@ -33,6 +33,7 @@ class FwColorPick extends LitElement {
       "section" : this.type,
       "type"    : this.value,
       "value"   : clr,
+      "rgb"     : hexToRgb(clr),
     }
     const event = new CustomEvent('color-change', { detail, bubbles : true, composed : true });
     this.dispatchEvent(event);

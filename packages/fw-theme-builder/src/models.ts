@@ -246,7 +246,6 @@ export const initialtheme : any = {
   colors : {
     "primary" : {
       "hex" : "#ad38d1",
-      "rgb" : "rgb(173, 56, 209)",
       "l1" : "#ba68d3",
       "l2" : "#dcb5e7",
       "l3" : "#e5d3eb",
@@ -254,7 +253,6 @@ export const initialtheme : any = {
     },
     "secondary" : {
       "hex" : "#4a48c7",
-      "rgb" : "rgb(74, 72, 199)",
       "l1" : "#5f5dce",
       "l2" : "#706fd1",
       "l3" : "#9190df",
@@ -262,11 +260,9 @@ export const initialtheme : any = {
     },
     "background" : {
       "hex" : "#eeeeee",
-      "rgb" : "rgb(238, 238, 238)",
     },
     "error" : {
       "hex" : "#e61e1e",
-      "rgb" : "rgb(230, 30, 30)",
       "l1" : "#f1b4b4",
     },
     "text" : {
