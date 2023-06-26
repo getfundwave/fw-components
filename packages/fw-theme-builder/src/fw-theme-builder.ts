@@ -4,7 +4,6 @@ import "./fw-color-pick";
 import "./fw-size-pick";
 import "./fw-font-pick";
 import { home, colors, sizes, fonts, pallette, backgroundcolors, errorcolors, textcolors, fontoptions, initialtheme } from "./models";
-import '@material/mwc-icon/mwc-icon.js';
 
 @customElement('fw-theme-builder')
 class FwThemeBuilder extends LitElement {
