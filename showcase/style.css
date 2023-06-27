@@ -315,6 +315,58 @@ fw-theme-builder::part(font-dropdown-selected) {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+fw-theme-builder::part(font-button) {
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 8rem;
+  height: 2rem;
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  box-shadow: 3px 3px 10px #1b1b1b1b, -3px -3px 10px #1b1b1b1b; 
+}
+fw-theme-builder::part(font-button):hover {
+  background-color: #fcfcfc;
+}
+fw-theme-builder::part(font-button):active {
+  box-shadow: none;
+  background-color: #e4e4e4;
+}
+fw-theme-builder::part(font-container) {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.5rem;
+  align-items: center;
+  height: 3.2rem;
+  padding: 0.2rem 0.5rem;
+}
+fw-theme-builder::part(theme-button) {
+    user-select: none;
+    width: 6rem;
+    height: 3.2rem;
+    background-color: #e2e2e2;
+    border-radius: 5px;
+    border: none;
+    padding: 0.2rem 0.5rem;
+    font-size: 16px;
+    font-family: "DM Sans", sans-serif;
+    font-weight: 400;
+    color: #2b2b2b;
+    cursor: pointer;
+    box-shadow: #1b1b1b3b 0px 4px 10px;
+}
+fw-theme-builder::part(theme-button):hover {
+    background-color: #dddddd;
+}
+fw-theme-builder::part(theme-button):active {
+    box-shadow: none;
+}
 
 @media (max-width: 1160px) {
     .showcase-content {

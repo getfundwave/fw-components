@@ -22,7 +22,6 @@ let FwThemeBuilder = class FwThemeBuilder extends LitElement {
             this.theme.colors[e.detail.section].rgb = e.detail.rgb;
         else
             this.theme.colors[e.detail.section][e.detail.type] = e.detail.value;
-        console.log(this.theme);
     }
     sizeChangeCallback(e, theme) {
         this.theme.sizes[e.detail.section] = e.detail.value;
@@ -62,9 +61,9 @@ let FwThemeBuilder = class FwThemeBuilder extends LitElement {
                 content = html `
                 <div part="content-container">
                     ${home.filter(obj => (this.theme ? Object.keys(this.theme) : []).includes(obj.value)).map((section) => (html `
-                            <span class="theme-button" @click=${(e) => this.sectionChangeHandler(e, `${section.value}`)}>
-                                <p>${section.label}</p>
-                            </span>
+                            <button part="theme-button" @click=${(e) => this.sectionChangeHandler(e, `${section.value}`)}>
+                                ${section.label}
+                            </button>
                             `))}
                 </div>
             `;
@@ -73,9 +72,9 @@ let FwThemeBuilder = class FwThemeBuilder extends LitElement {
                 content = html `
                 <div part="content-container">
                     ${colors.filter(obj => (this.theme.colors ? Object.keys(this.theme.colors) : []).includes(obj.value)).map((clr) => (html `
-                            <span class="theme-button" @click=${(e) => { this.sectionChangeHandler(e, `colors-${clr.value}`); }}>
-                                <p>${clr.label}</p>
-                            </span>
+                            <button part="theme-button" @click=${(e) => { this.sectionChangeHandler(e, `colors-${clr.value}`); }}>
+                                ${clr.label}
+                            </button>
                             `))}
                 </div>
                 `;
@@ -197,7 +196,6 @@ let FwThemeBuilder = class FwThemeBuilder extends LitElement {
         }
         return html `
             <div part="container" >
-                <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
                 <span part="back-icon-container" class="back-button ${this.nav == "home" ? "back-hidden" : ""}" @click="${this.navigateBack}">
                     <svg class="back-icon" width="46" height="80" viewBox="0 0 46 80" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M43.9567 77.8954C46.6811 75.1012 46.6811 70.5876 43.9567 67.7935L16.8527 39.9955L43.9567 12.1975C46.6811 9.40334 46.6811 4.88973 43.9567 2.0956C41.2324 -0.698533 36.8314 -0.698533 34.1071 2.0956L2.04329 34.9804C-0.681091 37.7745 -0.681092 42.2881 2.04328 45.0822L34.1071 77.967C36.7616 80.6895 41.2323 80.6895 43.9567 77.8954Z" fill="black"/>
@@ -278,57 +276,6 @@ FwThemeBuilder.styles = css `
     .action-button:active {
         box-shadow: none;
         transform: translateY(-2px);
-    }
-    
-
-    .theme-button {
-        user-select: none;
-        width: 6rem;
-        height: 3.2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #e2e2e2;
-        border-radius: 4px;
-        padding: 0.2rem 0.5rem;
-        font-family: "DM Sans", sans-serif;
-        font-weight: 400;
-        color: #2b2b2b;
-        cursor: pointer;
-        box-shadow: #1b1b1b3b 0px 4px 10px;
-    }
-    .theme-button:hover {
-        background-color: #dddddd;
-    }
-    .theme-button:active {
-        box-shadow: none;
-    }
-    .theme-button > p {
-        margin: 0;
-    }
-    /* fallback */
-    @font-face {
-        font-family: 'Material Icons';
-        font-style: normal;
-        font-weight: 400;
-        font-display: block;
-        src: url(https://fonts.gstatic.com/s/materialicons/v140/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
-    }
-
-    .material-icons {
-        font-family: 'Material Icons';
-        font-weight: normal;
-        font-style: normal;
-        font-size: 24px;
-        line-height: 1;
-        letter-spacing: normal;
-        text-transform: none;
-        display: inline-block;
-        white-space: nowrap;
-        word-wrap: normal;
-        direction: ltr;
-        -webkit-font-feature-settings: 'liga';
-        -webkit-font-smoothing: antialiased;
     }
     `;
 __decorate([

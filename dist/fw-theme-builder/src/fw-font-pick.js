@@ -40,9 +40,9 @@ let FwFontPick = class FwFontPick extends LitElement {
     }
     render() {
         return html `
-    <span part="font-container" class="fp-container">
-      <p part="font-label" class="fp-label">${this.label}</p>
-      <div part="font-button" class="fp-button" @click="${this.buttonClickHandler}">
+    <span part="font-container">
+      <p part="font-label">${this.label}</p>
+      <div part="font-button" @click="${this.buttonClickHandler}">
         <div part="font-dropdown-container" class="fp-dropdown ${this.dropdown ? "fp-dropdown-show" : ""}">
         ${this.options.filter((option) => {
             if (option.name != this.theme.fonts[this.value].name) {
@@ -60,15 +60,6 @@ let FwFontPick = class FwFontPick extends LitElement {
     }
 };
 FwFontPick.styles = css `
-  .fp-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 0.5rem;
-    align-items: center;
-    height: 3.2rem;
-    padding: 0.2rem 0.5rem;
-  }
   .fp-dropdown {
     position: absolute;
     bottom: 2.4rem;
@@ -101,28 +92,6 @@ FwFontPick.styles = css `
     100% {
       opacity: 1;
     }
-  }
-  .fp-button {
-    cursor: pointer;
-    position: relative;
-    user-select: none;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    width: 8rem;
-    height: 2rem;
-    border-radius: 4px;
-    padding: 0.2rem 0.5rem;
-    box-shadow: 3px 3px 10px #1b1b1b1b, -3px -3px 10px #1b1b1b1b; 
-  }
-  .fp-button:hover {
-    background-color: #fcfcfc;
-  }
-  .fp-button:active {
-    box-shadow: none;
-    background-color: #e4e4e4;
   }
   .fp-icon {
     width: 1rem;

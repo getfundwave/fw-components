@@ -171,7 +171,8 @@ export class FwAvatarGroup extends LitElement {
         else {
             this._filteredItems = this.items.filter(item => {
                 var _a, _b, _c, _d;
-                return ((_b = (_a = item[this.nameAttribute]) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === null || _b === void 0 ? void 0 : _b.includes(this._searchInputValue.toLowerCase())) || ((_d = (_c = item[this.secondaryAttribute]) === null || _c === void 0 ? void 0 : _c.toLowerCase()) === null || _d === void 0 ? void 0 : _d.includes(this._searchInputValue.toLowerCase()));
+                return ((_b = (_a = item[this.nameAttribute]) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === null || _b === void 0 ? void 0 : _b.includes(this._searchInputValue.toLowerCase()))
+                    || ((_d = (_c = item[this.secondaryAttribute]) === null || _c === void 0 ? void 0 : _c.toLowerCase()) === null || _d === void 0 ? void 0 : _d.includes(this._searchInputValue.toLowerCase()));
             });
         }
     }
