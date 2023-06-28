@@ -9,19 +9,19 @@ import { customElement, property, state } from 'lit/decorators.js';
 import "./fw-color-pick";
 import "./fw-size-pick";
 import "./fw-font-pick";
-import { home, colors, sizes, fonts, pallette, backgroundcolors, errorcolors, textcolors, fontoptions, initialtheme } from "./models";
+import { fontoptions, initialthemenew } from "./models";
 let FwThemeBuilder = class FwThemeBuilder extends LitElement {
     constructor() {
         super();
         this.nav = "home";
         this.fontOptions = fontoptions;
-        this.theme = initialtheme;
+        this.theme = initialthemenew;
     }
     colorChangeCallback(e, theme) {
         if (e.detail.type == "hex")
-            this.theme.colors[e.detail.section].rgb = e.detail.rgb;
+            this.theme.Colors[e.detail.section].rgb = e.detail.rgb;
         else
-            this.theme.colors[e.detail.section][e.detail.type] = e.detail.value;
+            this.theme.Colors[e.detail.section][e.detail.type] = e.detail.value;
     }
     sizeChangeCallback(e, theme) {
         this.theme.sizes[e.detail.section] = e.detail.value;
@@ -47,61 +47,62 @@ let FwThemeBuilder = class FwThemeBuilder extends LitElement {
     navigateBack() {
         if (this.nav == "home")
             return;
-        if (this.nav == "colors" || this.nav == "sizes" || this.nav == "fonts") {
+        if (this.nav == "Colors" || this.nav == "Sizes" || this.nav == "Fonts") {
             this.nav = "home";
         }
         else {
-            this.nav = "colors";
+            this.nav = "Colors";
         }
     }
     render() {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         let content;
         switch (this.nav) {
             case "home":
                 content = html `
                 <div part="content-container">
-                    ${home.filter(obj => (this.theme ? Object.keys(this.theme) : []).includes(obj.value)).map((section) => (html `
-                            <button part="theme-button" @click=${(e) => this.sectionChangeHandler(e, `${section.value}`)}>
-                                ${section.label}
+                    ${((_a = Object.keys(this.theme)) !== null && _a !== void 0 ? _a : []).map(section => (html `
+                            <button part="theme-button" @click=${(e) => this.sectionChangeHandler(e, `${section}`)}>
+                                ${section}
                             </button>
                             `))}
                 </div>
             `;
                 break;
-            case "colors":
+            case "Colors":
                 content = html `
                 <div part="content-container">
-                    ${colors.filter(obj => (this.theme.colors ? Object.keys(this.theme.colors) : []).includes(obj.value)).map((clr) => (html `
-                            <button part="theme-button" @click=${(e) => { this.sectionChangeHandler(e, `colors-${clr.value}`); }}>
-                                ${clr.label}
+                    ${((_b = Object.keys(this.theme.Colors)) !== null && _b !== void 0 ? _b : []).map(clr => (html `
+                            <button part="theme-button" @click=${(e) => this.sectionChangeHandler(e, `Colors-${clr}`)}>
+                                ${clr}
                             </button>
                             `))}
                 </div>
                 `;
                 break;
-            case "sizes":
+            case "Sizes":
                 content = html `
                 <span part="content-container">
-                    ${sizes.filter(obj => (this.theme.sizes ? Object.keys(this.theme.sizes) : []).includes(obj.value)).map((size) => (html `
+                    ${((_c = Object.keys(this.theme.Sizes)) !== null && _c !== void 0 ? _c : []).map(size => (html `
                             <fw-size-pick
                                 exportparts="size-container, size-label, size-input"
-                                label="${size.label}"
+                                label="${size}"
                                 .theme="${this.theme}"
-                                value="${size.value}"
+                                value="${size}"
                             >
                             </fw-size-pick>
                             `))}
                 </span>
                 `;
                 break;
-            case "fonts":
+            case "Fonts":
                 content = html `
                 <span part="content-container">
-                    ${fonts.filter(obj => (this.theme.fonts ? Object.keys(this.theme.fonts) : []).includes(obj.value)).map((font) => (html `
+                    ${((_d = Object.keys(this.theme.Fonts)) !== null && _d !== void 0 ? _d : []).map(font => (html `
                             <fw-font-pick
                                 exportparts="font-container, font-label, font-button, font-dropdown-container, font-dropdown-option, font-dropdown-selected"
-                                label="${font.label}"
-                                value="${font.value}"
+                                label="${font}"
+                                value="${font}"
                                 .theme="${this.theme}"
                                 .options="${this.fontOptions}"
                             >
@@ -110,84 +111,84 @@ let FwThemeBuilder = class FwThemeBuilder extends LitElement {
                 </span>
                 `;
                 break;
-            case "colors-primary":
+            case "Colors-Primary":
                 content = html `
                 <span part="content-container">
-                    ${pallette.filter(obj => (this.theme.colors.primary ? Object.keys(this.theme.colors.primary) : []).includes(obj.value)).map((item) => (html `
+                    ${((_e = Object.keys(this.theme.Colors.Primary)) !== null && _e !== void 0 ? _e : []).map((item) => (html `
                                 <fw-color-pick
                                     exportparts="color-button, color-label, color-hidden-input"
-                                    label="Primary${item.label}"
-                                    cssvariable="${item.value == "hex" ? `--primary` : `--primary-${item.value}`}"
+                                    label="Primary ${item == "Hex" ? "" : item}"
+                                    cssvariable="${item == "Hex" ? `--primary` : `--primary-${item.toLowerCase()}`}"
                                     .theme="${this.theme}"
-                                    value="${item.value}"
-                                    type="primary"
+                                    value="${item}"
+                                    type="Primary"
                                 >
                                 </fw-color-pick>
                             `))}
                 </span> 
                 `;
                 break;
-            case "colors-secondary":
+            case "Colors-Secondary":
                 content = html `
                 <span part="content-container">
-                    ${pallette.filter(obj => (this.theme.colors.secondary ? Object.keys(this.theme.colors.secondary) : []).includes(obj.value)).map((item) => (html `
+                    ${((_f = Object.keys(this.theme.Colors.Secondary)) !== null && _f !== void 0 ? _f : []).map((item) => (html `
                                 <fw-color-pick
                                     exportparts="color-button, color-label, color-hidden-input"
-                                    label="Secondary${item.label}"
-                                    cssvariable="${item.value == "hex" ? `--secondary` : `--secondary-${item.value}`}"
+                                    label="Secondary ${item == "Hex" ? "" : item}"
+                                    cssvariable="${item == "Hex" ? `--secondary` : `--secondary-${item.toLowerCase()}`}"
                                     .theme="${this.theme}"
-                                    value="${item.value}"
-                                    type="secondary"
+                                    value="${item}"
+                                    type="Secondary"
                                 >
                                 </fw-color-pick>
                             `))}
                 </span> 
                 `;
                 break;
-            case "colors-background":
+            case "Colors-Background":
                 content = html `
                 <span part="content-container">
-                    ${backgroundcolors.filter(obj => (this.theme.colors.background ? Object.keys(this.theme.colors.background) : []).includes(obj.value)).map((item) => (html `
+                    ${((_g = Object.keys(this.theme.Colors.Background)) !== null && _g !== void 0 ? _g : []).map((item) => (html `
                                 <fw-color-pick
                                     exportparts="color-button, color-label, color-hidden-input"
-                                    label="Background${item.label}"
-                                    cssvariable="${item.value == "hex" ? `--background` : `--background-${item.value}`}"
+                                    label="Background ${item == "Hex" ? "" : item}"
+                                    cssvariable="${item == "Hex" ? `--background` : `--background-${item.toLowerCase()}`}"
                                     .theme="${this.theme}"
-                                    value="${item.value}"
-                                    type="background"
+                                    value="${item}"
+                                    type="Background"
                                 >
                                 </fw-color-pick>
                             `))}
                 </span> 
                 `;
                 break;
-            case "colors-error":
+            case "Colors-Error":
                 content = html `
                 <span part="content-container">
-                    ${errorcolors.filter(obj => (this.theme.colors.error ? Object.keys(this.theme.colors.error) : []).includes(obj.value)).map((item) => (html `
+                    ${((_h = Object.keys(this.theme.Colors.Error)) !== null && _h !== void 0 ? _h : []).map((item) => (html `
                                 <fw-color-pick
                                     exportparts="color-button, color-label, color-hidden-input"
-                                    label="Error${item.label}"
-                                    cssvariable="${item.value == "hex" ? `--error` : `--error-${item.value}`}"
+                                    label="Error ${item == "Hex" ? "" : item}"
+                                    cssvariable="${item == "Hex" ? `--error` : `--error-${item.toLowerCase()}`}"
                                     .theme="${this.theme}"
-                                    value="${item.value}"
-                                    type="error"
+                                    value="${item}"
+                                    type="Error"
                                 >
                                 </fw-color-pick>
                             `))}
                 </span>`;
                 break;
-            case "colors-text":
+            case "Colors-Text":
                 content = html `
                 <span part="content-container">
-                    ${textcolors.filter(obj => (this.theme.colors.text ? Object.keys(this.theme.colors.text) : []).includes(obj.value)).map((clr) => (html `
+                    ${((_j = Object.keys(this.theme.Colors.Text)) !== null && _j !== void 0 ? _j : []).map((item) => (html `
                                 <fw-color-pick
                                     exportparts="color-button, color-label, color-hidden-input"
-                                    label="${clr.label}"
-                                    cssvariable="--text-${clr.value}"
+                                    label="Text ${item == "Hex" ? "" : item}"
+                                    cssvariable="${item == "Hex" ? `--text` : `--text-${item.toLowerCase()}`}"
                                     .theme="${this.theme}"
-                                    value="${clr.value}"
-                                    type="text"
+                                    value="${item}"
+                                    type="Text"
                                 >
                                 </fw-color-pick>
                             `))}
@@ -282,24 +283,10 @@ __decorate([
     state()
 ], FwThemeBuilder.prototype, "nav", void 0);
 __decorate([
-    property({ type: Array, converter: {
-            fromAttribute: (value) => {
-                return JSON.parse(value);
-            },
-            toAttribute: (value) => {
-                return JSON.stringify(value);
-            }
-        } })
+    property({ type: Array })
 ], FwThemeBuilder.prototype, "fontOptions", void 0);
 __decorate([
-    property({ type: Object, converter: {
-            fromAttribute: (value) => {
-                return JSON.parse(value);
-            },
-            toAttribute: (value) => {
-                return JSON.stringify(value);
-            }
-        } })
+    property({ type: Object })
 ], FwThemeBuilder.prototype, "theme", void 0);
 FwThemeBuilder = __decorate([
     customElement('fw-theme-builder')

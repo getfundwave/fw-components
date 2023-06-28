@@ -7,14 +7,14 @@
         <script>
             window.addEventListener("color-change", (e) => {
                 console.log("Color:", e);
-                if (e.detail.type == "hex")
-                    document.body.style.setProperty("--" + e.detail.section, e.detail.value);
+                if ((e.detail.type).toLowerCase() == "hex")
+                    document.body.style.setProperty("--" + (e.detail.section).toLowerCase(), e.detail.value);
                 else
-                    document.body.style.setProperty("--" + e.detail.section + "-" + e.detail.type, e.detail.value);
+                    document.body.style.setProperty("--" + (e.detail.section).toLowerCase() + "-" + (e.detail.type).toLowerCase(), e.detail.value);
             });
             window.addEventListener("size-change", (e) => {
                 console.log("Size:", e);
-                document.body.style.setProperty("--font-" + e.detail.section, e.detail.value);
+                document.body.style.setProperty("--font-" + (e.detail.section).toLowerCase(), e.detail.value);
             });
             window.addEventListener("font-change", async (e) => {
                 console.log("Font:", e);
@@ -22,7 +22,7 @@
                 document.fonts.add(selectedFont);
                 await selectedFont.load();
 
-                document.body.style.setProperty("--" + e.detail.section + "-font", e.detail.value.name);
+                document.body.style.setProperty("--" + (e.detail.section).toLowerCase() + "-font", e.detail.value.name);
             });
             window.addEventListener("theme-change", (e) => {
                 console.log("Theme:", e);

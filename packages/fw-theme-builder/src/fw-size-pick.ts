@@ -58,7 +58,7 @@ class FwSizePick extends LitElement {
       <input
         part="size-input"
         type="number"
-        value="${(this.theme.sizes[this.value])?.slice(0, -2) || -1}"
+        value="${(this.theme.Sizes[this.value])?.slice(0, -2) || -1}"
         @change="${this.handleChange}"
       />
     </span>

@@ -1,143 +1,3 @@
-export const home = [
-  {
-    "label" : "Colors",
-    "value" : "colors"
-  },
-  {
-    "label" : "Sizes",
-    "value" : "sizes"
-  },
-  {
-    "label" : "Fonts",
-    "value" : "fonts"
-  }
-]
-
-export const colors = [
-  {
-    "label" : "Primary",
-    "value" : "primary"
-  },
-  {
-    "label" : "Secondary",
-    "value" : "secondary"
-  },
-  {
-    "label" : "Background",
-    "value" : "background"
-  },
-  {
-    "label" : "Error",
-    "value" : "error"
-  },
-  {
-    "label" : "Text",
-    "value" : "text"
-  }
-]
-
-export const sizes = [
-  {
-    "label" : "Tiny",
-    "value" : "tiny"
-  },
-  {
-    "label" : "XS",
-    "value" : "xs"
-  },
-  {
-    "label" : "S",
-    "value" : "s"
-  },
-  {
-    "label" : "M",
-    "value" : "m"
-  },
-  {
-    "label" : "L",
-    "value" : "l"
-  },
-  {
-    "label" : "XL",
-    "value" : "xl"
-  },
-  {
-    "label" : "Huge",
-    "value" : "huge"
-  }
-]
-
-export const fonts = [
-  {
-    "label" : "Title",
-    "value" : "title"
-  },
-  {
-    "label" : "Body",
-    "value" : "body"
-  }
-]
-
-export const pallette = [
-  {
-    "label" : "",
-    "value" : "hex"
-  },
-  {
-    "label" : " Light 1",
-    "value" : "l1"
-  },
-  {
-    "label" : " Light 2",
-    "value" : "l2"
-  },
-  {
-    "label" : " Light 3",
-    "value" : "l3"
-  },
-  {
-    "label" : " Contrast",
-    "value" : "contrast"
-  },
-]
-
-export const errorcolors = [
-  {
-    "label" : "",
-    "value" : "hex"
-  },
-  {
-    "label" : " Light 1",
-    "value" : "l1"
-  }
-]
-
-export const backgroundcolors = [
-  {
-    "label" : "",
-    "value" : "hex"
-  }
-]
-
-export const textcolors = [
-  {
-    "label" : "Title",
-    "value" : "title"
-  },
-  {
-    "label" : "Subtitle",
-    "value" : "subtitle"
-  },
-  {
-    "label" : "Body",
-    "value" : "body"
-  },
-  {
-    "label" : "Body Light 1",
-    "value" : "body-l1"
-  }
-]
-
 export const fontoptions = [
   {
     name : "Archivo",
@@ -221,55 +81,108 @@ export const fontoptions = [
   },
 ]
 
-export const initialtheme : any = {
-  fonts : {
-    "title" : {
+// export const initialtheme : any = {
+//   fonts : {
+//     "title" : {
+//       name : "DM Sans",
+//       url: 'https://fonts.gstatic.com/s/dmsans/v11/rP2Hp2ywxg089UriCZOIHQ.woff2',
+//       style: "'DM Sans', sans-serif",
+//     },
+//     "body" : {
+//       name : "DM Sans",
+//       url: 'https://fonts.gstatic.com/s/dmsans/v11/rP2Hp2ywxg089UriCZOIHQ.woff2',
+//       style: "'DM Sans', sans-serif",
+//     }
+//   },
+//   sizes : {
+//     "tiny"  : "10px",
+//     "xs"    : "14px",
+//     "s"     : "16px",
+//     "m"     : "18px",
+//     "l"     : "20px",
+//     "xl"    : "22px",
+//     "huge"  : "48px",
+//   },
+//   colors : {
+//     "primary" : {
+//       "hex" : "#ad38d1",
+//       "l1" : "#ba68d3",
+//       "l2" : "#dcb5e7",
+//       "l3" : "#e5d3eb",
+//       "contrast" : "#f0f0f0",
+//     },
+//     "secondary" : {
+//       "hex" : "#4a48c7",
+//       "l1" : "#5f5dce",
+//       "l2" : "#706fd1",
+//       "l3" : "#9190df",
+//       "contrast" : "#ebdbdb",
+//     },
+//     "background" : {
+//       "hex" : "#eeeeee",
+//     },
+//     "error" : {
+//       "hex" : "#e61e1e",
+//       "l1" : "#f1b4b4",
+//     },
+//     "text" : {
+//       "title" : "#1b1b1b",
+//       "subtitle" : "#1b1b1b",
+//       "body" : "#1b1b1b",
+//       "body-l1" : "#363636",
+//     }
+//   }
+// }
+
+export const initialthemenew : any = {
+  Fonts : {
+    "Title" : {
       name : "DM Sans",
       url: 'https://fonts.gstatic.com/s/dmsans/v11/rP2Hp2ywxg089UriCZOIHQ.woff2',
       style: "'DM Sans', sans-serif",
     },
-    "body" : {
+    "Body" : {
       name : "DM Sans",
       url: 'https://fonts.gstatic.com/s/dmsans/v11/rP2Hp2ywxg089UriCZOIHQ.woff2',
       style: "'DM Sans', sans-serif",
     }
   },
-  sizes : {
-    "tiny"  : "10px",
-    "xs"    : "14px",
-    "s"     : "16px",
-    "m"     : "18px",
-    "l"     : "20px",
-    "xl"    : "22px",
-    "huge"  : "48px",
+  Sizes : {
+    "Tiny"  : "10px",
+    "XS"    : "14px",
+    "S"     : "16px",
+    "M"     : "18px",
+    "L"     : "20px",
+    "XL"    : "22px",
+    "Huge"  : "48px",
   },
-  colors : {
-    "primary" : {
-      "hex" : "#ad38d1",
-      "l1" : "#ba68d3",
-      "l2" : "#dcb5e7",
-      "l3" : "#e5d3eb",
-      "contrast" : "#f0f0f0",
+  Colors : {
+    "Primary" : {
+      "Hex" : "#ad38d1",
+      "L1" : "#ba68d3",
+      "L2" : "#dcb5e7",
+      "L3" : "#e5d3eb",
+      "Contrast" : "#f0f0f0",
     },
-    "secondary" : {
-      "hex" : "#4a48c7",
-      "l1" : "#5f5dce",
-      "l2" : "#706fd1",
-      "l3" : "#9190df",
-      "contrast" : "#ebdbdb",
+    "Secondary" : {
+      "Hex" : "#4a48c7",
+      "L1" : "#5f5dce",
+      "L2" : "#706fd1",
+      "L3" : "#9190df",
+      "Contrast" : "#ebdbdb",
     },
-    "background" : {
-      "hex" : "#eeeeee",
+    "Background" : {
+      "Hex" : "#eeeeee",
     },
-    "error" : {
-      "hex" : "#e61e1e",
-      "l1" : "#f1b4b4",
+    "Error" : {
+      "Hex" : "#e61e1e",
+      "L1" : "#f1b4b4",
     },
-    "text" : {
-      "title" : "#1b1b1b",
-      "subtitle" : "#1b1b1b",
-      "body" : "#1b1b1b",
-      "body-l1" : "#363636",
+    "Text" : {
+      "Title" : "#1b1b1b",
+      "Subtitle" : "#1b1b1b",
+      "Body" : "#1b1b1b",
+      "Body-l1" : "#363636",
     }
   }
 }

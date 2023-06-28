@@ -83,13 +83,13 @@ class FwFontPick extends LitElement {
         <div part="font-dropdown-container" class="fp-dropdown ${this.dropdown?"fp-dropdown-show":""}">
         ${
           this.options.filter((option : any) => {
-            if (option.name != this.theme.fonts[this.value].name) {
+            if (option.name != this.theme.Fonts[this.value].name) {
               return option;
             }
           }).map((option : any) => (html`<div part="font-dropdown-option" @click="${(e : any) => this.optionSelectHandler(option)}" class="fp-option-unselected">${option.name}</div>`))
         }
         </div>
-        <p part="font-dropdown-selected" class="fp-button-fontname">${this.theme.fonts[this.value].name}</p>
+        <p part="font-dropdown-selected" class="fp-button-fontname">${this.theme.Fonts[this.value].name}</p>
         <svg class="fp-icon ${this.dropdown?"fp-icon-selected":""}" width="80" height="46" viewBox="0 0 80 46" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M2.10464 43.9567C4.89877 46.6811 9.41237 46.6811 12.2065 43.9567L40.0045 16.8527L67.8025 43.9567C70.5967 46.6811 75.1103 46.6811 77.9044 43.9567C80.6985 41.2323 80.6985 36.8314 77.9044 34.1071L45.0196 2.04328C42.2255 -0.681097 37.7119 -0.681097 34.9178 2.04328L2.033 34.1071C-0.689491 36.7616 -0.689489 41.2323 2.10464 43.9567Z" fill="black"/>
         </svg>    

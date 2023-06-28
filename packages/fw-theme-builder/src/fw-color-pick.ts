@@ -46,29 +46,13 @@ class FwColorPick extends LitElement {
   }
 
   firstUpdated() {
-    let rgb = hexToRgb(this.theme.colors[this.type][this.value] ?? "#ffffff");
+    let rgb = hexToRgb(this.theme.Colors[this.type][this.value] ?? "#ffffff");
     let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
     this.textColor = textClr;
     this.styling = `
     .color-button {
-      min-width: 6rem;
-      height: 3.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      background-color: var(${this.CSSvariable}) !important;
-      border-radius: 4px;
-      padding: 0.2rem 0.5rem;
-      font-family: "DM Sans", sans-serif;
-      font-weight: 400;
       color: ${this.textColor};
-      cursor: pointer;
-      box-shadow: #1b1b1b3b 0px 4px 10px;
-    }
-    .color-button > p {
-      margin: 0;
-      font-family: "DM Sans", sans-serif;
+      background-color: var(${this.CSSvariable}) !important;
     }
     .colorpicker-hidden {
       opacity: 0;
@@ -78,7 +62,6 @@ class FwColorPick extends LitElement {
       width: 100%;
       height: 100%;
       z-index: 20;
-      border-radius: 4px;
       cursor: pointer;
     }`;
   }
@@ -86,16 +69,16 @@ class FwColorPick extends LitElement {
   render () {
     return html`
     <style>${this.styling}</style>
-    <span part="color-button" class="color-button" >
-      <p part="color-label">${this.label}</p>
+    <button part="color-button" class="color-button" >
+      ${this.label}
       <input 
         part="color-hidden-input"
         class="colorpicker-hidden"
         type="color"
-        value=${this.theme.colors[this.type][this.value] || "ERROR"}
+        value=${this.theme.Colors[this.type][this.value] || "ERROR"}
         @change=${this.handleChange}
       />
-    </span>
+    </button>
     `;
   }
 }
