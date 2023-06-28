@@ -40,6 +40,7 @@ let FwColorPick = class FwColorPick extends LitElement {
         this.textColor = textClr;
         this.styling = `
     .color-button {
+      position: relative;
       color: ${this.textColor};
       background-color: var(${this.CSSvariable}) !important;
     }
