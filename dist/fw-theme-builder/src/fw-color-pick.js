@@ -39,22 +39,22 @@ let FwColorPick = class FwColorPick extends LitElement {
         let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
         this.textColor = textClr;
         this.styling = `
-    .color-button {
-      position: relative;
-      color: ${this.textColor};
-      background-color: var(${this.CSSvariable}) !important;
-    }
-    .colorpicker-hidden {
-      opacity: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 20;
-      cursor: pointer;
-    }`;
-    }
+            .color-button {
+            position: relative;
+            color: ${this.textColor};
+            background-color: var(${this.CSSvariable}) !important;
+            }
+            .colorpicker-hidden {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            cursor: pointer;
+            }`;
+        }
     render() {
         return html `
     <style>${this.styling}</style>
