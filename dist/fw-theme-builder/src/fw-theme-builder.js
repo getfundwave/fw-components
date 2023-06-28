@@ -24,10 +24,10 @@ let FwThemeBuilder = class FwThemeBuilder extends LitElement {
             this.theme.Colors[e.detail.section][e.detail.type] = e.detail.value;
     }
     sizeChangeCallback(e, theme) {
-        this.theme.sizes[e.detail.section] = e.detail.value;
+        this.theme.Sizes[e.detail.section] = e.detail.value;
     }
     fontChangeCallback(e, theme) {
-        this.theme.fonts[e.detail.section] = e.detail.value;
+        this.theme.Fonts[e.detail.section] = e.detail.value;
     }
     connectedCallback() {
         super.connectedCallback();

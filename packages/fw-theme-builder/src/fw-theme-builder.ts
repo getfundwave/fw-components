@@ -27,11 +27,11 @@ class FwThemeBuilder extends LitElement {
     }
 
     sizeChangeCallback (e : any, theme : Object) {
-        this.theme.sizes[e.detail.section] = e.detail.value;
+        this.theme.Sizes[e.detail.section] = e.detail.value;
     }
 
     fontChangeCallback (e : any, theme : Object) {
-        this.theme.fonts[e.detail.section]= e.detail.value;
+        this.theme.Fonts[e.detail.section]= e.detail.value;
     }
 
     connectedCallback(): void {
