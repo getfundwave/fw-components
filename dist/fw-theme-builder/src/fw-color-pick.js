@@ -9,14 +9,13 @@ import { customElement, property, state } from 'lit/decorators.js';
 let FwColorPick = class FwColorPick extends LitElement {
     constructor() {
         super(...arguments);
-        this.CSSvariable = "";
         this.value = "";
         this.type = "";
         this.styling = "";
         this.textColor = "";
     }
     handleChange(e) {
-        var _a, _b;
+        var _a, _b, _c;
         let clr = (_a = e.target) === null || _a === void 0 ? void 0 : _a.value;
         if (clr == "rgba(0, 0, 0, 0)")
             return;
@@ -28,10 +27,10 @@ let FwColorPick = class FwColorPick extends LitElement {
         };
         const event = new CustomEvent('color-change', { detail, bubbles: true, composed: true });
         this.dispatchEvent(event);
-        // document.body.style.setProperty(this.CSSvariable, clr);
         let rgb = hexToRgb(clr);
         let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
         (_b = e.target.parentElement) === null || _b === void 0 ? void 0 : _b.style.setProperty("color", textClr);
+        (_c = e.target.parentElement) === null || _c === void 0 ? void 0 : _c.style.setProperty("background-color", clr);
     }
     firstUpdated() {
         var _a;
@@ -39,22 +38,22 @@ let FwColorPick = class FwColorPick extends LitElement {
         let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
         this.textColor = textClr;
         this.styling = `
-            .color-button {
-            position: relative;
-            color: ${this.textColor};
-            background-color: var(${this.CSSvariable}) !important;
-            }
-            .colorpicker-hidden {
-            opacity: 0;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 20;
-            cursor: pointer;
-            }`;
-        }
+    .color-button {
+      position: relative;
+      color: ${this.textColor};
+      background-color: ${this.theme.Colors[this.type][this.value]};
+    }
+    .colorpicker-hidden {
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 20;
+      cursor: pointer;
+    }`;
+    }
     render() {
         return html `
     <style>${this.styling}</style>
@@ -74,9 +73,6 @@ let FwColorPick = class FwColorPick extends LitElement {
 __decorate([
     property()
 ], FwColorPick.prototype, "label", void 0);
-__decorate([
-    property()
-], FwColorPick.prototype, "CSSvariable", void 0);
 __decorate([
     property()
 ], FwColorPick.prototype, "value", void 0);

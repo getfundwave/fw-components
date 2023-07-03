@@ -7,9 +7,6 @@ class FwColorPick extends LitElement {
   label? : string;
 
   @property() 
-  CSSvariable = "";
-
-  @property() 
   value = "";
 
   @property() 
@@ -37,12 +34,11 @@ class FwColorPick extends LitElement {
     }
     const event = new CustomEvent('color-change', { detail, bubbles : true, composed : true });
     this.dispatchEvent(event);
-
-    // document.body.style.setProperty(this.CSSvariable, clr);
     
     let rgb = hexToRgb(clr);
     let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
     (e.target as HTMLInputElement).parentElement?.style.setProperty("color", textClr);
+    (e.target as HTMLInputElement).parentElement?.style.setProperty("background-color", clr);
   }
 
   firstUpdated() {
@@ -53,7 +49,7 @@ class FwColorPick extends LitElement {
     .color-button {
       position: relative;
       color: ${this.textColor};
-      background-color: var(${this.CSSvariable}) !important;
+      background-color: ${this.theme.Colors[this.type][this.value]};
     }
     .colorpicker-hidden {
       opacity: 0;

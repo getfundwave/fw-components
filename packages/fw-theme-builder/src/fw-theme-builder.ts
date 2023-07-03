@@ -3,7 +3,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import "./fw-color-pick";
 import "./fw-size-pick";
 import "./fw-font-pick";
-import {fontoptions, initialthemenew } from "./models";
+import {fontoptions, initialthemenew} from "./models";
 
 @customElement('fw-theme-builder')
 class FwThemeBuilder extends LitElement {
@@ -217,7 +217,6 @@ class FwThemeBuilder extends LitElement {
                                 <fw-color-pick
                                     exportparts="color-button, color-label, color-hidden-input"
                                     label="Primary ${item == "Hex" ? "" : item}"
-                                    cssvariable="${item == "Hex" ? `--primary`: `--primary-${item.toLowerCase()}`}"
                                     .theme="${this.theme}"
                                     value="${item}"
                                     type="Primary"
@@ -238,7 +237,6 @@ class FwThemeBuilder extends LitElement {
                                 <fw-color-pick
                                     exportparts="color-button, color-label, color-hidden-input"
                                     label="Secondary ${item == "Hex" ? "" : item}"
-                                    cssvariable="${item == "Hex" ? `--secondary`: `--secondary-${item.toLowerCase()}`}"
                                     .theme="${this.theme}"
                                     value="${item}"
                                     type="Secondary"
@@ -259,7 +257,6 @@ class FwThemeBuilder extends LitElement {
                                 <fw-color-pick
                                     exportparts="color-button, color-label, color-hidden-input"
                                     label="Background ${item == "Hex" ? "" : item}"
-                                    cssvariable="${item == "Hex" ? `--background`: `--background-${item.toLowerCase()}`}"
                                     .theme="${this.theme}"
                                     value="${item}"
                                     type="Background"
@@ -280,7 +277,6 @@ class FwThemeBuilder extends LitElement {
                                 <fw-color-pick
                                     exportparts="color-button, color-label, color-hidden-input"
                                     label="Error ${item == "Hex" ? "" : item}"
-                                    cssvariable="${item == "Hex" ? `--error`: `--error-${item.toLowerCase()}`}"
                                     .theme="${this.theme}"
                                     value="${item}"
                                     type="Error"
@@ -300,7 +296,6 @@ class FwThemeBuilder extends LitElement {
                                 <fw-color-pick
                                     exportparts="color-button, color-label, color-hidden-input"
                                     label="Text ${item == "Hex" ? "" : item}"
-                                    cssvariable="${item == "Hex" ? `--text`: `--text-${item.toLowerCase()}`}"
                                     .theme="${this.theme}"
                                     value="${item}"
                                     type="Text"
