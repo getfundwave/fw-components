@@ -7,9 +7,6 @@ import {fontoptions, initialthemenew} from "./models";
 
 @customElement('fw-theme-builder')
 class FwThemeBuilder extends LitElement {
-	constructor () {
-		super();
-	}
 	@state()
 	nav = "home";
 
