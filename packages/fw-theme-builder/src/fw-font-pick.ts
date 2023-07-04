@@ -23,7 +23,7 @@ class FwFontPick extends LitElement {
     else this.dropdown = true;
   }
 
-  async optionSelectHandler (selection : any) {
+  optionSelectHandler (selection : any) {
     let detail = {
       "section" : this.section,
       "value"   : selection,
