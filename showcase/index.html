@@ -24,9 +24,6 @@
 
                 document.body.style.setProperty("--" + (e.detail.section).toLowerCase() + "-font", e.detail.value.name);
             });
-            window.addEventListener("theme-change", (e) => {
-                console.log("Theme:", e);
-            });
 
             let inputTheme = {
                 colors : {

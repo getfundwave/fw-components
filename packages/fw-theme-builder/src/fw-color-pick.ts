@@ -7,7 +7,7 @@ class FwColorPick extends LitElement {
   label? : string;
 
   @property() 
-  value = "";
+  section = "";
 
   @property() 
   type = "";
@@ -28,7 +28,7 @@ class FwColorPick extends LitElement {
 
     let detail = {
       "section" : this.type,
-      "type"    : this.value,
+      "type"    : this.section,
       "value"   : clr,
       "rgb"     : hexToRgb(clr),
     }
@@ -42,14 +42,14 @@ class FwColorPick extends LitElement {
   }
 
   firstUpdated() {
-    let rgb = hexToRgb(this.theme.Colors[this.type][this.value] ?? "#ffffff");
+    let rgb = hexToRgb(this.theme.Colors[this.type][this.section] ?? "#ffffff");
     let textClr = rgbToHex((255 - rgb.r), (255 - rgb.g), (255 - rgb.b));
     this.textColor = textClr;
     this.styling = `
     .color-button {
       position: relative;
       color: ${this.textColor};
-      background-color: ${this.theme.Colors[this.type][this.value]};
+      background-color: ${this.theme.Colors[this.type][this.section]};
     }
     .colorpicker-hidden {
       opacity: 0;
@@ -72,7 +72,7 @@ class FwColorPick extends LitElement {
         part="color-hidden-input"
         class="colorpicker-hidden"
         type="color"
-        value=${this.theme.Colors[this.type][this.value] || "ERROR"}
+        value=${this.theme.Colors[this.type][this.section] || "ERROR"}
         @change=${this.handleChange}
       />
     </button>

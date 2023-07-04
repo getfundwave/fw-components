@@ -178,7 +178,7 @@ class FwThemeBuilder extends LitElement {
                                 exportparts="size-container, size-label, size-input"
                                 label="${size}"
                                 .theme="${this.theme}"
-                                value="${size}"
+                                section="${size}"
                             >
                             </fw-size-pick>
                             `
@@ -196,7 +196,7 @@ class FwThemeBuilder extends LitElement {
                             <fw-font-pick
                                 exportparts="font-container, font-label, font-button, font-dropdown-container, font-dropdown-option, font-dropdown-selected"
                                 label="${font}"
-                                value="${font}"
+                                section="${font}"
                                 .theme="${this.theme}"
                                 .options="${this.fontOptions}"
                             >
@@ -218,7 +218,7 @@ class FwThemeBuilder extends LitElement {
                                     exportparts="color-button, color-label, color-hidden-input"
                                     label="Primary ${item == "Hex" ? "" : item}"
                                     .theme="${this.theme}"
-                                    value="${item}"
+                                    section="${item}"
                                     type="Primary"
                                 >
                                 </fw-color-pick>
@@ -238,7 +238,7 @@ class FwThemeBuilder extends LitElement {
                                     exportparts="color-button, color-label, color-hidden-input"
                                     label="Secondary ${item == "Hex" ? "" : item}"
                                     .theme="${this.theme}"
-                                    value="${item}"
+                                    section="${item}"
                                     type="Secondary"
                                 >
                                 </fw-color-pick>
@@ -258,7 +258,7 @@ class FwThemeBuilder extends LitElement {
                                     exportparts="color-button, color-label, color-hidden-input"
                                     label="Background ${item == "Hex" ? "" : item}"
                                     .theme="${this.theme}"
-                                    value="${item}"
+                                    section="${item}"
                                     type="Background"
                                 >
                                 </fw-color-pick>
@@ -278,7 +278,7 @@ class FwThemeBuilder extends LitElement {
                                     exportparts="color-button, color-label, color-hidden-input"
                                     label="Error ${item == "Hex" ? "" : item}"
                                     .theme="${this.theme}"
-                                    value="${item}"
+                                    section="${item}"
                                     type="Error"
                                 >
                                 </fw-color-pick>
@@ -297,7 +297,7 @@ class FwThemeBuilder extends LitElement {
                                     exportparts="color-button, color-label, color-hidden-input"
                                     label="Text ${item == "Hex" ? "" : item}"
                                     .theme="${this.theme}"
-                                    value="${item}"
+                                    section="${item}"
                                     type="Text"
                                 >
                                 </fw-color-pick>

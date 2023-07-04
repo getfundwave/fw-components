@@ -81,58 +81,6 @@ export const fontoptions = [
   },
 ]
 
-// export const initialtheme : any = {
-//   fonts : {
-//     "title" : {
-//       name : "DM Sans",
-//       url: 'https://fonts.gstatic.com/s/dmsans/v11/rP2Hp2ywxg089UriCZOIHQ.woff2',
-//       style: "'DM Sans', sans-serif",
-//     },
-//     "body" : {
-//       name : "DM Sans",
-//       url: 'https://fonts.gstatic.com/s/dmsans/v11/rP2Hp2ywxg089UriCZOIHQ.woff2',
-//       style: "'DM Sans', sans-serif",
-//     }
-//   },
-//   sizes : {
-//     "tiny"  : "10px",
-//     "xs"    : "14px",
-//     "s"     : "16px",
-//     "m"     : "18px",
-//     "l"     : "20px",
-//     "xl"    : "22px",
-//     "huge"  : "48px",
-//   },
-//   colors : {
-//     "primary" : {
-//       "hex" : "#ad38d1",
-//       "l1" : "#ba68d3",
-//       "l2" : "#dcb5e7",
-//       "l3" : "#e5d3eb",
-//       "contrast" : "#f0f0f0",
-//     },
-//     "secondary" : {
-//       "hex" : "#4a48c7",
-//       "l1" : "#5f5dce",
-//       "l2" : "#706fd1",
-//       "l3" : "#9190df",
-//       "contrast" : "#ebdbdb",
-//     },
-//     "background" : {
-//       "hex" : "#eeeeee",
-//     },
-//     "error" : {
-//       "hex" : "#e61e1e",
-//       "l1" : "#f1b4b4",
-//     },
-//     "text" : {
-//       "title" : "#1b1b1b",
-//       "subtitle" : "#1b1b1b",
-//       "body" : "#1b1b1b",
-//       "body-l1" : "#363636",
-//     }
-//   }
-// }
 
 export const initialthemenew : any = {
   Fonts : {
