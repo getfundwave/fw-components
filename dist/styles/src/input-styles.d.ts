@@ -1,9 +1,0 @@
-export declare const SelectInputStyles: import("lit-html").TemplateResult<1>;
-export declare const DropdownStyles: import("lit-html").TemplateResult<1>;
-export declare const UnderlinedInputStyles: import("lit-html").TemplateResult<1>;
-export declare const CheckboxStyles: import("lit-html").TemplateResult<1>;
-export declare const PlainInputStyles: import("lit-html").TemplateResult<1>;
-export declare const LargeInputStyles: import("lit-html").TemplateResult<1>;
-export declare const BoxInputStyles: import("lit-html").TemplateResult<1>;
-export declare const SmallInputStyles: import("lit-html").TemplateResult<1>;
-export declare const AllInputStyles: import("lit-html").TemplateResult<1>;
