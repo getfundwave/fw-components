@@ -1,9 +1,10 @@
 {
-  "name": "@fw-components/fw-theme-builder",
+  "name": "@fundwave/fw-theme-builder",
   "version": "0.0.0-alpha.3",
   "description": "Theme builder web component",
   "scripts": {
     "build": "tsc --composite false",
+    "prepublishOnly": "npm run build",
     "dev": "tsc -w --composite false",
     "clean": "rm -rf ./*.js ./*.js.map ./*.d.ts"
   },
