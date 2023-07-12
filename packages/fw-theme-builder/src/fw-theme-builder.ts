@@ -1,276 +1,431 @@
-import {html, css, LitElement} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
+import { html, css, LitElement } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import "./fw-color-pick";
 import "./fw-size-pick";
 import "./fw-font-pick";
-import {fontoptions, initialthemenew} from "./models";
+import { fontoptions, initialthemenew } from "./models";
 
-@customElement('fw-theme-builder')
+@customElement("fw-theme-builder")
 class FwThemeBuilder extends LitElement {
-	@state()
-	nav = "home";
+  @state()
+  nav = "home";
 
-	@property({type : Array})
-	fontOptions = fontoptions;
+  @property({ type: Array })
+  fontOptions = fontoptions;
 
-	@property({type : Object})
-	theme = initialthemenew;
+  @property({ type: Object })
+  theme = initialthemenew;
 
-	colorChangeCallback (e : any, theme : Object) {
-		if (e.detail.type == "hex")
-			this.theme.Colors[e.detail.section].rgb = e.detail.rgb;
-		else
-			this.theme.Colors[e.detail.section][e.detail.type] = e.detail.value;
-	}
+  @property({ type: Boolean })
+  viewByGroup = false;
 
-	sizeChangeCallback (e : any, theme : Object) {
-		this.theme.Sizes[e.detail.section] = e.detail.value;
-	}
+  colorChangeCallback(e: any, theme: Object) {
+    if (e.detail.type == "hex")
+      this.theme.Colors[e.detail.section].rgb = e.detail.rgb;
+    else this.theme.Colors[e.detail.section][e.detail.type] = e.detail.hex;
+  }
 
-	fontChangeCallback (e : any, theme : Object) {
-		this.theme.Fonts[e.detail.section]= e.detail.value;
-	}
+  sizeChangeCallback(e: any, theme: Object) {
+    this.theme.Sizes[e.detail.section] = e.detail.hex;
+  }
 
-	connectedCallback(): void {
-		super.connectedCallback();
-		this.addEventListener('color-change', (e: any) => this.colorChangeCallback(e, this.theme));
-		this.addEventListener("size-change", (e: any) => this.sizeChangeCallback(e, this.theme));
-		this.addEventListener("font-change", (e: any) => this.fontChangeCallback(e, this.theme));
-	}
+  fontChangeCallback(e: any, theme: Object) {
+    this.theme.Fonts[e.detail.section] = e.detail.hex;
+  }
 
-	disconnectedCallback(): void {
-		this.removeEventListener("color-change", (e: any) => this.colorChangeCallback(e, this.theme));
-		this.removeEventListener("size-change", (e: any) => this.sizeChangeCallback(e, this.theme));
-		this.removeEventListener("font-change", (e: any) => this.fontChangeCallback(e, this.theme));
-		super.disconnectedCallback();
-	}
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.addEventListener("color-change", (e: any) =>
+      this.colorChangeCallback(e, this.theme)
+    );
+    this.addEventListener("size-change", (e: any) =>
+      this.sizeChangeCallback(e, this.theme)
+    );
+    this.addEventListener("font-change", (e: any) =>
+      this.fontChangeCallback(e, this.theme)
+    );
+  }
 
+  disconnectedCallback(): void {
+    this.removeEventListener("color-change", (e: any) =>
+      this.colorChangeCallback(e, this.theme)
+    );
+    this.removeEventListener("size-change", (e: any) =>
+      this.sizeChangeCallback(e, this.theme)
+    );
+    this.removeEventListener("font-change", (e: any) =>
+      this.fontChangeCallback(e, this.theme)
+    );
+    super.disconnectedCallback();
+  }
 
-	static styles = css`
-	.primary-color {
-		background-color: var(--primary) !important;
-	}
+  static styles = css`
+    .primary-color {
+      background-color: var(--primary) !important;
+    }
 
-	.secondary-color {
-		background-color: var(--secondary) !important;
-	}
+    .secondary-color {
+      background-color: var(--secondary) !important;
+    }
 
-	.primary-btn-text-color {
-		background-color: var(--primary-contrast) !important;
-	}
+    .primary-btn-text-color {
+      background-color: var(--primary-contrast) !important;
+    }
 
-	.secondary-btn-text-color {
-		background-color: var(--secondary-contrast) !important;
-	}
+    .secondary-btn-text-color {
+      background-color: var(--secondary-contrast) !important;
+    }
 
-	.title-text-color {
-		background-color: var(--title-text-color) !important;
-	}
+    .title-text-color {
+      background-color: var(--title-text-color) !important;
+    }
 
-	.subtitle-text-color {
-		background-color: var(--subtitle-text-color) !important;
-	}
+    .subtitle-text-color {
+      background-color: var(--subtitle-text-color) !important;
+    }
 
-	.body-text-color {
-		background-color: var(--body-text-color) !important;
-	}
+    .body-text-color {
+      background-color: var(--body-text-color) !important;
+    }
 
-	.background-color {
-		background-color: var(--background-color) !important;
-	}
+    .background-color {
+      background-color: var(--background-color) !important;
+    }
 
-	.back-button {
-		user-select: none;
-		cursor: pointer;
-		width: 3rem;
-		padding: 0.5rem 0.5rem;
-		z-index: 100;
-	}
-	.back-hidden {
-		opacity: 0;
-			cursor: default;
-	}
-	.back-icon {
-		height: 1rem;
-	}
-	
-	.action-button {
-		transition: all 0.1s ease-in-out;
-		cursor: pointer;
-		width: 3.5rem;
-		user-select: none;
-		text-align: center;
-		border-radius: 4px;
-		font-family: "DM Sans", sans-serif;
-		padding: 0.5rem 0.5rem;
-		box-shadow: #1b1b1b3b 0px 4px 2px;
-	}
-	.save-btn {
-		background-color: #aaf16f;
-	}
-	.discard-btn {
-		background-color: #e7e7e7;
-	}
-	.action-button:active {
-		box-shadow: none;
-		transform: translateY(-2px);
-	}
-	`;
+    .back-button {
+      user-select: none;
+      cursor: pointer;
+      width: 3rem;
+      padding: 0.5rem 0.5rem;
+      z-index: 100;
+    }
+    .back-hidden {
+      opacity: 0;
+      cursor: default;
+    }
+    .back-icon {
+      height: 1rem;
+    }
 
-	sectionChangeHandler (e : any, s : string) {
-		this.nav = s;
-	}
+    .action-button {
+      transition: all 0.1s ease-in-out;
+      cursor: pointer;
+      width: 3.5rem;
+      user-select: none;
+      text-align: center;
+      border-radius: 4px;
+      font-family: "DM Sans", sans-serif;
+      padding: 0.5rem 0.5rem;
+      box-shadow: #1b1b1b3b 0px 4px 2px;
+    }
+    .save-btn {
+      background-color: #aaf16f;
+    }
+    .discard-btn {
+      background-color: #e7e7e7;
+    }
+    .action-button:active {
+      box-shadow: none;
+      transform: translateY(-2px);
+    }
+  `;
 
-	navigateBack() {
-		if (this.nav == "home")
-			return; 
-		if (this.nav == "Colors" || this.nav == "Sizes"  || this.nav == "Fonts" ) {
-			this.nav = "home";
-		} else {
-			this.nav = "Colors";
-		}
-	}
-	
-	render () {
-		let content;
-		switch (this.nav) {
-			case "home":
-				content = html`
-					<div part="content-container">
-							${(Object.keys(this.theme)??[]).map(section => (html`
-								<button part="theme-button" @click=${(e : any) => this.sectionChangeHandler(e, `${section}`)}>
-									${section}
-								</button>`
-							))}
-					</div>`;    
-			break;
-			case "Colors":
-				content = html`
-				<div part="content-container">
-						${(Object.keys(this.theme.Colors)??[]).map(clr => (html`
-							<button part="theme-button" @click=${(e : any) => this.sectionChangeHandler(e, `Colors-${clr}`)}>
-								${clr}
-							</button>`
-						))}
-				</div>`;
-			break;
-			case "Sizes":
-				content = html`
-				<span part="content-container">
-					${(Object.keys(this.theme.Sizes)??[]).map(size => (html`
-						<fw-size-pick
-							exportparts="size-container, size-label, size-input"
-							label="${size}"
-							.theme="${this.theme}"
-							section="${size}"
-						>
-						</fw-size-pick>`
-					))}
-				</span>`;
-			break;
-			case "Fonts":
-				content = html`
-				<span part="content-container">
-						${(Object.keys(this.theme.Fonts)??[]).map(font => (html`
-							<fw-font-pick
-								exportparts="font-container, font-label, font-button, font-dropdown-container, font-dropdown-option, font-dropdown-selected"
-								label="${font}"
-								section="${font}"
-								.theme="${this.theme}"
-								.options="${this.fontOptions}"
-							>
-							</fw-font-pick>`
-						))}
-				</span>`;
-			break;
-			case "Colors-Primary":
-				content = html`
-				<span part="content-container">
-					${(Object.keys(this.theme.Colors.Primary)??[]).map((item) => (html`
-						<fw-color-pick
-							exportparts="color-button, color-label, color-hidden-input"
-							label="Primary ${item == "Hex" ? "" : item}"
-							.theme="${this.theme}"
-							section="${item}"
-							type="Primary"
-						>
-						</fw-color-pick>`
-					))}
-				</span>`;
-			break;
-			case "Colors-Secondary":
-				content = html`
-				<span part="content-container">
-					${(Object.keys(this.theme.Colors.Secondary)??[]).map((item) => (html`
-						<fw-color-pick
-							exportparts="color-button, color-label, color-hidden-input"
-							label="Secondary ${item == "Hex" ? "" : item}"
-							.theme="${this.theme}"
-							section="${item}"
-							type="Secondary"
-						>
-						</fw-color-pick>`
-					))}
-				</span> `;
-			break;
-			case "Colors-Background":
-				content = html`
-				<span part="content-container">
-					${(Object.keys(this.theme.Colors.Background)??[]).map((item) => (html`
-						<fw-color-pick
-							exportparts="color-button, color-label, color-hidden-input"
-							label="Background ${item == "Hex" ? "" : item}"
-							.theme="${this.theme}"
-							section="${item}"
-							type="Background"
-						>
-						</fw-color-pick>`
-					))}
-				</span>`;
-			break;
-			case "Colors-Error":
-				content = html`
-				<span part="content-container">
-					${(Object.keys(this.theme.Colors.Error)??[]).map((item) => (html`
-						<fw-color-pick
-								exportparts="color-button, color-label, color-hidden-input"
-								label="Error ${item == "Hex" ? "" : item}"
-								.theme="${this.theme}"
-								section="${item}"
-								type="Error"
-						>
-						</fw-color-pick>`
-					))}
-				</span>`;
-			break;
-			case "Colors-Text":
-				content = html`
-				<span part="content-container">
-					${(Object.keys(this.theme.Colors.Text)??[]).map((item) => (html`
-						<fw-color-pick
-							exportparts="color-button, color-label, color-hidden-input"
-							label="Text ${item == "Hex" ? "" : item}"
-							.theme="${this.theme}"
-							section="${item}"
-							type="Text"
-						>
-						</fw-color-pick>`
-					))}
-				</span>`;
-			break;
-		}
+  sectionChangeHandler(e: any, s: string) {
+    this.nav = s;
+  }
 
-		return html`
-			<div part="container" >
-				<span part="back-icon-container" class="back-button ${this.nav == "home" ? "back-hidden" : ""}" @click="${this.navigateBack}">
-					<svg class="back-icon" width="46" height="80" viewBox="0 0 46 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M43.9567 77.8954C46.6811 75.1012 46.6811 70.5876 43.9567 67.7935L16.8527 39.9955L43.9567 12.1975C46.6811 9.40334 46.6811 4.88973 43.9567 2.0956C41.2324 -0.698533 36.8314 -0.698533 34.1071 2.0956L2.04329 34.9804C-0.681091 37.7745 -0.681092 42.2881 2.04328 45.0822L34.1071 77.967C36.7616 80.6895 41.2323 80.6895 43.9567 77.8954Z" fill="black"/>
-					</svg>
-				</span>
-				<span part="content-span">
-					${content}
-				</span>
-			</div>
-		`;
-	}
+  navigateBack() {
+    if (this.nav == "home") return;
+    if (this.nav == "Colors" || this.nav == "Sizes" || this.nav == "Fonts") {
+      this.nav = "home";
+    } else {
+      this.nav = "Colors";
+    }
+  }
+
+  createFontPickComponent(font: string) {
+    return html` <fw-font-pick
+      exportparts="font-container, font-label, font-button, font-dropdown-container, font-dropdown-option, font-dropdown-selected"
+      .label=${font}
+      @value-changed=${(e: any) => {
+        let detail = {
+          type: font,
+          value: e.detail.value,
+        };
+        this.shadowRoot?.dispatchEvent(
+          new CustomEvent("font-change", {
+            detail,
+            bubbles: true,
+            composed: true,
+          })
+        );
+        this.theme.Fonts[font] = e.detail.value;
+      }}
+      .options="${this.fontOptions}"
+      .value=${this.theme.Fonts[font]}
+    >
+    </fw-font-pick>`;
+  }
+
+  createSizePickComponent(size: string) {
+    return html` <fw-size-pick
+      exportparts="size-container, size-label, size-input"
+      .label=${size}
+      @value-changed=${(e: any) => {
+        let detail = {
+          type: size,
+          value: e.detail.value,
+        };
+        this.shadowRoot?.dispatchEvent(
+          new CustomEvent("size-change", {
+            detail,
+            bubbles: true,
+            composed: true,
+          })
+        );
+        this.theme.Sizes[size] = e.detail.value;
+      }}
+      .value=${this.theme.Sizes[size]}
+    >
+    </fw-size-pick>`;
+  }
+
+  createColorPickComponent(group: string, type: string) {
+    return html` <fw-color-pick
+      exportparts="color-button, color-label, color-hidden-input"
+      @value-changed=${(e: any) => {
+        let detail = {
+          type: type,
+          group: group,
+          value: e.detail.hex,
+          rgb: e.detail.rgb,
+        };
+        this.shadowRoot?.dispatchEvent(
+          new CustomEvent("color-change", {
+            detail,
+            bubbles: true,
+            composed: true,
+          })
+        );
+        this.theme.Colors[group][type] = e.detail.hex;
+      }}
+      label=${`${group} ${type?.toLowerCase() == "hex" ? "" : type}`}
+      .value="${this.theme.Colors[group][type]}"
+    >
+    </fw-color-pick>`;
+  }
+
+  getContent() {
+    let content;
+    switch (this.nav) {
+      case "home":
+        content = html` <div part="content-container">
+          ${(Object.keys(this.theme) ?? []).map(
+            (section) => html` <button
+              part="theme-button"
+              @click=${(e: any) => this.sectionChangeHandler(e, `${section}`)}
+            >
+              ${section}
+            </button>`
+          )}
+        </div>`;
+        break;
+      case "Colors":
+        content = html` <div part="content-container">
+          ${(Object.keys(this.theme.Colors) ?? []).map(
+            (clr) => html` <button
+              part="theme-button"
+              @click=${(e: any) =>
+                this.sectionChangeHandler(e, `Colors-${clr}`)}
+            >
+              ${clr}
+            </button>`
+          )}
+        </div>`;
+        break;
+      case "Sizes":
+        content = html` <span part="content-container">
+          ${(Object.keys(this.theme.Sizes) ?? []).map(
+            (size) => html` <fw-size-pick
+              exportparts="size-container, size-label, size-input"
+              label="${size}"
+              .theme="${this.theme}"
+              section="${size}"
+            >
+            </fw-size-pick>`
+          )}
+        </span>`;
+        break;
+      case "Fonts":
+        content = html` <span part="content-container">
+          ${Object.keys(this.theme["Fonts"]).map((font: string) =>
+            this.createFontPickComponent(font)
+          )}
+        </span>`;
+        break;
+      case "Colors-":
+        content = html` <span part="content-container">
+          ${(Object.keys(this.theme.Colors["Primary"]) ?? []).map(
+            (item) => html` <fw-color-pick
+              exportparts="color-button, color-label, color-hidden-input"
+              label="Primary ${item == "Hex" ? "" : item}"
+              .theme="${this.theme}"
+              section="${item}"
+              type="Primary"
+            >
+            </fw-color-pick>`
+          )}
+        </span>`;
+        break;
+      case "Colors-Secondary":
+        content = html`
+          <span part="content-container">
+            ${(Object.keys(this.theme.Colors.Secondary) ?? []).map(
+              (item) => html` <fw-color-pick
+                exportparts="color-button, color-label, color-hidden-input"
+                label="Secondary ${item == "Hex" ? "" : item}"
+                .theme="${this.theme}"
+                section="${item}"
+                type="Secondary"
+              >
+              </fw-color-pick>`
+            )}
+          </span>
+        `;
+        break;
+      case "Colors-Background":
+        content = html` <span part="content-container">
+          ${(Object.keys(this.theme.Colors.Background) ?? []).map(
+            (item) => html` <fw-color-pick
+              exportparts="color-button, color-label, color-hidden-input"
+              @value-changed=${(e: any) => {
+                let detail = {
+                  type: "Background",
+                  section: item,
+                  value: e.detail.hex,
+                  rgb: e.detail.rgb,
+                };
+                this.shadowRoot?.dispatchEvent(
+                  new CustomEvent("color-change", {
+                    detail,
+                    bubbles: true,
+                    composed: true,
+                  })
+                );
+                this.theme.Colors[item]["Background"] = e.detail.hex;
+              }}
+              label="Background ${item == "Hex" ? "" : item}"
+              .theme="${this.theme}"
+              section="${item}"
+              type="Background"
+              .value="${this.theme.Colors["Background"][item] || "ERROR"}"
+            >
+            </fw-color-pick>`
+          )}
+        </span>`;
+        break;
+      case "Colors-Error":
+        content = html` <span part="content-container">
+          ${(Object.keys(this.theme.Colors.Error) ?? []).map(
+            (item) => html` <fw-color-pick
+              exportparts="color-button, color-label, color-hidden-input"
+              label="Error ${item == "Hex" ? "" : item}"
+              .theme="${this.theme}"
+              section="${item}"
+              type="Error"
+            >
+            </fw-color-pick>`
+          )}
+        </span>`;
+        break;
+      case "Colors-Text":
+        content = html` <span part="content-container">
+          ${(Object.keys(this.theme.Colors.Text) ?? []).map(
+            (item) => html` <fw-color-pick
+              exportparts="color-button, color-label, color-hidden-input"
+              @changed=${(e: any) => {
+                let detail = {
+                  type: "Text",
+                  section: item,
+                  value: e.detail.hex,
+                  rgb: e.detail.rgb,
+                };
+              }}
+              label="Text ${item == "Hex" ? "" : item}"
+              .theme="${this.theme}"
+              section="${item}"
+              type="Text"
+              .value="${this.theme.Colors["Text"][item] || "ERROR"}"
+            >
+            </fw-color-pick>`
+          )}
+        </span>`;
+        break;
+    }
+    return content;
+  }
+
+  render() {
+    return html`
+      <div part="container">
+        ${this.viewByGroup
+          ? html` <span
+                part="back-icon-container"
+                class="back-button ${this.nav == "home" ? "back-hidden" : ""}"
+                @click="${this.navigateBack}"
+              >
+                <svg
+                  class="back-icon"
+                  width="46"
+                  height="80"
+                  viewBox="0 0 46 80"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M43.9567 77.8954C46.6811 75.1012 46.6811 70.5876 43.9567 67.7935L16.8527 39.9955L43.9567 12.1975C46.6811 9.40334 46.6811 4.88973 43.9567 2.0956C41.2324 -0.698533 36.8314 -0.698533 34.1071 2.0956L2.04329 34.9804C-0.681091 37.7745 -0.681092 42.2881 2.04328 45.0822L34.1071 77.967C36.7616 80.6895 41.2323 80.6895 43.9567 77.8954Z"
+                    fill="black"
+                  />
+                </svg>
+              </span>
+              <span part="content-span"> ${this.getContent()} </span>`
+          : html`
+              ${this.theme["Fonts"] &&
+              Object.keys(this.theme["Fonts"]).length != 0
+                ? html`<div>
+                    <h2>Fonts</h2>
+                    <hr />
+                    ${Object.keys(this.theme["Fonts"]).map((font: string) =>
+                      this.createFontPickComponent(font)
+                    )}
+                  </div>`
+                : null}
+              ${this.theme["Sizes"] &&
+              Object.keys(this.theme["Sizes"]).length != 0
+                ? html`<div>
+                    <h2>Sizes</h2>
+                    <hr />
+                    ${Object.keys(this.theme["Sizes"]).map((size: string) =>
+                      this.createSizePickComponent(size)
+                    )}
+                  </div>`
+                : null}
+              ${this.theme["Sizes"] &&
+              Object.keys(this.theme["Colors"]).length != 0
+                ? html`<div>
+                    <h2>Colors</h2>
+                    <hr />
+                    ${Object.keys(this.theme["Colors"]).map(
+                      (group) => html`<h3>${group}</h3>
+                        ${Object.keys(this.theme["Colors"][group]).map(
+                          (type: string) =>
+                            this.createColorPickComponent(group, type)
+                        )}`
+                    )}
+                  </div>`
+                : null}
+            `}
+      </div>
+    `;
+  }
 }

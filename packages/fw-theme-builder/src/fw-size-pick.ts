@@ -6,20 +6,16 @@ class FwSizePick extends LitElement {
   @property() 
   label? : string;
 
-  @property() 
-  theme? : any;
-
   @property()
-  section = "";
+  value = "";
 
   handleChange(e : any) {
     let size = (e.target as HTMLInputElement)?.value;
 
     let detail = {
-      "section" : this.section,
       "value"   : (size + "px"),
     }
-    const event = new CustomEvent('size-change', { detail, bubbles : true, composed : true });
+    const event = new CustomEvent('value-changed', { detail, bubbles : true, composed : true });
     this.dispatchEvent(event);
   }
 
@@ -53,12 +49,17 @@ class FwSizePick extends LitElement {
 
   render() {
     return html`
+    <style>
+      .size-label {
+        font-size: ${this.value};
+      }
+    </style>
     <span part="size-container" class="size-container">
-      <p part="size-label">${this.label}</p>
+      <p class="size-label" part="size-label">${this.label}</p>
       <input
         part="size-input"
         type="number"
-        value="${(this.theme.Sizes[this.section])?.slice(0, -2) || -1}"
+        value="${this.value?.slice(0, -2) || -1}"
         @change="${this.handleChange}"
       />
     </span>
