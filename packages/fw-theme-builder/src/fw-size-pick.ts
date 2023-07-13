@@ -47,6 +47,10 @@ class FwSizePick extends LitElement {
   }
   `;
 
+  updated(changedProps : any) {
+    console.log(changedProps, "size", this.value);
+  }
+
   render() {
     return html`
     <style>
@@ -59,7 +63,7 @@ class FwSizePick extends LitElement {
       <input
         part="size-input"
         type="number"
-        value="${this.value?.slice(0, -2) || -1}"
+        .value="${this.value?.slice(0, -2) || ""}"
         @change="${this.handleChange}"
       />
     </span>

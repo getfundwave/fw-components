@@ -54,6 +54,7 @@ class FwFontPick extends LitElement {
       border-radius: 4px;
       box-shadow: 3px 3px 10px #1b1b1b1b, -3px -3px 10px #1b1b1b1b;
       width: 8rem;
+      z-index: 21;
     }
     .fp-option-unselected {
       padding: 0.2rem 0.5rem;

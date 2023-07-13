@@ -120,6 +120,7 @@ class FwThemeBuilder extends LitElement {
           })
         );
         this.theme.Fonts[font] = e.detail.value;
+        this.theme = {...this.theme};
       }}
       .options="${this.fontOptions}"
       .value=${this.theme.Fonts[font]}
@@ -144,6 +145,7 @@ class FwThemeBuilder extends LitElement {
           })
         );
         this.theme.Sizes[size] = e.detail.value;
+        this.theme = {...this.theme};
       }}
       .value=${this.theme.Sizes[size]}
     >
@@ -168,8 +170,9 @@ class FwThemeBuilder extends LitElement {
           })
         );
         this.theme.Colors[group][type] = e.detail.hex;
+        this.theme = {...this.theme};
       }}
-      label=${`${group} ${type?.toLowerCase() == "hex" ? "" : type}`}
+      .label=${`${group} ${type?.toLowerCase() == "hex" ? "" : type}`}
       .value="${this.theme.Colors[group][type]}"
     >
     </fw-color-pick>`;
@@ -263,7 +266,6 @@ class FwThemeBuilder extends LitElement {
                 Object.keys(this.theme["Sizes"]).length != 0
                   ? html`<div part="sizes-ungrouped-container">
                       <h2 part="sizes-ungrouped-heading">Sizes</h2>
-                      <hr />
                       ${Object.keys(this.theme["Sizes"]).map((size: string) =>
                         this.createSizePickComponent(size)
                       )}
@@ -276,9 +278,8 @@ class FwThemeBuilder extends LitElement {
                 Object.keys(this.theme["Colors"]).length != 0
                   ? html`<div part="colors-ungrouped-container">
                       <h2 part="colors-ungrouped-heading">Colors</h2>
-                      <hr />
                       ${Object.keys(this.theme["Colors"]).map(
-                        (group) => html`<h3>${group}</h3>
+                        (group) => html`<h3 part="color-group-heading">${group}</h3>
                           ${Object.keys(this.theme["Colors"][group]).map(
                             (type: string) =>
                               this.createColorPickComponent(group, type)
@@ -293,7 +294,6 @@ class FwThemeBuilder extends LitElement {
                 Object.keys(this.theme["Fonts"]).length != 0
                   ? html`<div part="fonts-ungrouped-container">
                       <h2 part="fonts-ungrouped-heading">Fonts</h2>
-                      <hr />
                       ${Object.keys(this.theme["Fonts"]).map((font: string) =>
                         this.createFontPickComponent(font)
                       )}
