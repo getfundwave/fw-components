@@ -11,10 +11,10 @@ class FwSizePick extends LitElement {
 
   handleChange(e : any) {
     let size = (e.target as HTMLInputElement)?.value;
-
     let detail = {
       "value"   : (size + "px"),
     }
+    this.value = detail.value;
     const event = new CustomEvent('value-changed', { detail, bubbles : true, composed : true });
     this.dispatchEvent(event);
   }
@@ -51,7 +51,7 @@ class FwSizePick extends LitElement {
     return html`
     <style>
       .size-label {
-        font-size: ${this.value};
+        font-size: ${this.value} !important;
       }
     </style>
     <span part="size-container" class="size-container">
