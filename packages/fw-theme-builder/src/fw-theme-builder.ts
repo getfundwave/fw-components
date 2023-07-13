@@ -242,6 +242,23 @@ class FwThemeBuilder extends LitElement {
               <span part="content-span"> ${this.getContent()} </span>`
           : html`
               ${
+                // Fonts
+                this.theme["Fonts"] &&
+                Object.keys(this.theme["Fonts"]).length != 0
+                  ? html`<div part="fonts-ungrouped-container">
+                      <h2
+                        class="section-heading"
+                        part="fonts-ungrouped-heading"
+                      >
+                        Fonts
+                      </h2>
+                      ${Object.keys(this.theme["Fonts"]).map((font: string) =>
+                        this.createFontPickComponent(font)
+                      )}
+                    </div>`
+                  : null
+              }
+              ${
                 // Sizes
                 this.theme["Sizes"] &&
                 Object.keys(this.theme["Sizes"]).length != 0
@@ -284,23 +301,6 @@ class FwThemeBuilder extends LitElement {
                             )}
                           </div>
                         `
-                      )}
-                    </div>`
-                  : null
-              }
-              ${
-                // Fonts
-                this.theme["Fonts"] &&
-                Object.keys(this.theme["Fonts"]).length != 0
-                  ? html`<div part="fonts-ungrouped-container">
-                      <h2
-                        class="section-heading"
-                        part="fonts-ungrouped-heading"
-                      >
-                        Fonts
-                      </h2>
-                      ${Object.keys(this.theme["Fonts"]).map((font: string) =>
-                        this.createFontPickComponent(font)
                       )}
                     </div>`
                   : null
