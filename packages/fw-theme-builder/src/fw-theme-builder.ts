@@ -20,38 +20,6 @@ class FwThemeBuilder extends LitElement {
   viewByGroup = false;
 
   static styles = css`
-    .primary-color {
-      background-color: var(--primary) !important;
-    }
-
-    .secondary-color {
-      background-color: var(--secondary) !important;
-    }
-
-    .primary-btn-text-color {
-      background-color: var(--primary-contrast) !important;
-    }
-
-    .secondary-btn-text-color {
-      background-color: var(--secondary-contrast) !important;
-    }
-
-    .title-text-color {
-      background-color: var(--title-text-color) !important;
-    }
-
-    .subtitle-text-color {
-      background-color: var(--subtitle-text-color) !important;
-    }
-
-    .body-text-color {
-      background-color: var(--body-text-color) !important;
-    }
-
-    .background-color {
-      background-color: var(--background-color) !important;
-    }
-
     .back-button {
       user-select: none;
       cursor: pointer;
@@ -88,6 +56,16 @@ class FwThemeBuilder extends LitElement {
       box-shadow: none;
       transform: translateY(-2px);
     }
+    .color-group-heading {
+      font-weight: 300;
+      margin: 0.25rem 0rem 0.1rem 0rem;
+    }
+    .section-heading {
+      font-weight: 300;
+      margin: 1rem 0rem 0.25rem 0rem;
+      border-bottom: 1px solid #1b1b1b3b;
+      padding-bottom: 0.2rem;
+    }
   `;
 
   sectionChangeHandler(e: any, s: string) {
@@ -120,7 +98,7 @@ class FwThemeBuilder extends LitElement {
           })
         );
         this.theme.Fonts[font] = e.detail.value;
-        this.theme = {...this.theme};
+        this.theme = { ...this.theme };
       }}
       .options="${this.fontOptions}"
       .value=${this.theme.Fonts[font]}
@@ -145,7 +123,7 @@ class FwThemeBuilder extends LitElement {
           })
         );
         this.theme.Sizes[size] = e.detail.value;
-        this.theme = {...this.theme};
+        this.theme = { ...this.theme };
       }}
       .value=${this.theme.Sizes[size]}
     >
@@ -170,9 +148,13 @@ class FwThemeBuilder extends LitElement {
           })
         );
         this.theme.Colors[group][type] = e.detail.hex;
-        this.theme = {...this.theme};
+        this.theme = { ...this.theme };
       }}
-      .label=${`${group} ${type?.toLowerCase() == "hex" ? "" : type}`}
+      .label=${`${group} ${
+        type?.toLowerCase().slice(-3) == "hex"
+          ? type?.toLowerCase().slice(0, -4)
+          : type
+      }`}
       .value="${this.theme.Colors[group][type]}"
     >
     </fw-color-pick>`;
@@ -224,7 +206,6 @@ class FwThemeBuilder extends LitElement {
         break;
       default:
         const group = this.nav.slice(7);
-        console.log("GRP", group);
         content = html` <span part="content-container">
           ${Object.keys(this.theme["Colors"][group]).map((type: string) =>
             this.createColorPickComponent(group, type)
@@ -265,7 +246,12 @@ class FwThemeBuilder extends LitElement {
                 this.theme["Sizes"] &&
                 Object.keys(this.theme["Sizes"]).length != 0
                   ? html`<div part="sizes-ungrouped-container">
-                      <h2 part="sizes-ungrouped-heading">Sizes</h2>
+                      <h2
+                        class="section-heading"
+                        part="sizes-ungrouped-heading"
+                      >
+                        Sizes
+                      </h2>
                       ${Object.keys(this.theme["Sizes"]).map((size: string) =>
                         this.createSizePickComponent(size)
                       )}
@@ -277,13 +263,27 @@ class FwThemeBuilder extends LitElement {
                 this.theme["Sizes"] &&
                 Object.keys(this.theme["Colors"]).length != 0
                   ? html`<div part="colors-ungrouped-container">
-                      <h2 part="colors-ungrouped-heading">Colors</h2>
+                      <h2
+                        class="section-heading"
+                        part="colors-ungrouped-heading"
+                      >
+                        Colors
+                      </h2>
                       ${Object.keys(this.theme["Colors"]).map(
-                        (group) => html`<h3 part="color-group-heading">${group}</h3>
-                          ${Object.keys(this.theme["Colors"][group]).map(
-                            (type: string) =>
-                              this.createColorPickComponent(group, type)
-                          )}`
+                        (group) => html`
+                          <div part="color-group-container">
+                            <h3
+                              class="color-group-heading"
+                              part="color-group-heading"
+                            >
+                              ${group}
+                            </h3>
+                            ${Object.keys(this.theme["Colors"][group]).map(
+                              (type: string) =>
+                                this.createColorPickComponent(group, type)
+                            )}
+                          </div>
+                        `
                       )}
                     </div>`
                   : null
@@ -293,7 +293,12 @@ class FwThemeBuilder extends LitElement {
                 this.theme["Fonts"] &&
                 Object.keys(this.theme["Fonts"]).length != 0
                   ? html`<div part="fonts-ungrouped-container">
-                      <h2 part="fonts-ungrouped-heading">Fonts</h2>
+                      <h2
+                        class="section-heading"
+                        part="fonts-ungrouped-heading"
+                      >
+                        Fonts
+                      </h2>
                       ${Object.keys(this.theme["Fonts"]).map((font: string) =>
                         this.createFontPickComponent(font)
                       )}

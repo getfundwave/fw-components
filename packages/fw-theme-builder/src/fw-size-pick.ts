@@ -47,10 +47,6 @@ class FwSizePick extends LitElement {
   }
   `;
 
-  updated(changedProps : any) {
-    console.log(changedProps, "size", this.value);
-  }
-
   render() {
     return html`
     <style>

@@ -44,8 +44,8 @@ class FwFontPick extends LitElement {
   static styles = css`
     .fp-dropdown {
       position: absolute;
-      bottom: 2.4rem;
-      right: 0;
+      top: 2.4rem;
+      left: 0;
       display: none;
       flex-direction: column;
       justify-content: flex-start;
@@ -79,9 +79,10 @@ class FwFontPick extends LitElement {
     .fp-icon {
       width: 1rem;
       height: 1rem;
+      transform: rotate(180deg);
     }
     .fp-icon-selected {
-      transform: rotate(180deg);
+      transform: rotate(0deg);
     }
   `;
 
