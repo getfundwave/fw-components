@@ -139,6 +139,7 @@ class FwThemeBuilder extends LitElement {
           type: type,
           value: e.detail.hex,
           rgb: e.detail.rgb,
+          hsl: e.detail.hsl,
         };
         this.shadowRoot?.dispatchEvent(
           new CustomEvent("color-change", {
