@@ -60,12 +60,12 @@ jobs:
         id: generate_token
         uses: tibdex/github-app-token@v1
         with:
-          app_id: ${{ secrets.FUNDABOT_APP_ID }}
+          app_id: ${{ vars.FUNDABOT_APP_ID }}
           private_key: ${{ secrets.FUNDABOT_PRIVATE_KEY }}
 
       - name: Release
         env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.ref_name == 'main' && steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}
         run: |
           if [ "${BRANCH}" != "main" ]; then PRERELEASE="-p"; fi
           echo "Releasing version ${TAG} on branch ${BRANCH}"
@@ -73,5 +73,5 @@ jobs:
 
       - name: Push changes
         env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.ref_name == 'main' && steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}
         run: git push --follow-tags --atomic --no-verify
