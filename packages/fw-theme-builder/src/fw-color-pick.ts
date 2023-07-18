@@ -31,12 +31,15 @@ class FwColorPick extends LitElement {
     this.dispatchEvent(event);
   }
 
+  getColorForLabel(value: string) {
+    const { red, green, blue } = hexToRgb(value ?? "#ffffff");
+    const intensity = red * 0.299 + green * 0.587 + blue * 0.114;
+  
+    return intensity > 186 ? '#000000' : '#FFFFFF';
+  }
+
   updated(changedProperties : any) {
-    if (changedProperties.has("value")) {
-      let rgb = hexToRgb(this.value ?? "#ffffff");
-      let textClr = rgbToHex(255 - rgb.r, 255 - rgb.g, 255 - rgb.b);
-      this.textColor = textClr;
-    }
+    if (changedProperties.has("value")) this.textColor = this.getColorForLabel(this.value);
   }
 
   render() {
