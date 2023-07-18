@@ -12,22 +12,21 @@ class FwColorPick extends LitElement {
   @property()
   value = "";
 
-  handleChange(e: any) {
-    let clr = (e.target as HTMLInputElement)?.value;
-    this.value = clr;
-    if (clr == "rgba(0, 0, 0, 0)") return;
-    const rgbClr = hexToRgb(clr);
-    const hslClr = rgbToHsl(rgbClr.r, rgbClr.g, rgbClr.b);
-    let detail = {
-      hex: clr,
-      rgb: rgbClr,
-      hsl: hslClr
-    };
+  handleChange(e: InputEvent) {
+    const colorHEX = (e.target as HTMLInputElement)?.value;
+    this.value = colorHEX;
+
+    if (colorHEX == "rgba(0, 0, 0, 0)") return;
+
+    const colorRGB = hexToRgb(colorHEX);
+    const colorHSL = rgbToHsl(colorRGB.red, colorRGB.green, colorRGB.blue);
+
     const event = new CustomEvent("value-changed", {
-      detail,
+      detail: { hex: colorHEX, rgb: colorRGB, hsl: colorHSL },
       bubbles: true,
       composed: true,
     });
+
     this.dispatchEvent(event);
   }
 
@@ -61,7 +60,7 @@ class FwColorPick extends LitElement {
           cursor: pointer;
         }
       </style>
-      <button part="color-button" class="color-button">
+      <button part="color-button" class="color-button" data-label-color="${this.value}">
         ${this.label}
         <input
           part="color-hidden-input"
@@ -76,18 +75,13 @@ class FwColorPick extends LitElement {
 }
 
 function hexToRgb(hex: string) {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-      }
-    : {
-        r: 0,
-        g: 0,
-        b: 0,
-      };
+  const hexValues = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+  const red = hexValues ? parseInt(hexValues[1], 16) : 0;
+  const green = hexValues ? parseInt(hexValues[2], 16) : 0;
+  const blue = hexValues ? parseInt(hexValues[3], 16) : 0;
+
+  return { red, green, blue };
 }
 
 function rgbToHex(r: number, g: number, b: number) {
