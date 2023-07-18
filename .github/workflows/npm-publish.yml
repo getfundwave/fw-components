@@ -56,7 +56,6 @@ jobs:
           echo "TAG=$TAG" >> $GITHUB_ENV
 
       - name: Generate token
-        if: ${{ github.ref_name == 'main'}}
         id: generate_token
         uses: tibdex/github-app-token@v1
         with:
@@ -65,7 +64,7 @@ jobs:
 
       - name: Release
         env:
-          GITHUB_TOKEN: ${{ github.ref_name == 'main' && steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           if [ "${BRANCH}" != "main" ]; then PRERELEASE="-p"; fi
           echo "Releasing version ${TAG} on branch ${BRANCH}"
@@ -73,5 +72,5 @@ jobs:
 
       - name: Push changes
         env:
-          GITHUB_TOKEN: ${{ github.ref_name == 'main' && steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: git push --follow-tags --atomic --no-verify
