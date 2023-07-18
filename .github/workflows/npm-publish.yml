@@ -8,12 +8,11 @@ on:
 env:
   BRANCH_TAG: ${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
   BRANCH: ${{ github.ref_name }}
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build_test_publish:
     runs-on: ubuntu-latest
-
+    environment: "${{ github.ref_name == 'main' && 'prod' || '' }}"
     steps:
       - uses: actions/setup-node@v3
         with:
@@ -56,11 +55,23 @@ jobs:
           echo "Published tag $TAG"
           echo "TAG=$TAG" >> $GITHUB_ENV
 
+      - name: Generate token
+        if: ${{ github.ref_name == 'main'}}
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.FUNDABOT_APP_ID }}
+          private_key: ${{ secrets.FUNDABOT_PRIVATE_KEY }}
+
       - name: Release
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}
         run: |
           if [ "${BRANCH}" != "main" ]; then PRERELEASE="-p"; fi
           echo "Releasing version ${TAG} on branch ${BRANCH}"
           gh release create ${TAG} --target ${BRANCH} --generate-notes ${PRERELEASE}
 
       - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}
         run: git push --follow-tags --atomic --no-verify
