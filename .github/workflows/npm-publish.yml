@@ -1,0 +1,68 @@
+name: Publish packages
+
+on:
+  push:
+    branches-ignore:
+      - "dependabot/**"
+  
+env:
+  BRANCH_TAG: "${{ github.ref_name == 'main' && 'latest' || github.ref_name }}"
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Run tests
+        run: npm run test
+
+  publish:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          registry-url: https://registry.npmjs.org
+      - uses: actions/checkout@v3
+        with:
+          # pulls all commits and tags (needed for lerna to correctly version)
+          fetch-depth: 0
+
+      - name: Setup git
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions[bot]"
+
+      - name: clean install
+        run: npm ci
+
+      - name: build
+        run: npm run build
+
+      - name: Publish packages
+        env:
+          MAJOR_VERSION: ${{ contains(github.event.head_commit.message , '[bump major]') }}
+          MINOR_VERSION: ${{ contains(github.event.head_commit.message , '[bump minor]') }}
+          NODE_AUTH_TOKEN: ${{secrets.NPMJS_TOKEN}}
+        run: |
+          VERSION=${{ github.ref_name == 'main' && 'patch' || 'prerelease' }}
+          if [ ${{ github.ref_name }} == 'main' ]
+          then
+            if [ $MINOR_VERSION == true ]; then VERSION="minor"; fi
+            if [ $MAJOR_VERSION == true ]; then VERSION="major"; fi
+          fi
+          echo "Updating $VERSION.."
+          npm run publish -- $VERSION --yes --dist-tag=$BRANCH_TAG --no-push --preid ${{ github.ref_name }} ${{ github.ref_name == 'main' && '' || '--include-merged-tags' }}
+
+      - name: Push changes
+        run: git push --follow-tags --atomic --no-verify
