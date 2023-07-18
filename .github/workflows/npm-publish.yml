@@ -4,13 +4,13 @@ on:
   push:
     branches-ignore:
       - "dependabot/**"
-  
+
 env:
-  BRANCH_TAG: "${{ github.ref_name == 'main' && 'latest' || github.ref_name }}"
+  BRANCH_TAG: ${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
+  BRANCH: ${{ github.ref_name }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-
   build_and_test:
     runs-on: ubuntu-latest
     steps:
@@ -39,7 +39,7 @@ jobs:
           # pulls all commits and tags (needed for lerna to correctly version)
           fetch-depth: 0
 
-      - name: Setup git
+      - name: setup git
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "github-actions[bot]"
@@ -50,7 +50,7 @@ jobs:
       - name: build
         run: npm run build
 
-      - name: Publish packages
+      - name: publish packages
         env:
           MAJOR_VERSION: ${{ contains(github.event.head_commit.message , '[bump major]') }}
           MINOR_VERSION: ${{ contains(github.event.head_commit.message , '[bump minor]') }}
@@ -64,6 +64,15 @@ jobs:
           fi
           echo "Updating $VERSION.."
           npm run publish -- $VERSION --yes --dist-tag=$BRANCH_TAG --no-push --preid ${{ github.ref_name }} ${{ github.ref_name == 'main' && '' || '--include-merged-tags' }}
+          TAG="`git describe --tags --abbrev=0`"
+          echo "Published tag $TAG"
+          echo "TAG=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: release
+        run: |
+          if [ "${BRANCH}" != "main" ]; then PRERELEASE="-p"; fi
+          echo "Releasing version ${TAG} on branch ${BRANCH}"
+          gh release create ${TAG} --target ${BRANCH} --generate-notes ${PRERELEASE}
 
       - name: Push changes
         run: git push --follow-tags --atomic --no-verify
