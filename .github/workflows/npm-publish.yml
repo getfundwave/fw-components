@@ -54,7 +54,7 @@ jobs:
           npm run publish -- $VERSION --yes --dist-tag=$BRANCH_TAG --no-push --preid ${{ github.ref_name }} ${{ github.ref_name == 'main' && '' || '--include-merged-tags' }}
           TAG="`git describe --tags --abbrev=0`"
           echo "Published tag $TAG"
-          echo "TAG=$TAG" >> "$GITHUB_OUTPUT"
+          echo "TAG=$TAG" >> $GITHUB_ENV
 
       - name: Release
         run: |
