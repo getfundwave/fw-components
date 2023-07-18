@@ -11,22 +11,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  build_and_test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - name: Install dependencies
-        run: npm ci
-      - name: Build
-        run: npm run build
-      - name: Run tests
-        run: npm run test
-
-  publish:
-    needs: build_and_test
+  build_test_publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -39,18 +24,21 @@ jobs:
           # pulls all commits and tags (needed for lerna to correctly version)
           fetch-depth: 0
 
-      - name: setup git
+      - name: Setup git
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "github-actions[bot]"
 
-      - name: clean install
+      - name: Install dependencies
         run: npm ci
-
-      - name: build
+      
+      - name: Build
         run: npm run build
+      
+      - name: Run tests
+        run: npm run test
 
-      - name: publish packages
+      - name: Publish packages
         env:
           MAJOR_VERSION: ${{ contains(github.event.head_commit.message , '[bump major]') }}
           MINOR_VERSION: ${{ contains(github.event.head_commit.message , '[bump minor]') }}
@@ -68,7 +56,7 @@ jobs:
           echo "Published tag $TAG"
           echo "TAG=$TAG" >> "$GITHUB_OUTPUT"
 
-      - name: release
+      - name: Release
         run: |
           if [ "${BRANCH}" != "main" ]; then PRERELEASE="-p"; fi
           echo "Releasing version ${TAG} on branch ${BRANCH}"
