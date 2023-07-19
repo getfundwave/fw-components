@@ -66,8 +66,6 @@ jobs:
         env:  
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
-          echo $GITHUB_TOKEN
-          echo ${{ secrets.GITHUB_TOKEN }}
           npm version patch --git-tag-version false
           git add package.json
           git commit -m "Bump version"
@@ -81,6 +79,11 @@ jobs:
       #     gh release create ${TAG} --target ${BRANCH} --generate-notes ${PRERELEASE}
 
       - name: Push changes
-        # env:  
-        #   GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
-        run: git push --follow-tags --atomic --no-verify
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ steps.generate_token.outputs.token }}
+      
+          # - name: Push changes
+      #   # env:  
+      #   #   GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+      #   run: git push --follow-tags --atomic --no-verify
