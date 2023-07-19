@@ -30,10 +30,10 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.generate_token.outputs.token }}
 
-      - name: Setup git
-        run: |
-          git config --local user.email "fundabot@getfundwave.com"
-          git config --local user.name "fundabot"
+      # - name: Setup git
+      #   run: |
+      #     git config --local user.email "fundabot@getfundwave.com"
+      #     git config --local user.name "fundabot"
 
       # - name: Install dependencies
       #   run: npm ci
@@ -65,7 +65,8 @@ jobs:
 
       - name: Bump version
         run: |
-          npm version patch
+          npm version patch --git-tag-version false
+          git commit -am "bump version \n [skip ci]"
 
       # - name: Release
       #   env:
