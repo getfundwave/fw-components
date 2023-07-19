@@ -63,12 +63,8 @@ jobs:
           private_key: ${{ secrets.FUNDABOT_PRIVATE_KEY }}
 
       - name: Bump version
-        env:  
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
-          npm version patch --git-tag-version false
-          git add package.json
-          git commit -m "Bump version"
+          npm version patch
 
       # - name: Release
       #   env:
