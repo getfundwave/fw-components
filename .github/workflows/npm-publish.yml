@@ -55,16 +55,18 @@ jobs:
       #     echo "Published tag $TAG"
       #     echo "TAG=$TAG" >> $GITHUB_ENV
 
-      - name: Bump version
-        run: |
-          npm version patch
-
       - name: Generate token
         id: generate_token
         uses: tibdex/github-app-token@v1
         with:
           app_id: ${{ vars.FUNDABOT_APP_ID }}
           private_key: ${{ secrets.FUNDABOT_PRIVATE_KEY }}
+
+      - name: Bump version
+        env:  
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+        run: |
+          npm version patch
 
       # - name: Release
       #   env:
