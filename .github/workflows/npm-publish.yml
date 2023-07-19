@@ -19,14 +19,14 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org
       - uses: actions/checkout@v3
-        with:
-          # pulls all commits and tags (needed for lerna to correctly version)
-          fetch-depth: 0
+        # with:
+        #   # pulls all commits and tags (needed for lerna to correctly version)
+        #   fetch-depth: 0
 
-      - name: Setup git
-        run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "github-actions[bot]"
+      # - name: Setup git
+      #   run: |
+      #     git config --global user.email "actions@github.com"
+      #     git config --global user.name "github-actions[bot]"
 
       # - name: Install dependencies
       #   run: npm ci
