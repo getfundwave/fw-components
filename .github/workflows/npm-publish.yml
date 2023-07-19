@@ -66,7 +66,9 @@ jobs:
         # env:  
         #   GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
-          npm version patch
+          npm version patch --no-git-tag-version
+          git add package.json
+          git commit -m "Bump version"
 
       # - name: Release
       #   env:
