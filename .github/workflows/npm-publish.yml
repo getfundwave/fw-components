@@ -14,19 +14,26 @@ jobs:
     runs-on: ubuntu-latest
     environment: "${{ 'prod'}}"
     steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ vars.FUNDABOT_APP_ID }}
+          private_key: ${{ secrets.FUNDABOT_PRIVATE_KEY }}
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org
       - uses: actions/checkout@v3
-        # with:
-        #   # pulls all commits and tags (needed for lerna to correctly version)
-        #   fetch-depth: 0
+        with:
+          # pulls all commits and tags (needed for lerna to correctly version)
+          fetch-depth: 0
+          token: ${{ steps.generate_token.outputs.token }}
 
       - name: Setup git
         run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "github-actions[bot]"
+          git config --local user.email "fundabot@getfundwave.com"
+          git config --local user.name "fundabot"
 
       # - name: Install dependencies
       #   run: npm ci
@@ -55,12 +62,6 @@ jobs:
       #     echo "Published tag $TAG"
       #     echo "TAG=$TAG" >> $GITHUB_ENV
 
-      - name: Generate token
-        id: generate_token
-        uses: tibdex/github-app-token@v1
-        with:
-          app_id: ${{ vars.FUNDABOT_APP_ID }}
-          private_key: ${{ secrets.FUNDABOT_PRIVATE_KEY }}
 
       - name: Bump version
         run: |
