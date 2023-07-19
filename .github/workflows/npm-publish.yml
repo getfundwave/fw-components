@@ -23,10 +23,10 @@ jobs:
         #   # pulls all commits and tags (needed for lerna to correctly version)
         #   fetch-depth: 0
 
-      # - name: Setup git
-      #   run: |
-      #     git config --global user.email "actions@github.com"
-      #     git config --global user.name "github-actions[bot]"
+      - name: Setup git
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions[bot]"
 
       # - name: Install dependencies
       #   run: npm ci
@@ -63,9 +63,11 @@ jobs:
           private_key: ${{ secrets.FUNDABOT_PRIVATE_KEY }}
 
       - name: Bump version
-        # env:  
-        #   GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+        env:  
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
+          echo $GITHUB_TOKEN
+          echo ${{ secrets.GITHUB_TOKEN }}
           npm version patch --git-tag-version false
           git add package.json
           git commit -m "Bump version"
