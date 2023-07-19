@@ -3,5 +3,10 @@
     "packages/*"
   ],
   "useWorkspaces": true,
-  "version": "1.0.5"
+  "version": "1.0.5",
+  "command": {
+    "version": {
+      "message": "chore(release): publish %s \n [skip ci]"
+    }
+  }
 }
