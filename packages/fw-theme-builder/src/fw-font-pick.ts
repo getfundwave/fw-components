@@ -94,7 +94,6 @@ class FwFontPick extends LitElement {
             font-family: ${this.value.style};
           }
         </style>
-        <p part="font-label">${this.label}</p>
         <div part="font-button" @click="${this.buttonClickHandler}">
           <div
             part="font-dropdown-container"
