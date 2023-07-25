@@ -1,0 +1,19 @@
+{
+  "name": "@fw-components/dnd-list",
+  "version": "0.0.0",
+  "description": "Drag-n-drop list",
+  "main": "dnd-list.js",
+  "repository": {
+    "url": "https://github.com/getfundwave/fw-components/tree/main/packages/dnd-list"
+  },
+  "author": "The Fundwave Authors",
+  "license": "ISC",
+  "dependencies": {
+    "@fundwave/styles": "^1.12.2",
+    "@polymer/iron-icons": "^3.0.1",
+    "@polymer/paper-button": "^3.0.1",
+    "@polymer/paper-icon-button": "^3.0.2",
+    "@polymer/paper-input": "^3.2.1",
+    "lit": "^2.1.2"
+  }
+}
