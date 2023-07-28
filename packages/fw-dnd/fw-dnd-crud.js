@@ -4,7 +4,7 @@ import "@polymer/paper-button";
 import "@polymer/paper-input/paper-input.js";
 import "@polymer/paper-input/paper-textarea.js";
 import "@polymer/paper-icon-button";
-import { BoxInputStyles } from "@fundwave/styles/input-styles.js";
+import { BoxInputStyles } from "@fw-components/styles/input-styles.js";
 import { CustomDndStyles, HeaderRowStyle, ItemRowStyle, BoxTextAreaStyles } from "./styles/index.js";
 import "./fw-dnd.js";
 
