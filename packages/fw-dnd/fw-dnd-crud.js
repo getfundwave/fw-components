@@ -86,12 +86,12 @@ export class crudDnDList extends LitElement {
               </div>`
             : null}
 
-          <drag-drop-list
+          <fw-dnd
             .list=${this.list}
             .headerName=${this.primaryHeaderValue}
             @item-reordered=${(e) => this.reorderItem(e.detail)}
             .dragItemRenderer=${(item) => this.renderListItem(item)}
-          ></drag-drop-list>
+          ></fw-dnd>
         `
       : null}`;
   }
@@ -217,12 +217,12 @@ export class crudDnDList extends LitElement {
     if (updatedDetails[this.primaryAttribute] === "") {
       if (typeof initialDetails[this.preventDeleteAttribute] === "string") updatedDetails[this.primaryAttribute] = initialDetails[this.preventDeleteAttribute];
       else {
-        const editInputField = this.shadowRoot.querySelector("drag-drop-list").shadowRoot.querySelector(`#edit-input-${itemId}`);
+        const editInputField = this.shadowRoot.querySelector("fw-dnd").shadowRoot.querySelector(`#edit-input-${itemId}`);
         this._displayErrorMessage(editInputField, "Required");
         return;
       }
     } else if (this._itemAlreadyExist(updatedDetails)) {
-      const editInputField = this.shadowRoot.querySelector("drag-drop-list").shadowRoot.querySelector(`#edit-input-${itemId}`);
+      const editInputField = this.shadowRoot.querySelector("fw-dnd").shadowRoot.querySelector(`#edit-input-${itemId}`);
       this._displayErrorMessage(editInputField, "Already Exist");
       return;
     }
@@ -292,7 +292,7 @@ export class crudDnDList extends LitElement {
 
   firstUpdated() {
     const styleNode = document.createElement("style");
-    const dragDropNode = this.shadowRoot.querySelector("drag-drop-list").shadowRoot;
+    const dragDropNode = this.shadowRoot.querySelector("fw-dnd").shadowRoot;
     dragDropNode.appendChild(styleNode);
     dragDropNode.querySelector("style").insertAdjacentHTML("beforebegin", CustomDndStyles.strings[0]);
     dragDropNode.querySelector("custom-style").insertAdjacentHTML("beforebegin", ItemRowStyle.strings[0]);
