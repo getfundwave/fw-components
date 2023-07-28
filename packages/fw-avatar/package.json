@@ -1,0 +1,36 @@
+{
+  "name": "@fw-components/fw-avatar",
+  "version": "0.0.1-alpha.1",
+  "description": "Avatar Web Component",
+  "main": "src/fw-avatar.js",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "start": "web-dev-server",
+    "pretest": "playwright install-deps",
+    "test": "web-test-runner",
+    "test:coverage": "web-test-runner  --coverage",
+    "test:watch": "web-test-runner  --watch"
+  },
+  "dependencies": {
+    "@fw-components/styles": "*",
+    "@material/mwc-icon": "^0.27.0",
+    "@material/mwc-list": "^0.25.3",
+    "@material/mwc-menu": "^0.25.3",
+    "@polymer/iron-icons": "^3.0.1",
+    "@polymer/paper-button": "^3.0.1",
+    "@polymer/paper-icon-button": "^3.0.2",
+    "@polymer/paper-input": "^3.2.1",
+    "lit": "^2.1.2"
+  },
+  "author": "The Fundwave Authors",
+  "license": "ISC",
+  "devDependencies": {
+    "@open-wc/testing": "^3.1.8",
+    "@web/dev-server-legacy": "^2.0.0",
+    "@web/test-runner": "^0.16.1",
+    "@web/test-runner-playwright": "^0.10.0"
+  }
+}

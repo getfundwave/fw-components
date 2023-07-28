@@ -1,0 +1,21 @@
+{
+  "name": "@fw-components/styles",
+  "version": "0.0.0-alpha.1",
+  "description": "Style library for web components",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc --composite false",
+    "dev": "tsc -w --composite false",
+    "clean": "rm -rf *.js *.js.map *.d.ts"
+  },
+  "author": "The Fundwave Authors",
+  "license": "ISC",
+  "dependencies": {
+    "lit": "^2.1.2"
+  },
+  "devDependencies": {
+    "typescript": "4.6.2"
+  }
+}
