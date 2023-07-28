@@ -138,4 +138,4 @@ class DnDList extends LitElement {
   }
 }
 
-window.customElements.define("dnd-list", DnDList);
+window.customElements.define("fw-dnd", DnDList);

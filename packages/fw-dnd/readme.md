@@ -1,10 +1,10 @@
 # Drag and drop list
 
-The dnd-list component is used to reorder the list of items using drag and drop.
+The fw-dnd component is used to reorder the list of items using drag and drop.
 
 ## Installation
 ```sh
-npm i @fundwave/dnd-list
+npm i @fundwave/fw-dnd
 ```
 
 ## Example usage
@@ -14,11 +14,11 @@ const dragList = [{ name:"Aayush", company:"Fundwave" }, { name:"Isha Sharma", c
 ```
 
 ```html
-<dnd-list
+<fw-dnd
   .list=${dragList}
   @list-updated=${updateList}
   .dragItemRenderer=${ (item) => html `<p>${item.name}</p>` }
-></dnd-list>
+></fw-dnd>
 ```
 
 ## API

@@ -6,7 +6,7 @@ import "@polymer/paper-input/paper-textarea.js";
 import "@polymer/paper-icon-button";
 import { BoxInputStyles } from "@fundwave/styles/input-styles.js";
 import { CustomDndStyles, HeaderRowStyle, ItemRowStyle, BoxTextAreaStyles } from "./styles/index.js";
-import "./dnd-list.js";
+import "./fw-dnd.js";
 
 export class crudDnDList extends LitElement {
   static get properties() {
@@ -356,4 +356,4 @@ export class crudDnDList extends LitElement {
   }
 }
 
-window.customElements.define("crud-dnd-list", crudDnDList);
+window.customElements.define("fw-dnd-crud", crudDnDList);
