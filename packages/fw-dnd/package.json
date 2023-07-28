@@ -1,6 +1,6 @@
 {
   "name": "@fw-components/fw-dnd",
-  "version": "2.0.1-custom-tags.1",
+  "version": "2.0.1-custom-tags.2",
   "description": "Drag-n-drop list",
   "main": "fw-dnd.js",
   "publishConfig": {
