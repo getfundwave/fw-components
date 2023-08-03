@@ -3,9 +3,6 @@
   "workspaces": [
     "packages/*"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
     "clean": "lerna clean --yes && lerna run clean",
     "preinstall": "npm run clean",

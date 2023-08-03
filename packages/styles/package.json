@@ -1,7 +1,10 @@
 {
   "name": "@fw-components/styles",
-  "version": "1.0.6",
+  "version": "2.0.0",
   "description": "Style library for web components",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc --composite false",
     "dev": "tsc -w --composite false",
