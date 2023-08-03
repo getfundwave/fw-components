@@ -1,6 +1,6 @@
 {
   "name": "@fundwave/fw-theme-builder",
-  "version": "0.0.0-theme-builder.3",
+  "version": "0.0.0-theme-builder.4",
   "description": "Theme builder web component",
   "scripts": {
     "build": "tsc --composite false",
