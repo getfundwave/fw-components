@@ -5,10 +5,11 @@ import "@polymer/paper-input/paper-input.js";
 import "@polymer/paper-input/paper-textarea.js";
 import "@polymer/paper-icon-button";
 import { BoxInputStyles } from "@fw-components/styles/input-styles.js";
-import { CustomDndStyles, HeaderRowStyle, ItemRowStyle, BoxTextAreaStyles } from "./styles/index.js";
+import { PrimaryButtonStyles, ButtonSpinnerStyles } from "@fw-components/styles/button-styles.js";
+import { CustomDndStyles, HeaderRowStyle, ItemRowStyle } from "./styles/index.js";
 import "./fw-dnd.js";
 
-export class crudDnDList extends LitElement {
+export class dndCrudList extends LitElement {
   static get properties() {
     return {
       list: Array,
@@ -16,11 +17,12 @@ export class crudDnDList extends LitElement {
       secondaryAttribute: String,
       positionAttribute: String,
       idAttribute: String,
-      preventDeleteAttribute: String,
-      primaryHeaderValue: String,
-      secondaryHeaderValue: String,
+      restrictDeleteAttribute: String,
+      primaryHeader: String,
+      secondaryHeader: String,
       editable: Boolean,
       stepSize: Number,
+      getInfoMessage: Function,
       _addItemFieldVisible: Boolean,
       _newItemPrimaryAttribute: Boolean,
       _newItemSecondaryAttribute: Boolean,
@@ -36,75 +38,78 @@ export class crudDnDList extends LitElement {
     this._addItemFieldVisible = false;
     this._editItemFieldVisible = [];
     this._activeItemEditsDetails = [];
+    this.idAttribute = "id";
+    this.primaryAttribute = "name";
+    this.primaryHeader = "Name";
   }
 
   render() {
-    return html` ${BoxInputStyles} ${CustomDndStyles} ${BoxTextAreaStyles} ${this.headerRow()}
-    ${this.primaryAttribute && this.idAttribute
-      ? html`
-          ${this.editable && this._addItemFieldVisible
-            ? html` <div class="item-row item-bottom-border">
-                <iron-icon style="visibility:hidden" id="drag-icon" icon="reorder"></iron-icon>
-                <div class="item-grid-container">
-                  <paper-input
-                    id="add-primary-input"
-                    class="box"
+    return html`
+      ${BoxInputStyles} ${CustomDndStyles} ${this.headerRow()}
+      ${this.editable && this._addItemFieldVisible
+        ? html` <div class="item-row item-bottom-border">
+            <iron-icon style="visibility:hidden" id="drag-icon" icon="reorder"></iron-icon>
+            <div class="item-grid-container">
+              <paper-input
+                id="add-primary-input"
+                class="box"
+                .noLabelFloat=${true}
+                .value=${this._newItemPrimaryAttribute}
+                @keydown=${(e) => {
+                  if (e.keyCode === 13) this.addNewItem();
+                }}
+                @value-changed=${(e) => {
+                  this._newItemPrimaryAttribute = e.target.value;
+                  this._removeErrorMsg(e.target);
+                }}
+              ></paper-input>
+              ${this.secondaryAttribute
+                ? html`<paper-textarea
+                    class="box grid-row-2-item"
                     .noLabelFloat=${true}
-                    .value=${this._newItemPrimaryAttribute}
-                    @keydown=${(e) => {
-                      if (e.keyCode === 13) this.addNewItem();
-                    }}
+                    .value=${this._newItemSecondaryAttribute}
                     @value-changed=${(e) => {
-                      this._newItemPrimaryAttribute = e.target.value;
-                      this._removeErrorMsg(e.target);
+                      this._newItemSecondaryAttribute = e.target.value;
                     }}
-                  ></paper-input>
-                  ${this.secondaryAttribute
-                    ? html`<paper-textarea
-                        class="box grid-row-2-item"
-                        .noLabelFloat=${true}
-                        .value=${this._newItemSecondaryAttribute}
-                        @value-changed=${(e) => {
-                          this._newItemSecondaryAttribute = e.target.value;
-                        }}
-                      ></paper-textarea>`
-                    : null}
+                  ></paper-textarea>`
+                : null}
 
-                  <paper-icon-button
-                    icon="check"
-                    @tap=${() => {
-                      this.addNewItem();
-                    }}
-                  ></paper-icon-button>
-                  <paper-icon-button
-                    icon="cancel"
-                    @tap=${() => {
-                      this._clearAddNewItemProperties();
-                    }}
-                  ></paper-icon-button>
-                </div>
-              </div>`
-            : null}
+              <paper-icon-button
+                icon="check"
+                @tap=${() => {
+                  this.addNewItem();
+                }}
+              ></paper-icon-button>
+              <paper-icon-button
+                icon="cancel"
+                @tap=${() => {
+                  this._clearAddNewItemProperties();
+                }}
+              ></paper-icon-button>
+            </div>
+          </div>`
+        : null}
 
-          <fw-dnd
-            .list=${this.list}
-            .headerName=${this.primaryHeaderValue}
-            @item-reordered=${(e) => this.reorderItem(e.detail)}
-            .dragItemRenderer=${(item) => this.renderListItem(item)}
-          ></fw-dnd>
-        `
-      : null}`;
+      <fw-dnd
+        .list=${this.list}
+        .headerName=${this.primaryHeader}
+        @item-reordered=${(e) => this.reorderItem(e.detail)}
+        .dragItemRenderer=${(item) => this.renderListItem(item)}
+      ></fw-dnd>
+    `;
   }
 
   headerRow() {
     return html`
-      ${HeaderRowStyle}
+      ${HeaderRowStyle} 
+      ${this.editable ? html`${PrimaryButtonStyles} ${ButtonSpinnerStyles}` : null}
       <div style=${this.editable && this.positionAttribute ? "" : "padding-left:10px;width:99%;gap:5px"} class="header-row">
-        <span>${this.primaryHeaderValue || ""}</span>
-        <span class="grid-row-2-item">${this.secondaryHeaderValue || ""}</span>
+        <span>${this.primaryHeader || ""}</span>
+        <span class="grid-row-2-item">${this.secondaryHeader || ""}</span>
         ${this.editable
           ? html`<paper-button
               id="add-new-item-btn"
+              class="primary-colored"
               noink
               raised
               class="grid-row-2-item"
@@ -112,7 +117,7 @@ export class crudDnDList extends LitElement {
                 this._addItemFieldVisible = true;
               }}
             >
-              <iron-icon icon="add-circle-outline"></iron-icon> ADD
+              <iron-icon icon="add" class="button-prefix-icon"></iron-icon> Add
             </paper-button>`
           : null}
       </div>
@@ -144,13 +149,13 @@ export class crudDnDList extends LitElement {
                         this._editItemFieldVisible = [...this._editItemFieldVisible, item[this.idAttribute]];
                       }}
                     ></paper-icon-button>
-                    ${item[this.preventDeleteAttribute]
+                    ${item[this.restrictDeleteAttribute]
                       ? html`<paper-icon-button
                           icon="info"
                           noink
                           class="info-btn ${this.secondaryAttribute ? "" : "grid-reposition-btn"}"
                           @tap=${(e) => e.target.classList.toggle("info-btn-text")}
-                          title=${this.defaultAttributeHoverMessage ? this.defaultAttributeHoverMessage(item) : null}
+                          title=${this.getInfoMessage ? this.getInfoMessage(item) : null}
                         ></paper-icon-button>`
                       : html`<paper-icon-button
                           icon="delete"
@@ -215,7 +220,7 @@ export class crudDnDList extends LitElement {
     updatedDetails = { ...initialDetails, ...updatedDetails };
     updatedDetails[this.primaryAttribute] = updatedDetails[this.primaryAttribute].trim();
     if (updatedDetails[this.primaryAttribute] === "") {
-      if (typeof initialDetails[this.preventDeleteAttribute] === "string") updatedDetails[this.primaryAttribute] = initialDetails[this.preventDeleteAttribute];
+      if (typeof initialDetails[this.restrictDeleteAttribute] === "string") updatedDetails[this.primaryAttribute] = initialDetails[this.restrictDeleteAttribute];
       else {
         const editInputField = this.shadowRoot.querySelector("fw-dnd").shadowRoot.querySelector(`#edit-input-${itemId}`);
         this._displayErrorMessage(editInputField, "Required");
@@ -223,7 +228,7 @@ export class crudDnDList extends LitElement {
       }
     } else if (this._itemAlreadyExist(updatedDetails)) {
       const editInputField = this.shadowRoot.querySelector("fw-dnd").shadowRoot.querySelector(`#edit-input-${itemId}`);
-      this._displayErrorMessage(editInputField, "Already Exist");
+      this._displayErrorMessage(editInputField, "Another item with same name exits");
       return;
     }
 
@@ -295,9 +300,8 @@ export class crudDnDList extends LitElement {
     const dragDropNode = this.shadowRoot.querySelector("fw-dnd").shadowRoot;
     dragDropNode.appendChild(styleNode);
     dragDropNode.querySelector("style").insertAdjacentHTML("beforebegin", CustomDndStyles.strings[0]);
-    dragDropNode.querySelector("custom-style").insertAdjacentHTML("beforebegin", ItemRowStyle.strings[0]);
-    dragDropNode.querySelector("custom-style").insertAdjacentHTML("beforebegin", BoxTextAreaStyles.strings[0]);
-    dragDropNode.querySelector("custom-style").insertAdjacentHTML("beforebegin", BoxInputStyles.strings[1]);
+    dragDropNode.querySelector("style").insertAdjacentHTML("beforebegin", ItemRowStyle.strings[0]);
+    dragDropNode.querySelector("style").insertAdjacentHTML("beforebegin", BoxInputStyles.strings[1]);
   }
 
   willUpdate(changedPropertiesMap) {
@@ -356,4 +360,4 @@ export class crudDnDList extends LitElement {
   }
 }
 
-window.customElements.define("fw-dnd-crud", crudDnDList);
+window.customElements.define("fw-dnd-crud", dndCrudList);

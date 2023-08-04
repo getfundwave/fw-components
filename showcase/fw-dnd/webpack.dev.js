@@ -9,7 +9,7 @@ const roots = [
 
 module.exports = (env) => { return {
   entry: {
-    'fund-es5-dev': ['./index.js'],
+    'crud-showcase': ['./index.js'],
   },
   resolve: {
     modules: roots

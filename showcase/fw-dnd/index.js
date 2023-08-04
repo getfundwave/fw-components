@@ -1,24 +1,24 @@
 import { LitElement, html } from "lit";
 import "@fw-components/fw-dnd/fw-dnd-crud";
-import "@fw-components/fw-dnd/fw-dnd"
+import "@fw-components/fw-dnd/fw-dnd";
 
 export class FWDndShowcase extends LitElement {
   static get properties() {
     return {
       list: Array,
-      admin: Boolean,
+      editable: Boolean,
     };
   }
 
   constructor() {
     super();
-    this.admin = true;
+    this.editable = true;
     this.list = [...sampleDocumentTags];
   }
 
   async handleDelete(eventDetails) {
     const deletedTag = eventDetails.data;
-  
+
     this.list = this.list.filter((tag) => tag.id !== deletedTag.id);
   }
 
@@ -31,35 +31,37 @@ export class FWDndShowcase extends LitElement {
 
   async handleUpdate(eventDetails) {
     const updatedTag = eventDetails.data;
-    
+
     this.list = this.list.filter((tag) => tag.id !== updatedTag.id);
     this.list = [...this.list, updatedTag];
   }
 
-  hoverMessageForDefaultName(tag) {
-    return `All ${tag.defaultName} shared from Fund Admin would be linked with this tag`;
+  getInfoMessage(tag) {
+    return `This ${tag.name} can't be deleted`;
   }
 
   render() {
-    console.log(this.list)
+    console.log(this.list);
     return html`
-      <div style='width:95%;margin:auto'>
-        <button style="margin-bottom:20px;"
-          @click=${() => {this.admin = !this.admin}}
-        > Toggle Admin </button>
-        <h2 style="margin-left:10px;">Customize Document Types</h2>
+      <div style="width:95%;margin:auto;">
+        <h2>Customize Document Types</h2>
+        <button
+          style="margin-bottom:20px;"
+          @click=${() => {
+            this.editable = !this.editable;
+          }}
+        >
+          Toggle editable
+        </button>
         <fw-dnd-crud
           .list=${this.list}
-          .editable=${this.admin}
+          .editable=${this.editable}
           .stepSize=${1024}
-          .defaultAttributeHoverMessage=${(tag) =>this.hoverMessageForDefaultName(tag)}
-          primaryAttribute="name"
           secondaryAttribute="description"
-          idAttribute="id"
           positionAttribute="position"
-          preventDeleteAttribute="defaultName"
-          primaryHeaderValue="Name"
-          secondaryHeaderValue="Description"
+          restrictDeleteAttribute="fixed"
+          secondaryHeader="Description"
+          .getInfoMessage=${(tag) => this.getInfoMessage(tag)}
           @item-deleted=${(e) => this.handleDelete(e.detail)}
           @item-added=${(e) => this.handleAdd(e.detail)}
           @item-updated=${(e) => this.handleUpdate(e.detail)}
@@ -95,13 +97,13 @@ const sampleDocumentTags = [
     id: "7s2kjshfn39c8cea31387c33",
     name: "Notices",
     position: 3072,
-    defaultName: "Notices",
+    fixed: true,
   },
   {
     id: "jdn372vbks87cea31387c33",
     name: "Reports",
     position: 7168,
-    defaultName: "Reports",
+    fixed: true,
   },
 ];
 

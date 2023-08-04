@@ -37,7 +37,7 @@ class DnDList extends LitElement {
         }
         .draggable-item.dragging {
           opacity: var(--fw-drag-drop-placeholder-opacity, 0.5);
-          border: var(--fw-drag-drop-placeholder-border, "");
+          border: var(--fw-drag-drop-placeholder-border, 1px solid var(--secondary-color-l3, #eee));
           background-color: var(--fw-drag-drop-placeholder-bgColor, "transparent");
         }
       </style>
