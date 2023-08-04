@@ -37,7 +37,7 @@ export class FWDndShowcase extends LitElement {
   }
 
   getInfoMessage(tag) {
-    return `This ${tag.name} can't be deleted`;
+    return `${tag.name} can't be deleted`;
   }
 
   render() {
