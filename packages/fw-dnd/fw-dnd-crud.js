@@ -101,8 +101,7 @@ export class dndCrudList extends LitElement {
 
   headerRow() {
     return html`
-      ${HeaderRowStyle} 
-      ${this.editable ? html`${PrimaryButtonStyles} ${ButtonSpinnerStyles}` : null}
+      ${HeaderRowStyle} ${this.editable ? html`${PrimaryButtonStyles} ${ButtonSpinnerStyles}` : null}
       <div style=${this.editable && this.positionAttribute ? "" : "padding-left:10px;width:99%;gap:5px"} class="header-row">
         <span>${this.primaryHeader || ""}</span>
         <span class="grid-row-2-item">${this.secondaryHeader || ""}</span>

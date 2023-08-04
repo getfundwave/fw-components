@@ -2,8 +2,8 @@ import { html } from "lit";
 
 export const CustomDndStyles = html`
   <style>
-    :host{
-        font-family: var(--theme-font);
+    :host {
+      font-family: var(--theme-font);
     }
     .item-row {
       display: flex;
@@ -109,7 +109,7 @@ export const ItemRowStyle = html`
       color: var(--error-color, #d50000);
     }
     .edit-btn:hover {
-      color: var(--primary-color, #2E7AE7);
+      color: var(--primary-color, #2e7ae7);
     }
     .info-btn:hover {
       cursor: pointer;
