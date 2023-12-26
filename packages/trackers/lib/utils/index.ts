@@ -6,7 +6,7 @@ import { SHADOW_ROOT_IDENTIFIER } from "./constants.js";
  * @param {Document | ShadowRoot | null} context - context from where to start tree-traversal 
  * @returns {Element | null}
  */
-export function getElementFromSelector(selector: string = "", context: Document | ShadowRoot | null = document) {
+export function getElementFromSelector(selector: string = "", context: Document | ShadowRoot | null = document): Element | null {
   if (context === null) context = document;
 
   if (!context?.querySelector) {
