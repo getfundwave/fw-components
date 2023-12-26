@@ -1,0 +1,23 @@
+{
+  "name": "@fundwave/trackers",
+  "version": "1.13.19-trackers.6",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/getfundwave/custom-elements.git"
+  },
+  "description": "Usage Trackers",
+  "main": "index.js",
+  "scripts": {
+    "prepublishOnly": "npm run build",
+    "build": "tsc --composite false",
+    "dev": "tsc -w --composite false"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "notion-utils": "^6.16.0"
+  },
+  "devDependencies": {
+    "notion-types": "^6.16.0",
+    "typescript": "^5.2.2"
+  }
+}
