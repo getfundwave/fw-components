@@ -39,7 +39,7 @@ export class Trackers {
 
       this.registerTrackers(this.events, this.track);
       this.observer = new MutationObserver(() => this.registerTrackers(this.events, this.track));
-      this.observer.observe(document, { subtree: true, attributes: true });
+      this.observer.observe(document, { subtree: true, attributes: true, childList: true });
 
       (window as any).fwTrackersRegistered = true;
     } catch (error) {
