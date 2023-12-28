@@ -93,14 +93,16 @@ export class Trackers {
 
   /**
    * attaches mutation-observer to provided node
-   * @param {ShadowRoot} node - ShadowRoot to attach the observer to
+   * @param {ShadowRoot | null} node - ShadowRoot to attach the observer to
    */
-  observeNode(node: ShadowRoot) {
+  observeNode(node: ShadowRoot | null) {
+    if (!Boolean(node)) return;
+
     try {
-      this.observer?.observe(node, { subtree: true, attributes: true, childList: true });
+      this.observer?.observe(node!, { subtree: true, attributes: true, childList: true });
       this.#debug("Registering observer on target: ", node?.host || node);
     } catch (error) {
-      this.#debug("Failed to register observer on target: ", { error, node: node.host || node });
+      this.#debug("Failed to register observer on target: ", { error, node: node!.host || node });
     }
   }
 
