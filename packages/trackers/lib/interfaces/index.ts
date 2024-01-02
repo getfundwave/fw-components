@@ -13,5 +13,6 @@ export type TrackerContext = {
     context: TStoreContext[(typeof supportedStores)[number]];
   };
   track: (title: string, target: Element, event: any, config: IEvent) => any;
+  onEventsFetched?: (events: IEvent[]) => Promise<IEvent[]>;
   debug?: boolean;
 };

@@ -8,6 +8,7 @@ export class Trackers {
   events: IEvent[];
   store: TrackerContext["store"];
   debug: boolean;
+  onEventsFetched: TrackerContext["onEventsFetched"];
 
   constructor(context: TrackerContext) {
     if (!Boolean(context.track)) throw new Error("Missing required `track` method!");
@@ -17,6 +18,7 @@ export class Trackers {
     this.track = context.track;
     this.events = [];
     this.debug = Boolean(context.debug);
+    if (context.onEventsFetched) this.onEventsFetched = context.onEventsFetched;
   }
 
   /**
@@ -35,6 +37,7 @@ export class Trackers {
 
       if (!this.events) return this.#debug("No events fetched from store: ", this.store);
 
+      if (this.onEventsFetched) this.events = await this.onEventsFetched(this.events);
       this.#debug("Events fetch from store", { events: this.events, store: this.store });
 
       this.registerTrackers();
