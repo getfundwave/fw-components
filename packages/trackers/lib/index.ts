@@ -3,7 +3,7 @@ import { fetchEvents } from "./stores/index.js";
 import { IEvent, TrackerContext } from "./interfaces/index.js";
 
 export class Trackers {
-  observer: MutationObserver | null;
+  observer: MutationObserver;
   track: TrackerContext["track"];
   events: IEvent[];
   store: TrackerContext["store"];
@@ -13,7 +13,7 @@ export class Trackers {
     if (!Boolean(context.track)) throw new Error("Missing required `track` method!");
 
     this.store = context.store;
-    this.observer = null;
+    this.observer = new MutationObserver(() => this.registerTrackers());
     this.track = context.track;
     this.events = [];
     this.debug = Boolean(context.debug);
@@ -37,8 +37,7 @@ export class Trackers {
 
       this.#debug("Events fetch from store", { events: this.events, store: this.store });
 
-      this.registerTrackers(this.events, this.track);
-      this.observer = new MutationObserver(() => this.registerTrackers(this.events, this.track));
+      this.registerTrackers();
       this.observer.observe(document, { subtree: true, attributes: true, childList: true });
 
       (window as any).fwTrackersRegistered = true;
@@ -49,11 +48,9 @@ export class Trackers {
 
   /**
    * identifies targets and attaches required listeners for tracking
-   * @param {IEvent[]} events - list of event-configs
-   * @param {function} track - tracker function provided by the user with supplied context
    **/
-  registerTrackers(events: IEvent[], track: TrackerContext["track"]) {
-    (events || []).forEach((eventConfig) => {
+  registerTrackers() {
+    (this.events || []).forEach((eventConfig) => {
       if (!eventConfig.location) return;
       if (!matchPathPattern(location.pathname, eventConfig.location)) return;
 
@@ -79,7 +76,7 @@ export class Trackers {
             if (!Boolean(this.track)) return this.#debug("Missing `track` method!");
 
             this.#debug("Event triggered: ", eventConfig, event);
-            track(eventConfig.title!, element, event, eventConfig);
+            this.track(eventConfig.title!, element, event, eventConfig);
           } catch (error) {
             this.#debug("Failed to register events.", error);
           }
