@@ -1,6 +1,6 @@
 {
   "name": "@fw-components/trackers",
-  "version": "2.0.2-trackers.5",
+  "version": "2.0.2",
   "description": "Usage trackers for web components",
   "publishConfig": {
     "access": "public"
