@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "web-dev-server",
-    "pretest": "playwright install-deps",
+    "pretest": "npx playwright install && playwright install-deps",
     "test": "web-test-runner",
     "test:coverage": "web-test-runner  --coverage",
     "test:watch": "web-test-runner  --watch"
