@@ -29,7 +29,10 @@ export class Trackers {
   async initialize(events?: IEvent[]) {
     if ((window as any).fwTrackersRegistered) return;
 
-    if (!events?.length && !this.store) return console.error("Malformed configuration. Please provide store config or list of events");
+    if (!events?.length && !this.store) {
+      console.error("Malformed configuration. Please provide store config or list of events");
+      throw new Error("Malformed configuration. Please provide store config or list of events");
+    }
 
     try {
       if (events?.length) this.events = events;
@@ -46,6 +49,7 @@ export class Trackers {
       (window as any).fwTrackersRegistered = true;
     } catch (error) {
       console.warn("Error while registering event-trackers", error);
+      throw error;
     }
   }
 
