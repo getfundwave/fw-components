@@ -1,26 +1,41 @@
-import { SHADOW_ROOT_IDENTIFIER } from "./constants.js";
+import { MULTIPLE_TARGETS_IDENTIFIER, SHADOW_ROOT_IDENTIFIER } from "./constants.js";
 
 /**
  * retrieves an element for a provided selector
- * @param {string} selector - css-selector 
- * @param {Document | ShadowRoot | null} context - context from where to start tree-traversal 
- * @returns {Element | null}
+ * @param {string} selector - css-selector
+ * @param {Document | ShadowRoot | null} context - context from where to start tree-traversal
+ * @returns {Element[] | null}
  */
-export function getElementFromSelector(selector: string = "", context: Document | ShadowRoot | null = document): Element | null {
-  if (context === null) context = document;
-
+export function getElementsFromSelector(selector: string = "", context: Document | DocumentFragment | Element | null = document): Element[] | null {
   if (!context?.querySelector) {
     console.warn("Provided context doesn't provide `querySelector` handler");
     return null;
   }
 
-  if (!selector.includes(SHADOW_ROOT_IDENTIFIER)) return context!.querySelector(selector);
+  if (!selector.includes(SHADOW_ROOT_IDENTIFIER) && !selector.includes(MULTIPLE_TARGETS_IDENTIFIER)) return Array.from(context!.querySelectorAll(selector));
+
+  if (selector.includes(MULTIPLE_TARGETS_IDENTIFIER)) {
+    const [branchParent, ...tail] = selector.split(MULTIPLE_TARGETS_IDENTIFIER);
+    const pathToChildren = tail.join(MULTIPLE_TARGETS_IDENTIFIER).replace(/^[^\w]+/, "");
+    const targets = getElementsFromSelector(branchParent, context);
+
+    if (!pathToChildren) return targets;
+
+    const descendants =
+      targets?.reduce((store, parent) => {
+        const descendant = getElementsFromSelector(pathToChildren, parent?.shadowRoot || parent);
+        if (descendant) store.push(...descendant);
+        return store;
+      }, [] as Element[]) || null;
+
+    return descendants;
+  }
 
   const [current, ...nested] = selector.split(SHADOW_ROOT_IDENTIFIER);
-  const element = context!.querySelector(current);
-  if (!nested) return element;
+  if (!nested) return Array.from(context!.querySelectorAll(current));
 
-  return getElementFromSelector(nested.join(SHADOW_ROOT_IDENTIFIER), element?.shadowRoot);
+  const element = context!.querySelector(current);
+  return getElementsFromSelector(nested.join(SHADOW_ROOT_IDENTIFIER), element?.shadowRoot);
 }
 
 /**
@@ -53,8 +68,7 @@ export function matchPathPattern(path: string | string[], pattern: string | stri
     else if (patternDir === "*") {
       if (Boolean(pattern[index + 1])) continue;
       return !Boolean(path[index + 1]);
-    }
-    else if (patternDir === path[index]) {
+    } else if (patternDir === path[index]) {
       if (!pattern[index + 1] && !path[index + 1]) return true;
     } else return false;
   }
