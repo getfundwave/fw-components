@@ -78,23 +78,22 @@ export function matchPathPattern(path: string | string[], pattern: string | stri
 
 /**
  * retrieves the DOM-element for the provided selector, along with all of it's parent shadowRoots
- * @param {string} selector - css-selector 
- * @param {Document | ShadowRoot | null} context - context from where to start tree-traversal 
- * @returns {{ destination: Element | null, context: Document | ShadowRoot, shadowRoots: ShadowRoot[] }}
+ * @param {string} selector - css-selector
+ * @param {Document | ShadowRoot | null} context - context from where to start tree-traversal
+ * @returns {{ destinations: Element[] | null, context: Document | ShadowRoot, shadowRoots: ShadowRoot[] }}
  */
 export function getNodeTree(selector: string, context: Document | ShadowRoot) {
-  const tree = selector.split(SHADOW_ROOT_IDENTIFIER);
+  const nodeTreeContext = { destinations: null as Element[] | null, context, shadowRoots: [] as ShadowRoot[] };
 
-  const nodeTreeContext = { destination: null as Element | null, context, shadowRoots: [] as ShadowRoot[] };
+  const targets = getElementsFromSelector(selector, nodeTreeContext.context);
+  if (!targets) return nodeTreeContext;
 
-  for (selector of tree) {
-    const element = getElementFromSelector(selector, nodeTreeContext.context);
-    if (!element) return nodeTreeContext;
-
-    if (element.shadowRoot) nodeTreeContext.shadowRoots.push(element.shadowRoot);
-    if (tree.indexOf(selector) === tree.length - 1) nodeTreeContext.destination = element;
-    if (element.shadowRoot) nodeTreeContext.context = element.shadowRoot;
+  const element = targets[0];
+  if (element?.shadowRoot && !(targets.length > 1)) {
+    nodeTreeContext.shadowRoots.push(element.shadowRoot);
+    nodeTreeContext.context = element.shadowRoot;
   }
+  nodeTreeContext.destinations = targets;
 
   return nodeTreeContext;
 }
