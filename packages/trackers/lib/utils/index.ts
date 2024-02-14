@@ -1,7 +1,7 @@
 import { MULTIPLE_TARGETS_IDENTIFIER, SHADOW_ROOT_IDENTIFIER } from "./constants.js";
 
 /**
- * retrieves an element for a provided selector
+ * retrieves multiple elements for a provided selector
  * @param {string} selector - css-selector
  * @param {Document | ShadowRoot | null} context - context from where to start tree-traversal
  * @returns {Element[] | null}
