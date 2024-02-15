@@ -8,7 +8,7 @@ import { MULTIPLE_TARGETS_IDENTIFIER, SHADOW_ROOT_IDENTIFIER } from "./constants
  */
 export function getElementsFromSelector(selector: string = "", context: Document | DocumentFragment | Element | null = document): Element[] | null {
   if (!context?.querySelector) {
-    console.warn("Provided context doesn't provide `querySelector` handler");
+    console.warn("Provided context doesn't provide `querySelector` handler", { context, selector });
     return null;
   }
 

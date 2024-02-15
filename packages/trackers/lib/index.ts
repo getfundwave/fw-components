@@ -70,6 +70,7 @@ export class Trackers {
       this.#debug("Attempting registration of trackers @ ", { tree, config: eventConfig });
 
       if (!elements?.length) tree.shadowRoots.forEach((root) => this.observeNode(root));
+      if (!tree.shadowRoots.length) this.#debug("No shadow-roots retreived for observation", { eventConfig });
 
       if (!elements?.length || !eventConfig.title) return;
 
