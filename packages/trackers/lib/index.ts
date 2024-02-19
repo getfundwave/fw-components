@@ -69,8 +69,8 @@ export class Trackers {
       const elements = tree.destinations;
       this.#debug("Attempting registration of trackers @ ", { tree, config: eventConfig });
 
-      if (!elements?.length) tree.shadowRoots.forEach((root) => this.observeNode(root));
-      if (!tree.shadowRoots.length) this.#debug("No shadow-roots retreived for observation", { eventConfig });
+      if (!elements?.length) tree.parents.forEach((root) => this.observeNode(root));
+      if (!tree.parents.length) this.#debug("No shadow-roots retrieved for observation", { eventConfig });
 
       if (!elements?.length || !eventConfig.title) return;
 
@@ -106,14 +106,14 @@ export class Trackers {
    * attaches mutation-observer to provided node
    * @param {ShadowRoot | null} node - ShadowRoot to attach the observer to
    */
-  observeNode(node: ShadowRoot | null) {
+  observeNode(node: Element | ShadowRoot | null) {
     if (!Boolean(node)) return;
 
     try {
       this.observer?.observe(node!, { subtree: true, attributes: true, childList: true });
-      this.#debug("Registering observer on target: ", node?.host || node);
+      this.#debug("Registering observer on target: ", (node as ShadowRoot)?.host || node);
     } catch (error) {
-      this.#debug("Failed to register observer on target: ", { error, node: node!.host || node });
+      this.#debug("Failed to register observer on target: ", { error, node: (node as ShadowRoot)!.host || node });
     }
   }
 

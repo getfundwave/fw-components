@@ -82,18 +82,38 @@ export function matchPathPattern(path: string | string[], pattern: string | stri
  * @param {Document | ShadowRoot | null} context - context from where to start tree-traversal
  * @returns {{ destinations: Element[] | null, context: Document | ShadowRoot, shadowRoots: ShadowRoot[] }}
  */
-export function getNodeTree(selector: string, context: Document | ShadowRoot) {
-  const nodeTreeContext = { destinations: null as Element[] | null, context, shadowRoots: [] as ShadowRoot[] };
+export function getNodeTree(selector: string, context: Document | ShadowRoot | Element) {
+  const result = [] as Array<{ path: string; needsMultiple: boolean }>;
+  const selectorsWithinShadowRoots = selector.split(SHADOW_ROOT_IDENTIFIER);
 
-  const targets = getElementsFromSelector(selector, nodeTreeContext.context);
-  if (!targets) return nodeTreeContext;
+  selectorsWithinShadowRoots.forEach((path) => {
+    if (!path.includes(MULTIPLE_TARGETS_IDENTIFIER)) return result.push({ path, needsMultiple: false });
 
-  const element = targets[0];
-  if (element?.shadowRoot && !(targets.length > 1)) {
-    nodeTreeContext.shadowRoots.push(element.shadowRoot);
-    nodeTreeContext.context = element.shadowRoot;
+    const selectorsWithinMultipleParents = path.split(MULTIPLE_TARGETS_IDENTIFIER);
+    result.push(...selectorsWithinMultipleParents.map((path) => ({ path: path.replace(/^\s*/, "").replace(/^[^\w]+/, ""), needsMultiple: true })).filter((path) => path.path));
+  });
+
+  const nodeTreeContext = { destinations: null as Array<Element> | null, context: [context], parents: [] as Array<ShadowRoot | Element> };
+
+  for (const [index, selector] of result.entries()) {
+    const newContext = [] as Element[];
+
+    nodeTreeContext.context.forEach((cxt) => {
+      const contextNode = (cxt as Element).shadowRoot || cxt;
+      const targets = selector.needsMultiple ? Array.from(contextNode.querySelectorAll(selector.path)) : contextNode.querySelector(selector.path);
+
+      if (!targets && !(targets! as Element[])?.length) return;
+
+      newContext.push(...[targets!].flat(1));
+    });
+
+    if (!newContext?.length) return nodeTreeContext;
+
+    nodeTreeContext.context = newContext;
+    nodeTreeContext.parents.push(...newContext);
+
+    if (index === result.length - 1) nodeTreeContext.destinations = newContext;
   }
-  nodeTreeContext.destinations = targets;
 
   return nodeTreeContext;
 }
