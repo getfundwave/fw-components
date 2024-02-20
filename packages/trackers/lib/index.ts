@@ -69,7 +69,7 @@ export class Trackers {
       const elements = tree.destinations;
       this.#debug("Attempting registration of trackers @ ", { tree, config: eventConfig });
 
-      if (!elements?.length) tree.parents.forEach((root) => this.observeNode(root));
+      if (!elements?.length) tree.parents.sort().reverse().forEach((root) => this.observeNode(root));
       if (!tree.parents.length) this.#debug("No shadow-roots retrieved for observation", { eventConfig });
 
       if (!elements?.length || !eventConfig.title) return;
@@ -110,7 +110,7 @@ export class Trackers {
     if (!Boolean(node)) return;
 
     try {
-      this.observer?.observe(node!, { subtree: true, attributes: true, childList: true });
+      this.observer?.observe((node! as Element).shadowRoot || node!, { subtree: true, attributes: true, childList: true });
       this.#debug("Registering observer on target: ", (node as ShadowRoot)?.host || node);
     } catch (error) {
       this.#debug("Failed to register observer on target: ", { error, node: (node as ShadowRoot)!.host || node });
