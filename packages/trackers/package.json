@@ -1,6 +1,6 @@
 {
   "name": "@fw-components/trackers",
-  "version": "2.0.3-track-multiple-targets.1",
+  "version": "2.0.3-track-multiple-targets.2",
   "description": "Usage trackers for web components",
   "publishConfig": {
     "access": "public"
