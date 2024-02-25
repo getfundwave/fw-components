@@ -1,6 +1,6 @@
 {
   "name": "@fw-components/formula-editor",
-  "version": "0.0.0-alpha.1",
+  "version": "2.0.3-formula-editor.0",
   "type": "module",
   "description": "A WYSIWYG type formula editor",
   "main": "dist/src/formula-builder.js",
@@ -8,7 +8,7 @@
     "start": "es-dev-server --app-index ../../index.html --node-resolve --watch --open"
   },
   "dependencies": {
-    "@fw-components/styles": "*",
+    "@fw-components/styles": "^2.0.3-formula-editor.0",
     "big.js": "^6.2.1",
     "lit": "^2.1.2",
     "typescript": "^5.0.4"
