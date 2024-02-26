@@ -8,7 +8,10 @@
     "access": "public"
   },
   "scripts": {
-    "start": "es-dev-server --app-index ../../index.html --node-resolve --watch --open"
+    "start": "es-dev-server --app-index ../../index.html --node-resolve --watch --open",
+    "build": "tsc --composite false",
+    "dev": "tsc -w --composite false",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@fw-components/styles": "^2.0.3-formula-editor.1",
