@@ -34,3 +34,12 @@ const tracker = new Trackers({
 
 tracker.initialize();
 ```
+
+### Note: 
+tracking multiple targets is also supported. Use `:nth-child(+)` identifier to highlight elements whose multiple instances are to be tracked
+
+> Supported selector
+  > ```js
+  > document.querySelector("div > div.main-content > div.page > route-page > request-grid:nth-child(+)")
+  >  ```
+
