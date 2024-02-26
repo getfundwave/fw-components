@@ -90,7 +90,7 @@ export function getNodeTree(selector: string, context: Document | ShadowRoot | E
     if (!path.includes(MULTIPLE_TARGETS_IDENTIFIER)) return result.push({ path, needsMultiple: false });
 
     const selectorsWithinMultipleParents = path.split(MULTIPLE_TARGETS_IDENTIFIER);
-    result.push(...selectorsWithinMultipleParents.map((path) => ({ path: path.replace(/^\s*/, "").replace(/^[^\w]+/, ""), needsMultiple: true })).filter((path) => path.path));
+    result.push(...selectorsWithinMultipleParents.map((path) => ({ path: path.replace(/^\s*/, "").replace(/^\s*\>*\s*/, ""), needsMultiple: true })).filter((path) => path.path));
   });
 
   const nodeTreeContext = { destinations: null as Array<Element> | null, context: [context], parents: [] as Array<ShadowRoot | Element> };

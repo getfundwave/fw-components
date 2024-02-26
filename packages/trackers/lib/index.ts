@@ -69,7 +69,7 @@ export class Trackers {
       const elements = tree.destinations;
       this.#debug("Attempting registration of trackers @ ", { tree, config: eventConfig });
 
-      if (!elements?.length) tree.parents.sort().reverse().forEach((root) => this.observeNode(root));
+      if (!elements?.length) tree.parents.reverse().forEach((root) => this.observeNode(root));
       if (!tree.parents.length) this.#debug("No shadow-roots retrieved for observation", { eventConfig });
 
       if (!elements?.length || !eventConfig.title) return;
