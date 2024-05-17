@@ -62,8 +62,8 @@ export class Trackers {
    **/
   registerTrackers() {
     (this.events || []).forEach((eventConfig) => {
-      if (!eventConfig.location) return;
-      if (!matchPathPattern(location.pathname, eventConfig.location)) return;
+      if (!eventConfig.location) return this.#debug("Ignoring event, missing location");
+      if (!matchPathPattern(location.pathname, eventConfig.location)) return this.#debug("Event not related to current path...", location.pathname, eventConfig.location);
 
       const tree = getNodeTree(eventConfig.jsPath, document);
       const elements = tree.destinations;
@@ -110,6 +110,7 @@ export class Trackers {
     if (!Boolean(node)) return;
 
     try {
+      console.log("observer", this.observer);
       this.observer?.observe((node! as Element).shadowRoot || node!, { subtree: true, attributes: true, childList: true });
       this.#debug("Registering observer on target: ", (node as ShadowRoot)?.host || node);
     } catch (error) {

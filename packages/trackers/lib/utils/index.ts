@@ -60,6 +60,7 @@ export function getSelectorForShadowRootJsPath(jsPath: string = "") {
  * @returns {boolean}
  **/
 export function matchPathPattern(path: string | string[], pattern: string | string[]): boolean {
+  if (path.toString() === "/" && pattern.toString() === "/") return true;
   if (!Array.isArray(path)) path = path.split("/").filter(Boolean);
   if (!Array.isArray(pattern)) pattern = pattern.split("/").filter(Boolean);
 
