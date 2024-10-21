@@ -26,10 +26,14 @@ export async function fetchEventsFromNotion(context: TStoreContext["notion"]) {
   const databaseProperties = notionPage.collection[collectionId].value.schema;
   if (!databaseProperties) return;
 
-  return Object.values(notionPage.block).reduce((store, block) => {
-    const pageProperties = block.value.properties;
+  const parsedEvents: IEvent[] = [];
 
-    if (block.value.type !== "page" || !pageProperties) return store;
+  Object.values(notionPage.block).forEach(block => {
+    if (block.role === "none") return;
+
+    const pageProperties = block.value?.properties;
+
+    if (block.value?.type !== "page" || !pageProperties) return;
 
     const result: IEvent = { jsPath: "" };
 
@@ -42,10 +46,10 @@ export async function fetchEventsFromNotion(context: TStoreContext["notion"]) {
       result[key] = value as string;
     });
 
-    if (!Boolean(result.jsPath)) return store;
     if (!Boolean(result.location)) result.location = "/";
 
-    store.push(result);
-    return store;
-  }, [] as IEvent[]);
+    parsedEvents.push(result);
+  });
+
+  return parsedEvents;
 }
