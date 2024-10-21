@@ -1,6 +1,6 @@
 {
   "name": "@fw-components/trackers",
-  "version": "2.0.5-ignore-blocks-wo-role.1",
+  "version": "2.0.5",
   "description": "Usage trackers for web components",
   "publishConfig": {
     "access": "public"
