@@ -289,7 +289,7 @@ export const BoxInputStyles = html`
 
   <custom-style>
     <style>
-      paper-input.box {
+      paper-input.box, paper-textarea.box {
         font-family: var(--theme-font);
 
         --paper-input-container-input: {

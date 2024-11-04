@@ -1,0 +1,33 @@
+{
+  "name": "fw-dnd-showcase",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Balraj-fundwave",
+  "scripts": {
+    "webpack": "webpack --config webpack.dev.js",
+    "webpack-dev": "webpack --config webpack.dev.js",
+    "start": "webpack-dev-server --config webpack.dev.js --host 0.0.0.0 --hot",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@fw-components/fw-dnd": "file:../../packages/fw-dnd",
+    "@fw-components/styles": "file:../../packages/styles",
+    "lit": "^2.7.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-transform-react-jsx": "^7.12.12",
+    "@babel/preset-env": "^7.5.4",
+    "@webcomponents/webcomponentsjs": "^2.8.0",
+    "babel-loader": "^8.2.2",
+    "clean-webpack-plugin": "^2.0.1",
+    "copy-webpack-plugin": "^5.0.3",
+    "html-webpack-plugin": "^4.5.1",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.5",
+    "webpack-dev-server": "^3.11.1"
+  }
+}
