@@ -111,6 +111,7 @@ class FwFontPick extends LitElement {
                     part="font-dropdown-option"
                     @click="${(e: any) => this.optionSelectHandler(option)}"
                     class="fp-option-unselected"
+                    style="font-family: ${option.style}"
                   >
                     ${option.name}
                   </div>`
