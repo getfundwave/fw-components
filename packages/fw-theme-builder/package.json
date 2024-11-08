@@ -1,6 +1,6 @@
 {
   "name": "@fw-components/fw-theme-builder",
-  "version": "2.0.6-theme-builder.1",
+  "version": "2.0.6-theme-builder.2",
   "description": "Theme builder web component",
   "publishConfig": {
     "access": "public"
