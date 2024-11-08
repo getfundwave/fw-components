@@ -30,6 +30,11 @@ export const fontoptions = [
     style: "'Inter', sans-serif",
   },
   {
+    name : "Josefin Sans",
+    url: 'https://fonts.gstatic.com/s/josefinsans/v32/Qw3aZQNVED7rKGKxtqIqX5EUAnx4Vn8siqM7.woff2',
+    style: "'Josefin Sans', sans-serif",
+  },
+  {
     name : "Karla",
     url: 'https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa2JL7SUc.woff2',
     style: "'Karla', sans-serif",
