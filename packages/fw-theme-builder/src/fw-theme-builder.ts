@@ -244,7 +244,7 @@ class FwThemeBuilder extends LitElement {
           : html`
               ${
                 // Fonts
-                this.theme["Fonts"] &&
+                this.theme && this.theme["Fonts"] &&
                 Object.keys(this.theme["Fonts"]).length != 0
                   ? html`<div part="fonts-ungrouped-container">
                       <h2
@@ -261,7 +261,7 @@ class FwThemeBuilder extends LitElement {
               }
               ${
                 // Sizes
-                this.theme["Sizes"] &&
+                this.theme && this.theme["Sizes"] &&
                 Object.keys(this.theme["Sizes"]).length != 0
                   ? html`<div part="sizes-ungrouped-container">
                       <h2
@@ -278,7 +278,7 @@ class FwThemeBuilder extends LitElement {
               }
               ${
                 // Colors
-                this.theme["Sizes"] &&
+                this.theme && this.theme["Colors"] &&
                 Object.keys(this.theme["Colors"]).length != 0
                   ? html`<div part="colors-ungrouped-container">
                       <h2
