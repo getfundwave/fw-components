@@ -15,6 +15,9 @@ export class FwFontPick extends LitElement {
   @property({type : Array})
   options: Array<Font> = [];
 
+  @property({ type: Boolean })
+  viewByGroup = false;
+
   @state()
   showDropdown = false;
 
@@ -48,10 +51,17 @@ export class FwFontPick extends LitElement {
   }
 
   static styles = css`
-    .fp-dropdown {
+    .downward-direction {
       position: absolute;
       top: 2.4rem;
       left: 0;
+    }
+    .upward-direction {
+      position: absolute;
+      bottom: 2.4rem;
+      left: 0;
+    }
+    .fp-dropdown {
       display: none;
       flex-direction: column;
       justify-content: flex-start;
@@ -103,7 +113,7 @@ export class FwFontPick extends LitElement {
         <div part="font-button" @click="${this.buttonClickHandler}">
           <div
             part="font-dropdown-container"
-            class="fp-dropdown ${this.showDropdown ? "fp-dropdown-show" : ""}"
+            class="fp-dropdown ${this.viewByGroup ? "upward-direction" : "downward-direction"} ${this.showDropdown ? "fp-dropdown-show" : ""}"
           >
             ${this.options
               .filter((option: Font) => {

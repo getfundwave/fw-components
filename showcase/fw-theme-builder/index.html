@@ -1,108 +1,73 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width,initial-scale=1.0">
-        <link rel="stylesheet" href="./style.css"/>
-        <script type="module" src="../../packages/fw-theme-builder/dist/fw-theme-builder/src/fw-theme-builder.js"></script>
-        <script>
-            window.addEventListener("color-change", (e) => {
-                console.log("Color:", e);
-                if ((e.detail.type).toLowerCase() == "hex")
-                    document.body.style.setProperty("--" + (e.detail.section).toLowerCase(), e.detail.value);
-                else
-                    document.body.style.setProperty("--" + (e.detail.section).toLowerCase() + "-" + (e.detail.type).toLowerCase(), e.detail.value);
-            });
-            window.addEventListener("size-change", (e) => {
-                console.log("Size:", e);
-                document.body.style.setProperty("--font-" + (e.detail.section).toLowerCase(), e.detail.value);
-            });
-            window.addEventListener("font-change", async (e) => {
-                console.log("Font:", e);
-                const selectedFont = new FontFace(e.detail.value.name, `url(${e.detail.value.url})`);
-                document.fonts.add(selectedFont);
-                await selectedFont.load();
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Component showcase</title>
+  </head>
+  <body>
+    <style>
+      body {
+        margin: 0;
+      }
+      body {
+        /* Fonts */
+        --title-font: "DM Sans", sans-serif;
+        --body-font: "DM Sans", sans-serif;
 
-                document.body.style.setProperty("--" + (e.detail.section).toLowerCase() + "-font", e.detail.value.name);
-            });
+        /* Sizes */
+        --font-tiny: 10px;
+        --font-xs: 14px;
+        --font-s: 16px;
+        --font-m: 18px;
+        --font-l: 20px;
+        --font-xl: 22px;
+        --font-huge: 48px;
+        /* --font-tiny: 0.75rem;
+                --font-xs: 0.95rem;
+                --font-s: 1rem;
+                --font-m: 1.05rem;
+                --font-l: 1.25rem;
+                --font-xl: 1.3rem;
+                --font-huge: 3rem; */
 
-            let inputTheme = {
-                colors : {
-                    "primary" : {
-                        "hex" : "#ad38d1",
-                        "rgb" : "rgb(173, 56, 209)",
-                        "l1" : "#ba68d3",
-                        "l2" : "#dcb5e7",
-                        "l3" : null
-                    },
-                    "secondary" : {
-                        "hex" : "#4a48c7",
-                        "rgb" : "rgb(74, 72, 199)",
-                        "l1" : "#5f5dce",
-                        "l2" : "#706fd1",
-                        "l3" : "#9190df",
-                        "contrast" : "#ebdbdb",
-                    },
-                    "background" : {
-                        "hex" : "#eeeeee",
-                        "rgb" : "rgb(238, 238, 238)",
-                    }
-                }
-            }
-            // console.log("Input Theme:", inputTheme);
-            // document.getElementsByTagName("fw-theme-builder")[0].setAttribute("theme", JSON.stringify(inputTheme));
-        </script>
-        <title>Component showcase </title>
-    </head>
-    <body>
-        <main class="showcase-page">
-            <div class="content-container">
-                <div class="showcase-content">
-                    <section class="left-section">
-                        <span class="main-heading">
-                            Theme Builder
-                            <span class="alpha-pill">Alpha</span>
-                        </span>
-                        <span class="sub-heading">Build and customize your own theme, effortlessly.</span>
-                        <span class="main-buttons">
-                            <button class="button primary-button">
-                                See all components
-                            </button>
-                            <button class="button secondary-button">
-                                Go to repository
-                            </button>
-                        </span>
-                        <p class="error-text">Oops! Seems like an error occured.<strong>Fix this</strong></p>
-                    </section>
-                    <section class="right-section">
-                        <div class="circle-group">
-                            <span class="primary-color color-circle"></span>
-                            <span class="secondary-color color-circle"></span>
-                            <span class="primary-txt-color color-circle"></span>
-                            <span class="secondary-txt-color color-circle"></span>
-                            <span class="title-color color-circle"></span>
-                            <span class="subtitle-color color-circle"></span>
-                            <span class="body-txt-color color-circle"></span>
-                        </div>
-                        <p class="body-text">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable.</p>
-                    </section>
-                </div>
-                <div class="features">
-                    <section class="secondary-colors">
-                        <h4>Build your design system</h4>
-                        <p>In eu sapien risus. Nulla vel lectus faucibus, tincidunt massa at, pulvinar metus. Phasellus vitae elit in mi ullamcorper commodo. Vivamus consequat eu nunc at auctor.</p>
-                    </section>
-                    <section>
-                        <h4>Customize font sizes</h4>
-                        <p>Pellentesque pretium cursus nisi, et hendrerit nulla dictum vel. Ut vel erat quis ipsum suscipit tincidunt a eu turpis. Quisque felis risus, porta ac lacus eget, efficitur tempor enim.</p>
-                    </section>
-                    <section class="hide-on-phone">
-                        <h4>Customize colors</h4>
-                        <p>Cras feugiat ut enim eu congue. Aliquam erat volutpat. Curabitur quam tortor, eleifend et interdum eu, venenatis et quam. Donec vehicula aliquet lobortis. </p>
-                    </section>
-                </div>
-            </div>
-            <fw-theme-builder id="theme-builder">
-            </fw-theme-builder>
-        </main>
-    </body>
+        /* Colors */
+        /* Primary Colors */
+        --primary: #ad38d1;
+        --primary-rgb: rgb(173, 56, 209);
+        --primary-l1: #ba68d3;
+        --primary-l2: #dcb5e7;
+        --primary-l3: #e5d3eb;
+        --primary-contrast: #f0f0f0;
+
+        /* Secondary Colors */
+        --secondary: #4a48c7;
+        --secondary-rgb: rgb(74, 72, 199);
+        --secondary-l1: #5f5dce;
+        --secondary-l2: #706fd1;
+        --secondary-l3: #9190df;
+        --secondary-contrast: #ebdbdb;
+
+        /* Background Colors */
+        --background: #eeeeee;
+        --background-rgb: rgb(238, 238, 238);
+
+        /* Error Colors */
+        --error: #e61e1e;
+        --error-rgb: rgb(230, 30, 30);
+        --error-l1: #f1b4b4;
+
+        /* Text Colors */
+        --text-title: #1b1b1b;
+        --text-subtitle: #1b1b1b;
+        --text-body: #1b1b1b;
+        --text-body-l1: #363636;
+      }
+
+      body {
+        margin: 0;
+        box-sizing: border-box;
+      }
+    </style>
+    <fw-theme-builder-showcase></fw-theme-builder-showcase>
+  </body>
 </html>

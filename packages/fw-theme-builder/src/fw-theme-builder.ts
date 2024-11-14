@@ -97,6 +97,7 @@ export class FwThemeBuilder extends LitElement {
     return html` <fw-font-pick
       exportparts="font-container, font-label, font-button, font-dropdown-container, font-dropdown-option, font-dropdown-selected"
       .label=${font}
+      .viewByGroup=${this.viewByGroup}
       @value-changed=${(e: CustomEvent) => {
         let detail = {
           type: font,
