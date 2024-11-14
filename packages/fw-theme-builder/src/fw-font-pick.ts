@@ -5,7 +5,7 @@ import '@polymer/paper-dropdown-menu/paper-dropdown-menu';
 import '@polymer/paper-listbox/paper-listbox';
 import '@polymer/paper-item/paper-item';
 
-import { DropdownStyles, PlainInputStyles } from '@fw-components/styles/src/input-styles';
+import { DropdownStyles, PlainInputStyles } from '@fw-components/styles/input-styles';
 
 type Font = {
   name: string,
