@@ -11,6 +11,7 @@ module.exports = (env) => {
       index: "./index.js",
     },
     resolve: {
+      extensions: [".ts", ".js"],
       modules: roots,
       alias: {
         "./src": false,
@@ -64,7 +65,7 @@ module.exports = (env) => {
             context: "./",
           },
         ],
-      }),
+      })
     ],
     mode: "development",
     devtool: "source-map",

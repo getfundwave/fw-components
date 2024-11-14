@@ -1,5 +1,11 @@
 import { html, css, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { repeat } from 'lit/directives/repeat.js';
+import '@polymer/paper-dropdown-menu/paper-dropdown-menu';
+import '@polymer/paper-listbox/paper-listbox';
+import '@polymer/paper-item/paper-item';
+
+import { DropdownStyles, PlainInputStyles } from '@fw-components/styles/src/input-styles';
 
 type Font = {
   name: string,
@@ -14,9 +20,6 @@ export class FwFontPick extends LitElement {
 
   @property({type : Array})
   options: Array<Font> = [];
-
-  @property({ type: Boolean })
-  viewByGroup = false;
 
   @state()
   showDropdown = false;
@@ -33,7 +36,8 @@ export class FwFontPick extends LitElement {
     else this.showDropdown = true;
   }
 
-  async optionSelectHandler(selection: Font) {
+  async optionSelectHandler(e: CustomEvent) {
+    const selection = e.detail.item.obj;
     let detail = {
       value: selection,
     };
@@ -51,17 +55,10 @@ export class FwFontPick extends LitElement {
   }
 
   static styles = css`
-    .downward-direction {
+    .fp-dropdown {
       position: absolute;
       top: 2.4rem;
       left: 0;
-    }
-    .upward-direction {
-      position: absolute;
-      bottom: 2.4rem;
-      left: 0;
-    }
-    .fp-dropdown {
       display: none;
       flex-direction: column;
       justify-content: flex-start;
@@ -104,51 +101,19 @@ export class FwFontPick extends LitElement {
 
   render() {
     return html`
+      ${DropdownStyles} ${PlainInputStyles}
       <span part="font-container">
         <style>
           :host {
             font-family: ${this.value.style};
           }
         </style>
-        <div part="font-button" @click="${this.buttonClickHandler}">
-          <div
-            part="font-dropdown-container"
-            class="fp-dropdown ${this.viewByGroup ? "upward-direction" : "downward-direction"} ${this.showDropdown ? "fp-dropdown-show" : ""}"
-          >
-            ${this.options
-              .filter((option: Font) => {
-                if (option.name != this.value.name) {
-                  return option;
-                }
-              })
-              .map(
-                (option: Font) =>
-                  html`<div
-                    part="font-dropdown-option"
-                    @click="${() => this.optionSelectHandler(option)}"
-                    class="fp-option-unselected"
-                    style="font-family: ${option.style}"
-                  >
-                    ${option.name}
-                  </div>`
-              )}
-          </div>
-          <p part="font-dropdown-selected" class="fp-button-fontname">
-            ${this.value.name}
-          </p>
-          <svg
-            class="fp-icon ${this.showDropdown ? "fp-icon-selected" : ""}"
-            width="80"
-            height="46"
-            viewBox="0 0 80 46"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M2.10464 43.9567C4.89877 46.6811 9.41237 46.6811 12.2065 43.9567L40.0045 16.8527L67.8025 43.9567C70.5967 46.6811 75.1103 46.6811 77.9044 43.9567C80.6985 41.2323 80.6985 36.8314 77.9044 34.1071L45.0196 2.04328C42.2255 -0.681097 37.7119 -0.681097 34.9178 2.04328L2.033 34.1071C-0.689491 36.7616 -0.689489 41.2323 2.10464 43.9567Z"
-              fill="black"
-            />
-          </svg>
+        <div part="font-button">
+          <paper-dropdown-menu .dynamicAlign=${true} class="plain" no-label-float @iron-select=${(e : CustomEvent) => this.optionSelectHandler(e)} style="width:100%" >
+              <paper-listbox  style="color:#000" slot="dropdown-content" .selected=${this.options[0].name || ''} attr-for-selected="name">
+              ${this.options && repeat(this.options, (item) => html`<paper-item style='font-family: ${item.style}' .name=${item.name} .obj=${item}>${item.name}</paper-item>`)}
+              </paper-listbox>
+          </paper-dropdown-menu>
         </div>
       </span>
     `;
