@@ -1,4 +1,4 @@
-export const fontoptions = [
+export const fontOptions = [
   {
     name : "Archivo",
     url: 'https://fonts.gstatic.com/s/archivo/v18/k3kPo8UDI-1M0wlSV9XAw6lQkqWY8Q82sLydOxI.woff2',
@@ -87,7 +87,7 @@ export const fontoptions = [
 ]
 
 
-export const initialthemenew : any = {
+export const defaultTheme = {
   Fonts : {
     "Title" : {
       name : "DM Sans",

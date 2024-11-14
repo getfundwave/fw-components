@@ -1,13 +1,19 @@
 import { html, css, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
+type Font = {
+  name: string,
+  url: string,
+  style: string
+}
+
 @customElement("fw-font-pick")
-class FwFontPick extends LitElement {
+export class FwFontPick extends LitElement {
   @property({type : String})
   label = "";
 
-  @property()
-  options: any;
+  @property({type : Array})
+  options: Array<Font> = [];
 
   @state()
   showDropdown = false;
@@ -24,7 +30,7 @@ class FwFontPick extends LitElement {
     else this.showDropdown = true;
   }
 
-  async optionSelectHandler(selection: any) {
+  async optionSelectHandler(selection: Font) {
     let detail = {
       value: selection,
     };
@@ -100,16 +106,16 @@ class FwFontPick extends LitElement {
             class="fp-dropdown ${this.showDropdown ? "fp-dropdown-show" : ""}"
           >
             ${this.options
-              .filter((option: any) => {
+              .filter((option: Font) => {
                 if (option.name != this.value.name) {
                   return option;
                 }
               })
               .map(
-                (option: any) =>
+                (option: Font) =>
                   html`<div
                     part="font-dropdown-option"
-                    @click="${(e: any) => this.optionSelectHandler(option)}"
+                    @click="${() => this.optionSelectHandler(option)}"
                     class="fp-option-unselected"
                     style="font-family: ${option.style}"
                   >

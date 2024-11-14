@@ -2,14 +2,14 @@ import { html, css, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 @customElement("fw-size-pick")
-class FwSizePick extends LitElement {
+export class FwSizePick extends LitElement {
   @property() 
   label? : string;
 
   @property()
   value = "";
 
-  handleChange(e : any) {
+  handleChange(e : InputEvent) {
     let size = (e.target as HTMLInputElement)?.value;
     let detail = {
       "value"   : (size + "px"),

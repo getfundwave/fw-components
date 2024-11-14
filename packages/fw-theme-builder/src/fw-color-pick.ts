@@ -2,7 +2,7 @@ import { html, css, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
 @customElement("fw-color-pick")
-class FwColorPick extends LitElement {
+export class FwColorPick extends LitElement {
   @property()
   label?: string;
 
@@ -37,7 +37,7 @@ class FwColorPick extends LitElement {
     return intensity > 186 ? '#000000' : '#FFFFFF';
   }
 
-  updated(changedProperties : any) {
+  updated(changedProperties : Map<string, unknown>) {
     if (changedProperties.has("value")) this.textColor = this.getColorForLabel(this.value);
   }
 
@@ -82,10 +82,6 @@ function hexToRgb(hex: string) {
   const blue = hexValues ? parseInt(hexValues[3], 16) : 0;
 
   return { red, green, blue };
-}
-
-function rgbToHex(r: number, g: number, b: number) {
-  return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
 }
 
 function rgbToHsl(r: number, g: number, b: number) {

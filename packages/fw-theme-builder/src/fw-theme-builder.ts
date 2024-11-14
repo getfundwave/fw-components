@@ -3,18 +3,30 @@ import { customElement, property, state } from "lit/decorators.js";
 import "./fw-color-pick";
 import "./fw-size-pick";
 import "./fw-font-pick";
-import { fontoptions, initialthemenew } from "./models";
+import { fontOptions, defaultTheme } from "./models";
+
+enum ThemeEnum {
+  COLORS = "Colors",
+  FONTS = "Fonts",
+  SIZES = "Sizes"
+}
+
+type Theme = {
+  Colors: {[key: string] : any},
+  Fonts: {[key: string] : any},
+  Sizes: {[key: string] : any},
+}
 
 @customElement("fw-theme-builder")
-class FwThemeBuilder extends LitElement {
+export class FwThemeBuilder extends LitElement {
   @state()
-  nav = "home";
+  nav = "Home";
 
   @property({ type: Array })
-  fontOptions = fontoptions;
+  fontOptions = fontOptions;
 
   @property({ type: Object })
-  theme = initialthemenew;
+  theme : Theme = defaultTheme;
 
   @property({ type: Boolean })
   viewByGroup = false;
@@ -68,16 +80,16 @@ class FwThemeBuilder extends LitElement {
     }
   `;
 
-  sectionChangeHandler(e: any, s: string) {
+  sectionChangeHandler(s: string) {
     this.nav = s;
   }
 
   navigateBack() {
-    if (this.nav == "home") return;
-    if (this.nav == "Colors" || this.nav == "Sizes" || this.nav == "Fonts") {
-      this.nav = "home";
+    if (this.nav == "Home") return;
+    if (this.nav == ThemeEnum.COLORS || this.nav == ThemeEnum.SIZES || this.nav == ThemeEnum.FONTS) {
+      this.nav = "Home";
     } else {
-      this.nav = "Colors";
+      this.nav = ThemeEnum.COLORS;
     }
   }
 
@@ -85,19 +97,19 @@ class FwThemeBuilder extends LitElement {
     return html` <fw-font-pick
       exportparts="font-container, font-label, font-button, font-dropdown-container, font-dropdown-option, font-dropdown-selected"
       .label=${font}
-      @value-changed=${(e: any) => {
+      @value-changed=${(e: CustomEvent) => {
         let detail = {
           type: font,
           value: e.detail.value,
         };
         this.shadowRoot?.dispatchEvent(
-          new CustomEvent("font-change", {
+          new CustomEvent("font-changed", {
             detail,
             bubbles: true,
             composed: true,
           })
         );
-        this.theme.Fonts[font] = e.detail.value;
+        this.theme.Fonts[font as keyof typeof this.theme.Fonts] = e.detail.value;
         this.theme = { ...this.theme };
       }}
       .options="${this.fontOptions}"
@@ -110,13 +122,13 @@ class FwThemeBuilder extends LitElement {
     return html` <fw-size-pick
       exportparts="size-container, size-label, size-input"
       .label=${size}
-      @value-changed=${(e: any) => {
+      @value-changed=${(e: CustomEvent) => {
         let detail = {
           type: size,
           value: e.detail.value,
         };
         this.shadowRoot?.dispatchEvent(
-          new CustomEvent("size-change", {
+          new CustomEvent("size-changed", {
             detail,
             bubbles: true,
             composed: true,
@@ -133,7 +145,7 @@ class FwThemeBuilder extends LitElement {
   createColorPickComponent(group: string, type: string) {
     return html` <fw-color-pick
       exportparts="color-button, color-label, color-hidden-input"
-      @value-changed=${(e: any) => {
+      @value-changed=${(e: CustomEvent) => {
         let detail = {
           group: group,
           type: type,
@@ -142,7 +154,7 @@ class FwThemeBuilder extends LitElement {
           hsl: e.detail.hsl,
         };
         this.shadowRoot?.dispatchEvent(
-          new CustomEvent("color-change", {
+          new CustomEvent("color-changed", {
             detail,
             bubbles: true,
             composed: true,
@@ -164,43 +176,43 @@ class FwThemeBuilder extends LitElement {
   getContent() {
     let content;
     switch (this.nav) {
-      case "home":
+      case "Home":
         content = html` <div part="content-container">
           ${(Object.keys(this.theme) ?? []).map(
             (section) => html` <button
               part="theme-button"
-              @click=${(e: any) => this.sectionChangeHandler(e, `${section}`)}
+              @click=${() => this.sectionChangeHandler(`${section}`)}
             >
               ${section}
             </button>`
           )}
         </div>`;
         break;
-      case "Colors":
+      case ThemeEnum.COLORS:
         content = html` <div part="content-container">
           ${(Object.keys(this.theme.Colors) ?? []).map(
             (clr) => html` <button
               part="theme-button"
-              @click=${(e: any) =>
-                this.sectionChangeHandler(e, `Colors-${clr}`)}
+              @click=${() =>
+                this.sectionChangeHandler( `Colors-${clr}`)}
             >
               ${clr}
             </button>`
           )}
         </div>`;
         break;
-      case "Sizes":
+      case ThemeEnum.SIZES:
         content = html` <span part="content-container">
-          ${this.theme["Sizes"] && Object.keys(this.theme["Sizes"]).length != 0
-            ? Object.keys(this.theme["Sizes"]).map((size: string) =>
+          ${this.theme[ThemeEnum.SIZES] && Object.keys(this.theme[ThemeEnum.SIZES]).length != 0
+            ? Object.keys(this.theme[ThemeEnum.SIZES]).map((size: string) =>
                 this.createSizePickComponent(size)
               )
             : null}
         </span>`;
         break;
-      case "Fonts":
+      case ThemeEnum.FONTS:
         content = html` <span part="content-container">
-          ${Object.keys(this.theme["Fonts"]).map((font: string) =>
+          ${Object.keys(this.theme[ThemeEnum.FONTS]).map((font: string) =>
             this.createFontPickComponent(font)
           )}
         </span>`;
@@ -208,7 +220,7 @@ class FwThemeBuilder extends LitElement {
       default:
         const group = this.nav.slice(7);
         content = html` <span part="content-container">
-          ${Object.keys(this.theme["Colors"][group]).map((type: string) =>
+          ${Object.keys(this.theme[ThemeEnum.COLORS][group]).map((type: string) =>
             this.createColorPickComponent(group, type)
           )}
         </span>`;
@@ -223,7 +235,7 @@ class FwThemeBuilder extends LitElement {
         ${this.viewByGroup
           ? html` <span
                 part="back-icon-container"
-                class="back-button ${this.nav == "home" ? "back-hidden" : ""}"
+                class="back-button ${this.nav == "Home" ? "back-hidden" : ""}"
                 @click="${this.navigateBack}"
               >
                 <svg
@@ -244,8 +256,8 @@ class FwThemeBuilder extends LitElement {
           : html`
               ${
                 // Fonts
-                this.theme && this.theme["Fonts"] &&
-                Object.keys(this.theme["Fonts"]).length != 0
+                this.theme && this.theme[ThemeEnum.FONTS] &&
+                Object.keys(this.theme[ThemeEnum.FONTS]).length != 0
                   ? html`<div part="fonts-ungrouped-container">
                       <h2
                         class="section-heading"
@@ -253,7 +265,7 @@ class FwThemeBuilder extends LitElement {
                       >
                         Fonts
                       </h2>
-                      ${Object.keys(this.theme["Fonts"]).map((font: string) =>
+                      ${Object.keys(this.theme[ThemeEnum.FONTS]).map((font: string) =>
                         this.createFontPickComponent(font)
                       )}
                     </div>`
@@ -261,8 +273,8 @@ class FwThemeBuilder extends LitElement {
               }
               ${
                 // Sizes
-                this.theme && this.theme["Sizes"] &&
-                Object.keys(this.theme["Sizes"]).length != 0
+                this.theme && this.theme[ThemeEnum.SIZES] &&
+                Object.keys(this.theme[ThemeEnum.SIZES]).length != 0
                   ? html`<div part="sizes-ungrouped-container">
                       <h2
                         class="section-heading"
@@ -270,7 +282,7 @@ class FwThemeBuilder extends LitElement {
                       >
                         Sizes
                       </h2>
-                      ${Object.keys(this.theme["Sizes"]).map((size: string) =>
+                      ${Object.keys(this.theme[ThemeEnum.SIZES]).map((size: string) =>
                         this.createSizePickComponent(size)
                       )}
                     </div>`
@@ -278,8 +290,8 @@ class FwThemeBuilder extends LitElement {
               }
               ${
                 // Colors
-                this.theme && this.theme["Colors"] &&
-                Object.keys(this.theme["Colors"]).length != 0
+                this.theme && this.theme[ThemeEnum.COLORS] &&
+                Object.keys(this.theme[ThemeEnum.COLORS]).length != 0
                   ? html`<div part="colors-ungrouped-container">
                       <h2
                         class="section-heading"
@@ -287,7 +299,7 @@ class FwThemeBuilder extends LitElement {
                       >
                         Colors
                       </h2>
-                      ${Object.keys(this.theme["Colors"]).map(
+                      ${Object.keys(this.theme[ThemeEnum.COLORS]).map(
                         (group) => html`
                           <div part="color-group-container">
                             <h3
@@ -296,7 +308,7 @@ class FwThemeBuilder extends LitElement {
                             >
                               ${group}
                             </h3>
-                            ${Object.keys(this.theme["Colors"][group]).map(
+                            ${Object.keys(this.theme[ThemeEnum.COLORS][group]).map(
                               (type: string) =>
                                 this.createColorPickComponent(group, type)
                             )}
