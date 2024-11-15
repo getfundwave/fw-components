@@ -38,6 +38,8 @@ export class FwFontPick extends LitElement {
 
   async optionSelectHandler(e: CustomEvent) {
     const selection = e.detail.item.obj;
+    if(selection.name === this.value.name) return;
+
     let detail = {
       value: selection,
     };
@@ -110,7 +112,7 @@ export class FwFontPick extends LitElement {
         </style>
         <div part="font-button">
           <paper-dropdown-menu .dynamicAlign=${true} class="plain" no-label-float @iron-select=${(e : CustomEvent) => this.optionSelectHandler(e)} style="width:100%" >
-              <paper-listbox  style="color:#000" slot="dropdown-content" .selected=${this.options[0].name || ''} attr-for-selected="name">
+              <paper-listbox  style="color:#000" slot="dropdown-content" .selected=${this.value.name || ''} attr-for-selected="name">
               ${this.options && repeat(this.options, (item) => html`<paper-item style='font-family: ${item.style}' .name=${item.name} .obj=${item}>${item.name}</paper-item>`)}
               </paper-listbox>
           </paper-dropdown-menu>
