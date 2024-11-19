@@ -11,7 +11,7 @@ npm i @fundwave/fw-theme-builder
 
 ```js 
 const theme = {
-  Fonts : {
+  fonts : {
     "Title" : {
       name : "DM Sans",
       url: 'https://fonts.gstatic.com/s/dmsans/v11/rP2Hp2ywxg089UriCZOIHQ.woff2',
@@ -23,7 +23,7 @@ const theme = {
       style: "'DM Sans', sans-serif",
     }
   },
-  Sizes : {
+  sizes : {
     "Tiny"  : "10px",
     "XS"    : "14px",
     "S"     : "16px",
@@ -32,7 +32,7 @@ const theme = {
     "XL"    : "22px",
     "Huge"  : "48px",
   },
-  Colors : {
+  colors : {
     "Primary" : {
       "Hex" : "#ad38d1",
       "L1" : "#ba68d3",

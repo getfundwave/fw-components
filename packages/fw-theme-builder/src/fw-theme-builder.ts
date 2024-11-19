@@ -6,15 +6,15 @@ import "./fw-font-pick";
 import { fontOptions, defaultTheme } from "./models";
 
 enum ThemeEnum {
-  COLORS = "Colors",
-  FONTS = "Fonts",
-  SIZES = "Sizes"
+  COLORS = "colors",
+  FONTS = "fonts",
+  SIZES = "sizes"
 }
 
 type Theme = {
-  Colors: {[key: string] : any},
-  Fonts: {[key: string] : any},
-  Sizes: {[key: string] : any},
+  colors: {[key: string] : any},
+  fonts: {[key: string] : any},
+  sizes: {[key: string] : any},
 }
 
 @customElement("fw-theme-builder")
@@ -109,11 +109,11 @@ export class FwThemeBuilder extends LitElement {
             composed: true,
           })
         );
-        this.theme.Fonts[font as keyof typeof this.theme.Fonts] = e.detail.value;
+        this.theme.fonts[font as keyof typeof this.theme.fonts] = e.detail.value;
         this.theme = { ...this.theme };
       }}
       .options="${this.fontOptions}"
-      .value=${this.theme.Fonts[font]}
+      .value=${this.theme.fonts[font]}
     >
     </fw-font-pick>`;
   }
@@ -134,10 +134,10 @@ export class FwThemeBuilder extends LitElement {
             composed: true,
           })
         );
-        this.theme.Sizes[size] = e.detail.value;
+        this.theme.sizes[size] = e.detail.value;
         this.theme = { ...this.theme };
       }}
-      .value=${this.theme.Sizes[size]}
+      .value=${this.theme.sizes[size]}
     >
     </fw-size-pick>`;
   }
@@ -160,7 +160,7 @@ export class FwThemeBuilder extends LitElement {
             composed: true,
           })
         );
-        this.theme.Colors[group][type] = e.detail.hex;
+        this.theme.colors[group][type] = e.detail.hex;
         this.theme = { ...this.theme };
       }}
       .label=${`${group} ${
@@ -168,7 +168,7 @@ export class FwThemeBuilder extends LitElement {
           ? type?.toLowerCase().slice(0, -4)
           : type
       }`}
-      .value="${this.theme.Colors[group][type]}"
+      .value="${this.theme.colors[group][type]}"
     >
     </fw-color-pick>`;
   }
@@ -190,11 +190,11 @@ export class FwThemeBuilder extends LitElement {
         break;
       case ThemeEnum.COLORS:
         content = html` <div part="content-container">
-          ${(Object.keys(this.theme.Colors) ?? []).map(
+          ${(Object.keys(this.theme.colors) ?? []).map(
             (clr) => html` <button
               part="theme-button"
               @click=${() =>
-                this.sectionChangeHandler( `Colors-${clr}`)}
+                this.sectionChangeHandler( `colors-${clr}`)}
             >
               ${clr}
             </button>`

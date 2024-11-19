@@ -88,7 +88,7 @@ export const fontOptions = [
 
 
 export const defaultTheme = {
-  Fonts : {
+  fonts : {
     "Title" : {
       name : "DM Sans",
       url: 'https://fonts.gstatic.com/s/dmsans/v11/rP2Hp2ywxg089UriCZOIHQ.woff2',
@@ -100,7 +100,7 @@ export const defaultTheme = {
       style: "'DM Sans', sans-serif",
     }
   },
-  Sizes : {
+  sizes : {
     "Tiny"  : "10px",
     "XS"    : "14px",
     "S"     : "16px",
@@ -109,7 +109,7 @@ export const defaultTheme = {
     "XL"    : "22px",
     "Huge"  : "48px",
   },
-  Colors : {
+  colors : {
     "Primary" : {
       "Hex" : "#ad38d1",
       "L1" : "#ba68d3",
