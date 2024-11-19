@@ -31,11 +31,6 @@ export class FwFontPick extends LitElement {
     style: "'DM Sans', sans-serif",
   };
 
-  buttonClickHandler() {
-    if (this.showDropdown) this.showDropdown = false;
-    else this.showDropdown = true;
-  }
-
   async optionSelectHandler(e: CustomEvent) {
     const selection = e.detail.item.obj;
     if(selection.name === this.value.name) return;
@@ -55,51 +50,6 @@ export class FwFontPick extends LitElement {
     await selectedFont.load();
     this.value = selection;
   }
-
-  static styles = css`
-    .fp-dropdown {
-      position: absolute;
-      top: 2.4rem;
-      left: 0;
-      display: none;
-      flex-direction: column;
-      justify-content: flex-start;
-      background-color: #ffffff;
-      padding: 0.5rem;
-      border-radius: 4px;
-      box-shadow: 3px 3px 10px #1b1b1b1b, -3px -3px 10px #1b1b1b1b;
-      width: 8rem;
-      z-index: 21;
-    }
-    .fp-option-unselected {
-      padding: 0.2rem 0.5rem;
-      cursor: pointer;
-      border-radius: 2px;
-    }
-    .fp-option-unselected:hover {
-      background-color: #e4e4e4;
-    }
-    .fp-dropdown-show {
-      display: flex;
-      animation: fp-appear 0.2s forwards;
-    }
-    @keyframes fp-appear {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-    .fp-icon {
-      width: 1rem;
-      height: 1rem;
-      transform: rotate(180deg);
-    }
-    .fp-icon-selected {
-      transform: rotate(0deg);
-    }
-  `;
 
   render() {
     return html`

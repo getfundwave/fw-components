@@ -47,27 +47,6 @@ export class FwThemeBuilder extends LitElement {
       height: 1rem;
     }
 
-    .action-button {
-      transition: all 0.1s ease-in-out;
-      cursor: pointer;
-      width: 3.5rem;
-      user-select: none;
-      text-align: center;
-      border-radius: 4px;
-      font-family: "DM Sans", sans-serif;
-      padding: 0.5rem 0.5rem;
-      box-shadow: #1b1b1b3b 0px 4px 2px;
-    }
-    .save-btn {
-      background-color: #aaf16f;
-    }
-    .discard-btn {
-      background-color: #e7e7e7;
-    }
-    .action-button:active {
-      box-shadow: none;
-      transform: translateY(-2px);
-    }
     .color-group-heading {
       font-weight: 300;
       margin: 0.25rem 0rem 0.1rem 0rem;
