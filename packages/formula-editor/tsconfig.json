@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "experimentalDecorators": true,
+      "outDir": "./dist",
+      "rootDir": "../",
+      "target": "esnext",
+      "module": "esnext",
+      "moduleResolution": "node",
+      "declaration": true,
+      "declarationDir": "./dist/types",
+      "composite": false,
+      "lib": ["esnext", "dom"],
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "noEmitOnError": false
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules", "dist"]
+  }
