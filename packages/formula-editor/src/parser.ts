@@ -438,7 +438,7 @@ export class Parser {
               calcStack.push(Big(numA).mul(Big(numB)));
               break;
             case "/":
-              if (Big(numB).toNumber() == 0) {
+              if (parseFloat(Big(numB).toString()) == 0) {
                 calculationResult.errorString = "Division by zero encountered";
                 return calculationResult;
               }
@@ -459,7 +459,7 @@ export class Parser {
       }
     }
 
-    calculationResult.result = calcStack.top()?.toNumber();
+    calculationResult.result=parseFloat(calcStack.top().toString());
     return calculationResult;
   }
 }

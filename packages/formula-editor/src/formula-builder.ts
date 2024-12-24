@@ -3,6 +3,7 @@ import { customElement, property, query } from "lit/decorators.js";
 import { Formula } from "./helpers/types.js";
 
 import { TextButtonStyles } from "../../styles/src/button-styles.js";
+import "./formula-editor"
 import { FormulaEditor } from "./formula-editor";
 
 @customElement("formula-builder")
@@ -66,12 +67,12 @@ class FormulaBuilder extends LitElement {
   })
   formula = new Formula("", "");
 
-  @property()
+
   handleCalculate = () => {
     this.formulaEditor?.requestCalculate();
   };
 
-  @property()
+
   handleFormat = () => {
     this.formulaEditor?.requestFormat();
   };
@@ -79,8 +80,13 @@ class FormulaBuilder extends LitElement {
   @query("#metric-name-input")
   nameInput: HTMLInputElement | undefined;
 
-  @query("formula-editor")
+  @query("#formula-editor-builder")
   formulaEditor: FormulaEditor | undefined;
+
+  firstUpdated() {
+    this.nameInput = this.shadowRoot?.querySelector("#metric-name-input");
+    this.formulaEditor = this.shadowRoot?.querySelector("#formula-editor-builder");
+  }
 
   handleChange() {
     this.dispatchEvent(
@@ -114,6 +120,7 @@ class FormulaBuilder extends LitElement {
       </div>
       <label>Formula</label>
       <formula-editor
+          id="formula-editor-builder"
         class="fe"
         minSuggestionLen="0"
         @fw-formula-content-changed=${(e: any) => {
