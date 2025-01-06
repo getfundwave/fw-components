@@ -39,13 +39,6 @@ export class FWFormulaEditorShowcase extends LitElement {
       background-color: #f3f3f3;
       box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
     }
-    .variables input {
-      padding: 8px;
-      margin-right: 5px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      width: 120px;
-    }
     .variable-list {
       margin-top: 10px;
     }
@@ -55,6 +48,7 @@ export class FWFormulaEditorShowcase extends LitElement {
       padding: 5px 0;
     }
     .formula-builder-container {
+      width: 99%;
       margin-top: 20px;
     }
   `;
