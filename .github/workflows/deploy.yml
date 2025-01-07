@@ -15,16 +15,22 @@ jobs:
     
     - name: Install dependencies
       run: |
-           npm install
+        npm install
 
-    - name: Build 
+    - name: Build
       run: |
         npm run build
 
-    - name: Deploy formula-editor
+    - name: Deploy showcases
       run: |
-        mkdir -p deployment/formula-editor
-        cp -r showcase/formula-editor/dist/* deployment/formula-editor/
+        mkdir -p deployment
+        for folder in showcase/*; do
+          if [ -d "$folder" ]; then
+            showcase_name=$(basename "$folder")
+            mkdir -p deployment/$showcase_name
+            cp -r "$folder"/dist/* deployment/$showcase_name/
+          fi
+        done
 
     - name: Push to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
