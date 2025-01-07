@@ -52,6 +52,9 @@ export class FormulaEditor extends LitElement {
   @state()
   lastInputType: string = "undef";
 
+  @state()
+  _selectedRecommendation: string; 
+
   @property()
   content: string = "";
 
@@ -81,12 +84,28 @@ export class FormulaEditor extends LitElement {
 
   handleChange(event: InputEvent) {
     event.preventDefault();
-
     this.lastInputType = event.inputType;
     this.content = (event.target as HTMLDivElement).innerText;
     this.parseInput();
-
     (event.target as HTMLDivElement).focus();
+  }
+
+
+
+  navigateRecommendations(direction: string) {
+    if (!this._recommendations) return;
+  
+    const currentIndex = this._recommendations.indexOf(this._selectedRecommendation);
+    let newIndex = currentIndex;
+  
+    if (direction === "ArrowDown") {
+      newIndex = currentIndex === this._recommendations.length - 1 ? 0 : currentIndex + 1;
+    } else if (direction === "ArrowUp") {
+      newIndex = currentIndex === 0 ? this._recommendations.length - 1 : currentIndex - 1;
+    }
+  
+    this._selectedRecommendation = this._recommendations[newIndex];
+    
   }
 
   handleTab(event: KeyboardEvent) {
@@ -94,6 +113,17 @@ export class FormulaEditor extends LitElement {
       event.preventDefault();
       this.parseInput(this._recommendations[0]);
     }
+    else if (event.code == "ArrowDown" || event.code == "ArrowUp") {
+      event.preventDefault();
+      this.navigateRecommendations(event.code);
+      this.requestUpdate();
+    }
+    else if (event.code === "Enter" && this._selectedRecommendation) {
+      event.preventDefault();
+      this.parseInput(this._selectedRecommendation);
+      this._selectedRecommendation = null; 
+    }
+  
   }
 
   onClickRecommendation(recommendation: string) {
@@ -227,6 +257,7 @@ export class FormulaEditor extends LitElement {
             "px"};
             "
             .recommendations=${this._recommendations}
+            .currentSelection=${this._selectedRecommendation}
             .onClickRecommendation=${(e: any) => this.onClickRecommendation(e)}
           ></suggestion-menu>`
         : html``}

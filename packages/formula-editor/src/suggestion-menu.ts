@@ -3,11 +3,21 @@ import { customElement, property } from "lit/decorators.js";
 
 @customElement("suggestion-menu")
 export class SuggestionMenu extends LitElement {
-  @property()
-  recommendations: string[] = [];
+  static get properties() {
+    return {
+      recommendations: { type: Array },
+      onClickRecommendation: { type: Function },
+      currentSelection: { type: String },
+    };
+  }
 
-  @property()
-  onClickRecommendation: Function = (recommendation: string) => {};
+  constructor(){
+    super();
+    this.recommendations = [];
+    this.currentSelection = "";
+    this.onClickRecommendation = (recommendation: string) => () => {};
+  }
+
 
   static styles = css`
     ul {
@@ -27,6 +37,11 @@ export class SuggestionMenu extends LitElement {
       cursor: pointer;
     }
 
+    li.selected {
+      background-color: darkgrey;
+      color: yellow;
+    }
+
     li:focus-visible {
       /* outline: 1px solid red; */
       outline: 0px;
@@ -43,11 +58,15 @@ export class SuggestionMenu extends LitElement {
     }
   }
 
+
+  
+
   render() {
     return html`
       <ul class="wysiwyg-suggestion-menu">
         ${this.recommendations.map((recommendation) => {
           return html`<li
+            class="${this.currentSelection === recommendation ? 'selected' : ''}"
             tabindex="0"
             @click=${(e: any) => this.onClickRecommendation(recommendation)}
             @keydown=${(e: any) => this.handleKeydown(e, recommendation)}
