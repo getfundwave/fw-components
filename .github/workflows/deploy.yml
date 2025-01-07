@@ -6,6 +6,8 @@ on:
       - formula-editor
     paths:
       - showcase/**
+      - .github/workflows/deploy.yml
+      
 
 jobs:
   deploy:
