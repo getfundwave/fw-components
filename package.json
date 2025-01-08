@@ -1,8 +1,7 @@
 {
   "name": "fw-components",
   "workspaces": [
-    "packages/*",
-    "showcase/*"
+    "packages/*"
   ],
   "scripts": {
     "clean": "lerna clean --yes && lerna run clean",

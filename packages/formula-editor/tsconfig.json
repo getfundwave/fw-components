@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
       "experimentalDecorators": true,
+      "useDefineForClassFields":false,
       "outDir": "./dist",
       "rootDir": "../",
       "target": "esnext",

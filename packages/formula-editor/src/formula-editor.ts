@@ -110,6 +110,7 @@ export class FormulaEditor extends LitElement {
 
   handleTab(event: KeyboardEvent) {
     if (event.code == "Tab" && this._recommendations?.length == 1) {
+      this._selectedRecommendation = null;
       event.preventDefault();
       this.parseInput(this._recommendations[0]);
     }

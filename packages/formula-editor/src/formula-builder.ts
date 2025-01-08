@@ -80,13 +80,9 @@ class FormulaBuilder extends LitElement {
   @query("#metric-name-input")
   nameInput: HTMLInputElement | undefined;
 
-  @query("#formula-editor-builder")
+  @query("#formula-editor")
   formulaEditor: FormulaEditor | undefined;
 
-  firstUpdated() {
-    this.nameInput = this.shadowRoot?.querySelector("#metric-name-input");
-    this.formulaEditor = this.shadowRoot?.querySelector("#formula-editor-builder");
-  }
 
   handleChange() {
     this.dispatchEvent(
@@ -120,7 +116,7 @@ class FormulaBuilder extends LitElement {
       </div>
       <label>Formula</label>
       <formula-editor
-          id="formula-editor-builder"
+          id="formula-editor"
         class="fe"
         minSuggestionLen="0"
         @fw-formula-content-changed=${(e: any) => {
