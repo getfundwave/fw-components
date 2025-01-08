@@ -3,20 +3,15 @@ import { customElement, property } from "lit/decorators.js";
 
 @customElement("suggestion-menu")
 export class SuggestionMenu extends LitElement {
-  static get properties() {
-    return {
-      recommendations: { type: Array },
-      onClickRecommendation: { type: Function },
-      currentSelection: { type: String },
-    };
-  }
 
-  constructor(){
-    super();
-    this.recommendations = [];
-    this.currentSelection = "";
-    this.onClickRecommendation = (recommendation: string) => () => {};
-  }
+  @property()
+  recommendations: string[] = [];
+
+  @property()
+  onClickRecommendation: Function = (recommendation: string) => {};
+
+  @property()
+  currentSelection: string = "";
 
 
   static styles = css`
@@ -58,8 +53,6 @@ export class SuggestionMenu extends LitElement {
     }
   }
 
-
-  
 
   render() {
     return html`
