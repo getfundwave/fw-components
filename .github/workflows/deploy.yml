@@ -7,7 +7,6 @@ on:
     paths:
       - showcase/**
       - .github/workflows/deploy.yml
-      
 
 jobs:
   deploy:
@@ -16,25 +15,21 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    
-    - name: Install dependencies
-      run: |
-        npm install
 
-    - name: Build
-      run: |
-        npm run build
-
-    - name: Deploy showcases
+    - name: Install and Build All Showcases
       run: |
         mkdir -p deployment
-        for folder in showcase/*; do
-          if [ -d "$folder" ]; then
-            showcase_name=$(basename "$folder")
-            mkdir -p deployment/$showcase_name
-            cp -r "$folder"/dist/* deployment/$showcase_name/
+        ls showcase | xargs -I {} bash -c '
+          if [ -d "showcase/{}" ]; then
+            echo "Processing showcase: {}"
+            cd showcase/{} 
+            npm install
+            npm run build
+            cd ../..
+            mkdir -p deployment/{}
+            cp -r showcase/{}/dist/* deployment/{}/
           fi
-        done
+        '
 
     - name: Push to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
