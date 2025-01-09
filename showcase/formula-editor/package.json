@@ -1,6 +1,6 @@
 {
   "name": "fw-formula-editor-showcase",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "",
   "scripts": {
     "webpack": "webpack --config webpack.dev.js",

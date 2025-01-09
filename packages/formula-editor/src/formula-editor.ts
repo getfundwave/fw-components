@@ -84,13 +84,13 @@ export class FormulaEditor extends LitElement {
 
   handleChange(event: InputEvent) {
     event.preventDefault();
+
     this.lastInputType = event.inputType;
     this.content = (event.target as HTMLDivElement).innerText;
     this.parseInput();
+
     (event.target as HTMLDivElement).focus();
   }
-
-
 
   navigateRecommendations(direction: string) {
     if (!this._recommendations) return;

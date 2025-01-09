@@ -67,11 +67,9 @@ class FormulaBuilder extends LitElement {
   })
   formula = new Formula("", "");
 
-
   handleCalculate = () => {
     this.formulaEditor?.requestCalculate();
   };
-
 
   handleFormat = () => {
     this.formulaEditor?.requestFormat();
@@ -82,7 +80,6 @@ class FormulaBuilder extends LitElement {
 
   @query("formula-editor")
   formulaEditor: FormulaEditor | undefined;
-
 
   handleChange() {
     this.dispatchEvent(

@@ -450,7 +450,7 @@ export class Parser {
             // is obvious due to performance overheads. Use this case with care.
 
             case "^":
-              calcStack.push(Big(numA).pow(Big(numB).toNumber()));
+              calcStack.push(Big(numA).pow(parseFloat(Big(numB).toString())));
           }
         } catch (error: any) {
           calculationResult.errorString = error;

@@ -54,11 +54,10 @@ export class FWFormulaEditorShowcase extends LitElement {
   `;
 
   handleFormulaChange(event) {
-    const { name, rawFormula, error: _, precision } = event.detail;
+    // eslint-disable-next-line no-unused-vars
+    const { name, rawFormula, error, precision } = event.detail;
     this.currentFormula = new Formula(name, rawFormula, precision);
   }
-
-
 
   render() {
     return html`
@@ -69,13 +68,13 @@ export class FWFormulaEditorShowcase extends LitElement {
           <div class="variable-list">
             <h4>Current Variables</h4>
             ${Array.from(this.variables.entries()).map(
-      ([key, value]) => html`
+              ([key, value]) => html`
                 <div class="variable-item">
                   <span>${key}</span>
                   <span>${value}</span>
                 </div>
               `
-    )}
+            )}
           </div>
         </div>
 

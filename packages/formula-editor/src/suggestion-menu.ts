@@ -13,7 +13,6 @@ export class SuggestionMenu extends LitElement {
   @property()
   currentSelection = "";
 
-
   static styles = css`
     ul {
       border: 1px solid var(--fe-suggestion-color, white);
@@ -52,7 +51,6 @@ export class SuggestionMenu extends LitElement {
       this.onClickRecommendation(recommendation);
     }
   }
-
 
   render() {
     return html`
