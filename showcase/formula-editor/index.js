@@ -54,7 +54,7 @@ export class FWFormulaEditorShowcase extends LitElement {
   `;
 
   handleFormulaChange(event) {
-    const { name, rawFormula, error, precision } = event.detail;
+    const { name, rawFormula, error: _, precision } = event.detail;
     this.currentFormula = new Formula(name, rawFormula, precision);
   }
 

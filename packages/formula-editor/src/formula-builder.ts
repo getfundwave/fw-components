@@ -80,7 +80,7 @@ class FormulaBuilder extends LitElement {
   @query("#metric-name-input")
   nameInput: HTMLInputElement | undefined;
 
-  @query("#formula-editor")
+  @query("formula-editor")
   formulaEditor: FormulaEditor | undefined;
 
 
@@ -116,7 +116,6 @@ class FormulaBuilder extends LitElement {
       </div>
       <label>Formula</label>
       <formula-editor
-          id="formula-editor"
         class="fe"
         minSuggestionLen="0"
         @fw-formula-content-changed=${(e: any) => {

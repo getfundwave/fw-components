@@ -11,7 +11,7 @@ export class SuggestionMenu extends LitElement {
   onClickRecommendation: Function = (recommendation: string) => {};
 
   @property()
-  currentSelection: string = "";
+  currentSelection = "";
 
 
   static styles = css`
