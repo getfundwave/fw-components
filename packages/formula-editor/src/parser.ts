@@ -459,7 +459,7 @@ export class Parser {
       }
     }
 
-    calculationResult.result=parseFloat(calcStack.top().toString());
+    calculationResult.result = parseFloat(calcStack.top().toString());
     return calculationResult;
   }
 }

@@ -108,13 +108,13 @@ export class FormulaEditor extends LitElement {
     
   }
 
-  handleTab(event: KeyboardEvent) {
+  handleKeyboardEvents(event: KeyboardEvent) {
     if (event.code == "Tab" && this._recommendations?.length == 1) {
       this._selectedRecommendation = null;
       event.preventDefault();
       this.parseInput(this._recommendations[0]);
     }
-    else if (event.code == "ArrowDown" || event.code == "ArrowUp") {
+    else if (event.code === "ArrowDown" || event.code === "ArrowUp") {
       event.preventDefault();
       this.navigateRecommendations(event.code);
       this.requestUpdate();
@@ -243,7 +243,7 @@ export class FormulaEditor extends LitElement {
         spellcheck="false"
         autocomplete="off"
         @input=${this.handleChange}
-        @keydown=${this.handleTab}
+        @keydown=${this.handleKeyboardEvents}
       ></div>
       ${this._recommendations
         ? html` <suggestion-menu
