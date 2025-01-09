@@ -32,8 +32,8 @@ export class SuggestionMenu extends LitElement {
     }
 
     li.selected {
-      background-color: darkgrey;
-      color: yellow;
+      background-color: var(--fe-suggestion-selected-background-color, darkgrey);
+      color: var(--fe-suggestion-selected-color, yellow);
     }
 
     li:focus-visible {
