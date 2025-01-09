@@ -96,16 +96,14 @@ export class FormulaEditor extends LitElement {
     if (!this._recommendations) return;
   
     const currentIndex = this._recommendations.indexOf(this._selectedRecommendation);
-    let newIndex = currentIndex;
-  
-    if (direction === "ArrowDown") {
-      newIndex = currentIndex === this._recommendations.length - 1 ? 0 : currentIndex + 1;
-    } else if (direction === "ArrowUp") {
-      newIndex = currentIndex === 0 ? this._recommendations.length - 1 : currentIndex - 1;
-    }
+    const newIndex =
+      direction === "ArrowDown"
+        ? (currentIndex + 1) % this._recommendations.length
+        : direction === "ArrowUp"
+        ? (currentIndex - 1 + this._recommendations.length) % this._recommendations.length
+        : currentIndex;
   
     this._selectedRecommendation = this._recommendations[newIndex];
-    
   }
 
   handleKeyboardEvents(event: KeyboardEvent) {
