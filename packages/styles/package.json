@@ -1,6 +1,6 @@
 {
   "name": "@fw-components/styles",
-  "version": "2.0.3-formula-editor.1",
+  "version": "2.0.6",
   "description": "Style library for web components",
   "publishConfig": {
     "access": "public"

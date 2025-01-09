@@ -53,6 +53,10 @@ export class Trackers {
     }
   }
 
+  getUntrackedTargets(elements: Element[]) {
+    return elements.filter((element) => !Boolean(element.getAttribute("fw-events-registered")));
+  }
+
   /**
    * identifies targets and attaches required listeners for tracking
    **/
@@ -62,36 +66,39 @@ export class Trackers {
       if (!matchPathPattern(location.pathname, eventConfig.location)) return;
 
       const tree = getNodeTree(eventConfig.jsPath, document);
-      const element = tree.destination;
+      const elements = tree.destinations;
       this.#debug("Attempting registration of trackers @ ", { tree, config: eventConfig });
 
-      if (!element) tree.shadowRoots.forEach((root) => this.observeNode(root));
+      if (!elements?.length) tree.parents.reverse().forEach((root) => this.observeNode(root));
+      if (!tree.parents.length) this.#debug("No shadow-roots retrieved for observation", { eventConfig });
 
-      if (!element || !eventConfig.title) return;
+      if (!elements?.length || !eventConfig.title) return;
 
-      const trackerRegistered = Boolean(element.getAttribute("fw-events-registered"));
-      this.#debug("Tracking status", { element, trackerRegistered });
+      const unTrackedElements = this.getUntrackedTargets(elements);
+      this.#debug("Tracking status", { element: elements, trackerRegistered: unTrackedElements.length });
 
-      if (trackerRegistered) return;
+      if (!unTrackedElements.length) return;
 
       const eventsToTrack = (eventConfig.type || "").split(",").filter(Boolean) || [];
       if (!Boolean(eventsToTrack.length)) eventsToTrack.push("click");
 
-      eventsToTrack.forEach((eventType: any) =>
-        element.addEventListener(eventType, (event) => {
-          try {
-            if (!Boolean(this.track)) return this.#debug("Missing `track` method!");
+      eventsToTrack.forEach((eventType: string) =>
+        elements.forEach((element) => {
+          element.addEventListener(eventType, (event) => {
+            try {
+              if (!Boolean(this.track)) return this.#debug("Missing `track` method!");
 
-            this.#debug("Event triggered: ", eventConfig, event);
-            this.track(eventConfig.title!, element, event, eventConfig);
-          } catch (error) {
-            this.#debug("Failed to register events.", error);
-          }
+              this.#debug("Event triggered: ", eventConfig, event);
+              this.track(eventConfig.title!, element, event, eventConfig);
+            } catch (error) {
+              this.#debug("Failed to register events.", error);
+            }
+          });
+
+          element.setAttribute("fw-events-registered", "true");
+          this.#debug("Tracker registered @ ", { element, eventConfig });
         })
       );
-
-      element.setAttribute("fw-events-registered", "true");
-      this.#debug("Tracker registered @ ", { element, eventConfig });
     });
   }
 
@@ -99,14 +106,14 @@ export class Trackers {
    * attaches mutation-observer to provided node
    * @param {ShadowRoot | null} node - ShadowRoot to attach the observer to
    */
-  observeNode(node: ShadowRoot | null) {
+  observeNode(node: Element | ShadowRoot | null) {
     if (!Boolean(node)) return;
 
     try {
-      this.observer?.observe(node!, { subtree: true, attributes: true, childList: true });
-      this.#debug("Registering observer on target: ", node?.host || node);
+      this.observer?.observe((node! as Element).shadowRoot || node!, { subtree: true, attributes: true, childList: true });
+      this.#debug("Registering observer on target: ", (node as ShadowRoot)?.host || node);
     } catch (error) {
-      this.#debug("Failed to register observer on target: ", { error, node: node!.host || node });
+      this.#debug("Failed to register observer on target: ", { error, node: (node as ShadowRoot)!.host || node });
     }
   }
 
