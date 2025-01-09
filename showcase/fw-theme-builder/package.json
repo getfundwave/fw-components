@@ -1,0 +1,36 @@
+{
+  "name": "fw-theme-builder",
+  "version": "1.0.0",
+  "scripts": {
+    "webpack": "webpack --config webpack.dev.js",
+    "webpack-dev": "webpack --config webpack.dev.js",
+    "start": "webpack-dev-server --config webpack.dev.js --host 0.0.0.0 --hot",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@fw-components/fw-theme-builder": "file:../../packages/fw-theme-builder",
+    "lit": "^3.2.1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+    "@babel/plugin-transform-react-jsx": "^7.25.9",
+    "@babel/preset-env": "^7.26.0",
+    "@webcomponents/webcomponentsjs": "^2.8.0",
+    "babel-loader": "^9.2.1",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^7.1.2",
+    "esbuild-loader": "^4.2.2",
+    "html-webpack-plugin": "^5.6.3",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
+  }
+}
