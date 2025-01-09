@@ -12,7 +12,7 @@ const roots = [
 module.exports = () => { 
   return {
     entry: {
-      'crud-showcase': ['./index.js'],
+      'formula-editor-showcase': ['./index.js'],
     },
     resolve: {
       modules: roots
