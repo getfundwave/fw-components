@@ -9,6 +9,15 @@ class Formula {
     this.precision = precision;
     this.error = null;
   }
+
+  get formulaString() {
+    return this._formulaString;
+  }
+
+  set formulaString(value) {
+    this._formulaString = value;
+    this.error = null;
+  }
 }
 
 export class FWFormulaEditorShowcase extends LitElement {
@@ -54,8 +63,7 @@ export class FWFormulaEditorShowcase extends LitElement {
   `;
 
   handleFormulaChange(event) {
-    // eslint-disable-next-line no-unused-vars
-    const { name, rawFormula, error, precision } = event.detail;
+    const { name, rawFormula, precision } = event.detail;
     this.currentFormula = new Formula(name, rawFormula, precision);
   }
 
@@ -63,7 +71,6 @@ export class FWFormulaEditorShowcase extends LitElement {
     return html`
       <div class="formula-editor-showcase">
         <div class="variables">
-
           <!-- Current Variables -->
           <div class="variable-list">
             <h4>Current Variables</h4>
@@ -91,4 +98,7 @@ export class FWFormulaEditorShowcase extends LitElement {
   }
 }
 
-window.customElements.define("fw-formula-editor-showcase", FWFormulaEditorShowcase);
+window.customElements.define(
+  "fw-formula-editor-showcase",
+  FWFormulaEditorShowcase
+);
