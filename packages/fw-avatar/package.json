@@ -11,7 +11,7 @@
     "start": "web-dev-server"
   },
   "dependencies": {
-    "@fw-components/styles": "^2.0.2",
+    "@fw-components/styles": "^2.0.6",
     "@material/mwc-icon": "^0.27.0",
     "@material/mwc-list": "^0.25.3",
     "@material/mwc-menu": "^0.25.3",
