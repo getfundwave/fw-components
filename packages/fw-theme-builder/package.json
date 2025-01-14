@@ -1,6 +1,6 @@
 {
   "name": "@fw-components/fw-theme-builder",
-  "version": "2.0.6",
+  "version": "2.0.7-formula-editor.0",
   "description": "Theme builder web component",
   "publishConfig": {
     "access": "public"
@@ -14,7 +14,7 @@
   "author": "The Fundwave Authors",
   "license": "ISC",
   "dependencies": {
-    "@fw-components/styles": "^2.0.6",
+    "@fw-components/styles": "^2.0.7-formula-editor.0",
     "@polymer/paper-dropdown-menu": "^3.2.0",
     "@polymer/paper-item": "^3.0.1",
     "@polymer/paper-listbox": "^3.0.1",
