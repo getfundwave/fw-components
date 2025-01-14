@@ -41,7 +41,6 @@ jobs:
             cp -r showcase/{}/dist/* deployment/{}/
           fi
         '
-    
 
     - name: Push to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
