@@ -438,7 +438,7 @@ export class Parser {
               calcStack.push(Big(numA).mul(Big(numB)));
               break;
             case "/":
-              if (Big(numB).toNumber() == 0) {
+              if (parseFloat(Big(numB).toString()) == 0) {
                 calculationResult.errorString = "Division by zero encountered";
                 return calculationResult;
               }
@@ -450,7 +450,7 @@ export class Parser {
             // is obvious due to performance overheads. Use this case with care.
 
             case "^":
-              calcStack.push(Big(numA).pow(Big(numB).toNumber()));
+              calcStack.push(Big(numA).pow(parseFloat(Big(numB).toString())));
           }
         } catch (error: any) {
           calculationResult.errorString = error;
@@ -459,7 +459,7 @@ export class Parser {
       }
     }
 
-    calculationResult.result = calcStack.top()?.toNumber();
+    calculationResult.result = parseFloat(calcStack.top().toString());
     return calculationResult;
   }
 }

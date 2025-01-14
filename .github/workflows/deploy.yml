@@ -1,0 +1,49 @@
+name: Deploy Showcases
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - showcase/**
+      - .github/workflows/deploy.yml
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Install dependencies
+      run: |
+        npm install
+
+    - name: Build
+      run: |
+        npm run build
+
+    - name: Install and Build All Showcases 
+      run: |
+        # Reference: Discussion on dependency issues and NODE_OPTIONS usage
+        # https://github.com/webpack/webpack/issues/14532#
+        export NODE_OPTIONS=--openssl-legacy-provider
+        mkdir -p deployment
+        ls showcase | xargs -I {} bash -c '
+          if [ -d "showcase/{}" ]; then
+            echo "Processing showcase: {}"
+            cd showcase/{} 
+            npm install
+            npm run build
+            cd ../..
+            mkdir -p deployment/{}
+            cp -r showcase/{}/dist/* deployment/{}/
+          fi
+        '
+
+    - name: Push to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: deployment

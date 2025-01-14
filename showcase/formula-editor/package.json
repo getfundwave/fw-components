@@ -1,8 +1,7 @@
 {
-  "name": "fw-dnd-showcase",
-  "version": "1.0.0",
+  "name": "fw-formula-editor-showcase",
+  "version": "0.0.0",
   "description": "",
-  "author": "Balraj-fundwave",
   "scripts": {
     "webpack": "webpack --config webpack.js",
     "webpack-dev": "webpack --config webpack.js",
@@ -12,14 +11,17 @@
   },
   "keywords": [],
   "dependencies": {
-    "@fw-components/fw-dnd": "file:../../packages/fw-dnd",
+    "@fw-components/formula-editor": "file:../../packages/formula-editor",
     "@fw-components/styles": "file:../../packages/styles",
     "lit": "^2.7.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-proposal-decorators": "^7.25.9",
     "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-proposal-private-methods": "^7.18.6",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/plugin-transform-react-jsx": "^7.12.12",
     "@babel/preset-env": "^7.5.4",
     "@webcomponents/webcomponentsjs": "^2.8.0",

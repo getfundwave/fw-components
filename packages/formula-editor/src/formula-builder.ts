@@ -3,6 +3,7 @@ import { customElement, property, query } from "lit/decorators.js";
 import { Formula } from "./helpers/types.js";
 
 import { TextButtonStyles } from "../../styles/src/button-styles.js";
+import "./formula-editor"
 import { FormulaEditor } from "./formula-editor";
 
 @customElement("formula-builder")
@@ -66,12 +67,10 @@ class FormulaBuilder extends LitElement {
   })
   formula = new Formula("", "");
 
-  @property()
   handleCalculate = () => {
     this.formulaEditor?.requestCalculate();
   };
 
-  @property()
   handleFormat = () => {
     this.formulaEditor?.requestFormat();
   };

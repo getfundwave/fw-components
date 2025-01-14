@@ -52,6 +52,9 @@ export class FormulaEditor extends LitElement {
   @state()
   lastInputType: string = "undef";
 
+  @state()
+  _selectedRecommendation: string; 
+
   @property()
   content: string = "";
 
@@ -89,11 +92,37 @@ export class FormulaEditor extends LitElement {
     (event.target as HTMLDivElement).focus();
   }
 
-  handleTab(event: KeyboardEvent) {
+  navigateRecommendations(direction: string) {
+    if (!this._recommendations) return;
+  
+    const currentIndex = this._recommendations.indexOf(this._selectedRecommendation);
+    const newIndex =
+      direction === "ArrowDown"
+        ? (currentIndex + 1) % this._recommendations.length
+        : direction === "ArrowUp"
+        ? (currentIndex - 1 + this._recommendations.length) % this._recommendations.length
+        : currentIndex;
+  
+    this._selectedRecommendation = this._recommendations[newIndex];
+  }
+
+  handleKeyboardEvents(event: KeyboardEvent) {
     if (event.code == "Tab" && this._recommendations?.length == 1) {
+      this._selectedRecommendation = null;
       event.preventDefault();
       this.parseInput(this._recommendations[0]);
     }
+    else if (event.code === "ArrowDown" || event.code === "ArrowUp") {
+      event.preventDefault();
+      this.navigateRecommendations(event.code);
+      this.requestUpdate();
+    }
+    else if (event.code === "Enter" && this._selectedRecommendation) {
+      event.preventDefault();
+      this.parseInput(this._selectedRecommendation);
+      this._selectedRecommendation = null; 
+    }
+  
   }
 
   onClickRecommendation(recommendation: string) {
@@ -212,7 +241,7 @@ export class FormulaEditor extends LitElement {
         spellcheck="false"
         autocomplete="off"
         @input=${this.handleChange}
-        @keydown=${this.handleTab}
+        @keydown=${this.handleKeyboardEvents}
       ></div>
       ${this._recommendations
         ? html` <suggestion-menu
@@ -227,6 +256,7 @@ export class FormulaEditor extends LitElement {
             "px"};
             "
             .recommendations=${this._recommendations}
+            .currentSelection=${this._selectedRecommendation}
             .onClickRecommendation=${(e: any) => this.onClickRecommendation(e)}
           ></suggestion-menu>`
         : html``}
