@@ -14,35 +14,70 @@ export class SuggestionMenu extends LitElement {
   currentSelection = "";
 
   static styles = css`
-    ul {
-      border: 1px solid var(--fe-suggestion-color, white);
-      color: var(--fe-suggestion-color, #bab6c0);
-      background-color: var(--fe-suggestion-background-color, #363537);
-      box-sizing: border-box;
-      width: fit-content;
-      list-style-type: none;
-      padding: 4px 0px;
-      margin: 2px;
-    }
+      ul {
+        border: 1px solid var(--fe-suggestion-color, white);
+        color: var(--fe-suggestion-color, #bab6c0);
+        background-color: var(--fe-suggestion-background-color, white);
+        box-sizing: border-box;
+        width: 20vw;
+        max-height: 25vh;
+        overflow-x: auto;
+        overflow-y: auto;
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.13);
+        border-radius: 5px;
+      }
 
-    li {
-      margin: 0px;
-      padding: 2px 6px;
-      cursor: pointer;
-    }
+      li {
+        margin: 0;
+        padding: 0.5em 1rem;
+        cursor: pointer;
+        font-family: var(--theme-font);
+        font-size: var(--secondary-font-size, 16px);
+        color: var(--secondary-color, #bab6c0);
+      }
 
-    li.selected {
-      background-color: var(--fe-suggestion-selected-background-color, darkgrey);
-      color: var(--fe-suggestion-selected-color, yellow);
-    }
+      li:hover,
+      li:focus-visible {
+        font-weight: bold;
+        color: var(--fe-suggestion-focus-color, #69676c);
+      }
 
-    li:focus-visible {
-      /* outline: 1px solid red; */
-      outline: 0px;
-      color: var(--fe-suggestion-focus-color, #fce566);
-      background-color: var(--fe-suggestion-focus-background-color, #69676c);
-    }
-  `;
+      li.selected {
+        color: var(--fe-suggestion-focus-color, #69676c);
+        font-weight: bold;
+      }
+
+      li[focused] {
+        font-weight: bold;
+      }
+
+      /* Scrollbar styling */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #aaa;
+      }
+
+      /* Optional shadow for the dropdown */
+      .content {
+        box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.13);
+      }
+    `;
+
 
   handleKeydown(event: KeyboardEvent, recommendation: string) {
     if (event.code == "Enter") {
