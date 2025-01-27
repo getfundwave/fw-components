@@ -104,6 +104,21 @@ export class FormulaEditor extends LitElement {
         : currentIndex;
   
     this._selectedRecommendation = this._recommendations[newIndex];
+
+    this.scrollToSelectedRecommendation(newIndex);
+  }
+
+  scrollToSelectedRecommendation(index: number) {
+    const suggestionMenu = this.shadowRoot?.querySelector("suggestion-menu");
+    if (suggestionMenu) {
+      const listItem = suggestionMenu.shadowRoot?.querySelectorAll("li")[index];
+      if (listItem) {
+        listItem.scrollIntoView({
+          block: "nearest",  
+          inline: "nearest",
+        });
+      }
+    }
   }
 
   handleKeyboardEvents(event: KeyboardEvent) {
