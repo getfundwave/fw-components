@@ -1,106 +1,32 @@
+import { Fzf } from 'fzf';
+
 export class Recommender {
-  private _trie: TrieNode;
-  private _mininumSuggestionLength: number;
+  private _fzf: Fzf<Array<string>>;
+  private _minimumSuggestionLength: number;
 
   constructor(variables: Map<string, number>, minSuggestionLen: number) {
-    this._mininumSuggestionLength = minSuggestionLen > 0 ? minSuggestionLen : 1;
-    this._trie = new TrieNode();
+    this._minimumSuggestionLength = minSuggestionLen > 0 ? minSuggestionLen : 1;
 
-    for (let variable of variables) {
-      this.insert(variable[0]);
-    }
-  }
-
-  insert(
-    word: string,
-    position: number = -1,
-    node: TrieNode | undefined = undefined
-  ): void {
-    if (position == -1) {
-      this.insert(word, 0, this._trie);
-      return;
-    }
-
-    if (position == word.length) {
-      node?.addChild("\0");
-      return;
-    }
-
-    if (!node!.getChild(word[position])) {
-      node?.addChild(word[position]);
-    }
-
-    this.insert(word, position + 1, node!.getChild(word[position]));
+    const variableList = Array.from(variables.keys());
+    this._fzf = new Fzf(variableList);
   }
 
   getRecommendation(word: string): string[] | null {
-    if (word.length < this._mininumSuggestionLength) {
+    if (word.length < this._minimumSuggestionLength) {
       return null;
     }
 
-    let recommendations: string[] = [];
-    let currentPosition = 0;
-    let currentNode: TrieNode | undefined = this._trie;
+    const entries = this._fzf.find(word);
 
-    while (currentNode && currentPosition < word.length) {
-      currentNode = currentNode.getChild(word[currentPosition]);
-      currentPosition++;
-    }
-
-    if (!currentNode) {
-      return null;
-    }
-
-    this._traverseAndGet(recommendations, currentNode, word);
+    const recommendations = entries.map(entry => entry.item);
 
     if (
-      recommendations.length == 0 ||
-      (recommendations.length == 1 && recommendations[0] == word)
+      recommendations.length === 0 ||
+      (recommendations.length === 1 && recommendations[0] === word)
     ) {
       return null;
     }
 
     return recommendations;
-  }
-
-  private _traverseAndGet(
-    recommendations: string[],
-    node: TrieNode,
-    word: string,
-    currentString: string = ""
-  ) {
-    for (let child of node.children) {
-      if (child[0] == "\0") {
-        recommendations.push(word + currentString);
-        // return;
-      }
-
-      this._traverseAndGet(
-        recommendations,
-        child[1],
-        word,
-        currentString + child[0]
-      );
-    }
-  }
-}
-
-class TrieNode {
-  constructor() {
-    this._children = new Map<string, TrieNode>();
-  }
-
-  private _children: Map<string, TrieNode>;
-  
-  get children() {
-    return this._children;
-  }
-
-  getChild(char: string) {
-    return this._children.get(char);
-  }
-
-  addChild(char: string) {
-    this._children.set(char, new TrieNode());
   }
 }

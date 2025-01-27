@@ -224,7 +224,10 @@ export class FormulaEditor extends LitElement {
   }
 
   requestFormat() {
-    this.content = this._parser.addParentheses(this.content) ?? this.content;
+    if(!Boolean(this.content)){
+      return;
+    }
+    this.content =  this._parser.addParentheses(this.content) ?? this.content;
     this.parseInput();
     this._recommendations = null;
     this.requestUpdate();
@@ -235,14 +238,14 @@ export class FormulaEditor extends LitElement {
       <style>
         ${FormulaEditorStyles}
       </style>
-      <div
-        contenteditable
-        id="wysiwyg-editor"
-        spellcheck="false"
-        autocomplete="off"
-        @input=${this.handleChange}
-        @keydown=${this.handleKeyboardEvents}
-      ></div>
+        <div
+          contenteditable
+          id="wysiwyg-editor"
+          spellcheck="false"
+          autocomplete="off"
+          @input=${this.handleChange}
+          @keydown=${this.handleKeyboardEvents}
+        ></div>
       ${this._recommendations
         ? html` <suggestion-menu
             style="
@@ -255,10 +258,10 @@ export class FormulaEditor extends LitElement {
             window.scrollY +
             "px"};
             "
-            .recommendations=${this._recommendations}
-            .currentSelection=${this._selectedRecommendation}
-            .onClickRecommendation=${(e: any) => this.onClickRecommendation(e)}
-          ></suggestion-menu>`
+              .recommendations=${this._recommendations}
+              .currentSelection=${this._selectedRecommendation}
+              .onClickRecommendation=${(e: any) => this.onClickRecommendation(e)}
+            ></suggestion-menu>`
         : html``}
       <p>${this._calculatedResult}</p>
     `;

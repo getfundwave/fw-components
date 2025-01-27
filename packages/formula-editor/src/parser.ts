@@ -120,7 +120,6 @@ export class Parser {
         // Fetch recommendations nonetheless.
         parseOutput.recommendations =
           this._recommender.getRecommendation(token);
-        console.log(parseOutput.recommendations);
       }
 
       let tokenClassName = "";
