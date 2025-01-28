@@ -15,6 +15,7 @@ export class SuggestionMenu extends LitElement {
 
   static styles = css`
       ul {
+        position: relative;
         border: 1px solid var(--fe-suggestion-color, white);
         color: var(--fe-suggestion-color, #bab6c0);
         background-color: var(--fe-suggestion-background-color, white);
@@ -28,6 +29,7 @@ export class SuggestionMenu extends LitElement {
         margin: 0;
         box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.13);
         border-radius: 5px;
+        z-index: 99999
       }
 
       li {

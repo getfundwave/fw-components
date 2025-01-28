@@ -15,8 +15,8 @@
   "dependencies": {
     "@fw-components/styles": "^2.0.7-formula-editor.0",
     "big.js": "^6.2.1",
-    "fzf": "^0.5.2",
     "lit": "^2.1.2",
+    "match-sorter": "^8.0.0",
     "typescript": "^5.0.4"
   },
   "author": "The Fundwave Authors",

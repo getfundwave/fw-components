@@ -18,7 +18,6 @@ export interface CalculateResult {
 export class Parser {
   constructor(variables: Map<string, number>, minSuggestionLen: number) {
     this.variables = variables;
-
     this._recommender = new Recommender(this.variables, minSuggestionLen);
   }
 
@@ -67,7 +66,6 @@ export class Parser {
       errorString: null,
     };
 
-    console.log(tokens);
 
     tokens.forEach((token) => {
       // It is a number is either it's in the defined variables, or
@@ -116,7 +114,6 @@ export class Parser {
           token = recommendation;
           recommendation = null;
         }
-
         // Fetch recommendations nonetheless.
         parseOutput.recommendations =
           this._recommender.getRecommendation(token);

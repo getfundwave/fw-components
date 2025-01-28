@@ -11,7 +11,6 @@ export class FormulaEditor extends LitElement {
 
   constructor() {
     super();
-
     this._parser = new Parser(this.variables, this.minSuggestionLen);
   }
 
@@ -182,6 +181,8 @@ export class FormulaEditor extends LitElement {
     this._formattedContent = parseOutput.formattedContent;
     this.errorString = parseOutput.errorString;
 
+    // console.log("this._recommendation",parseOutput)
+
     /**
      * Don't modify the text stream manually if the text is being composed,
      * unless the user manually chooses to do so by selecting a suggestion.
@@ -215,6 +216,7 @@ export class FormulaEditor extends LitElement {
         detail: {
           formulaString: this.content,
           error: this.errorString,
+          recommendations: this._recommendations
         },
         bubbles: true,
       })
@@ -263,16 +265,6 @@ export class FormulaEditor extends LitElement {
         ></div>
       ${this._recommendations
         ? html` <suggestion-menu
-            style="
-              position: absolute; 
-              left: ${(this.currentCursorRect?.left ?? 0) -
-            (this.editor?.getClientRect()[0]?.left ?? 0) +
-            "px"}; 
-              top: ${(this.currentCursorRect?.top ??
-              0 - (this.editor?.getClientRect()[0]?.top ?? 0)) +
-            window.scrollY +
-            "px"};
-            "
               .recommendations=${this._recommendations}
               .currentSelection=${this._selectedRecommendation}
               .onClickRecommendation=${(e: any) => this.onClickRecommendation(e)}

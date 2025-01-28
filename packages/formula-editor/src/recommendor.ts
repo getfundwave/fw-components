@@ -1,14 +1,12 @@
-import { Fzf } from 'fzf';
+import {matchSorter} from 'match-sorter'
 
 export class Recommender {
-  private _fzf: Fzf<Array<string>>;
   private _minimumSuggestionLength: number;
+  private variableList: Array<string>;
 
   constructor(variables: Map<string, number>, minSuggestionLen: number) {
     this._minimumSuggestionLength = minSuggestionLen > 0 ? minSuggestionLen : 1;
-
-    const variableList = Array.from(variables.keys());
-    this._fzf = new Fzf(variableList);
+    this.variableList = Array.from(variables.keys());
   }
 
   getRecommendation(word: string): string[] | null {
@@ -16,9 +14,7 @@ export class Recommender {
       return null;
     }
 
-    const entries = this._fzf.find(word);
-
-    const recommendations = entries.map(entry => entry.item);
+    const recommendations = matchSorter(this.variableList,word)
 
     if (
       recommendations.length === 0 ||
