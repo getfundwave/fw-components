@@ -20,7 +20,7 @@ export class SuggestionMenu extends LitElement {
         color: var(--fe-suggestion-color, #bab6c0);
         background-color: var(--fe-suggestion-background-color, white);
         box-sizing: border-box;
-        width: 20vw;
+        width: var(--fe-suggestion-width, 20vw);
         max-height: 25vh;
         overflow-x: auto;
         overflow-y: auto;

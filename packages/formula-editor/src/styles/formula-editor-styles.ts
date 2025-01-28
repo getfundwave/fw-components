@@ -3,17 +3,15 @@ import { css } from "lit";
 export const FormulaEditorStyles = css`
   #wysiwyg-editor {
     display: inline-block;
-    border: none;
     padding: 4px;
     caret-color: var(--fe-caret-color, #fff);
     color: var(--fe-text-color, #f7f1ff);
     line-height: 1.1;
-    width: 100%;
+    width:  var(--fe-width, 100%);
     height: var(--fe-height, 60%);
-    border-radius: var(--fe-border-radius, 4px) var(--fe-border-radius, 4px) 0px
-      0px;
+    border-radius: var(--fe-border-radius, 4px);
     overflow: auto;
-    border: 2px solid black;
+    border: var(--fe-border, 2px solid black);
     outline: 0px solid black;
     white-space: pre-wrap;
     background-color: var(--fe-background-color, #222222);
