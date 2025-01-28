@@ -3,7 +3,7 @@ import { css } from "lit";
 export const FormulaEditorStyles = css`
   #wysiwyg-editor {
     display: inline-block;
-    padding: 4px;
+    padding: var(--fe-padding, 4px);
     caret-color: var(--fe-caret-color, #fff);
     color: var(--fe-text-color, #f7f1ff);
     line-height: 1.1;
@@ -16,6 +16,7 @@ export const FormulaEditorStyles = css`
     white-space: pre-wrap;
     background-color: var(--fe-background-color, #222222);
     margin: 0px;
+    box-sizing: border-box;
     /* position: relative; */
   }
 
