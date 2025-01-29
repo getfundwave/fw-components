@@ -20,6 +20,12 @@ export const FormulaEditorStyles = css`
     /* position: relative; */
   }
 
+  #wysiwyg-editor:empty:before {
+  content: attr(placeholder);
+  color: var(--fe-placeholder-color,grey);
+  pointer-events: none;
+  }
+
   .wysiwygInternals.error {
     text-decoration: underline;
     -webkit-text-decoration-color: var(--fe-err-underline-color, #fc514f);

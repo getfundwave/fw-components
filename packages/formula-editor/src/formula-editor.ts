@@ -57,6 +57,9 @@ export class FormulaEditor extends LitElement {
   @property()
   content: string = "";
 
+  @property()
+  placeholder: string = ""
+
   @property({
     type: Map<string, number>,
     converter: {
@@ -257,6 +260,7 @@ export class FormulaEditor extends LitElement {
       </style>
         <div
           contenteditable
+          placeholder=${this.placeholder}
           id="wysiwyg-editor"
           spellcheck="false"
           autocomplete="off"
