@@ -101,6 +101,10 @@ export class Parser {
           // to a variable.
           isNumber = true;
 
+          if (this.mathematicalOperators.has(token)) {
+            recommendation = token + recommendation;
+          } 
+
           // If the new cursor length somehow becomes larger than the
           // length of the formula string, setting the caret to that
           // length will move the caret to the start. Although this overflow
@@ -125,7 +129,7 @@ export class Parser {
       if (expectation != Expectation.UNDEFINED) {
         // Unnecessary closing parenthesis
         if (parentheses.isEmpty() && token == ")") {
-          parseOutput.errorString = `Unexpected ')' at pos: ${currentPosition}`;
+          parseOutput.errorString = `Unexpected ')' at position ${currentPosition}`;
           tokenClassName += " error";
           expectation = Expectation.UNDEFINED;
         }
@@ -143,7 +147,7 @@ export class Parser {
             this.mathematicalOperators.has(previousToken)
           )
         ) {
-          parseOutput.errorString = `Expected variable/number at pos: ${currentPosition}`;
+          parseOutput.errorString = `Expected variable/number at position ${currentPosition}`;
           tokenClassName += " error";
           expectation = Expectation.UNDEFINED;
         }
@@ -155,14 +159,14 @@ export class Parser {
           !isOperator &&
           token != ")"
         ) {
-          parseOutput.errorString = `Expected mathematical operator at pos: ${currentPosition}`;
+          parseOutput.errorString = `Expected mathematical operator at position ${currentPosition}`;
           tokenClassName += " error";
           expectation = Expectation.UNDEFINED;
         }
 
         // Unknown symbol/variable/word
         else if (!(isNumber || isOperator || isBracket)) {
-          parseOutput.errorString = `Unknown word at pos: ${currentPosition}`;
+          parseOutput.errorString = `Unknown word at position ${currentPosition}`;
           tokenClassName += " error";
           expectation = Expectation.UNDEFINED;
         }
@@ -174,7 +178,7 @@ export class Parser {
           previousToken == "/" &&
           (this.variables.get(token) == 0 || Number(token) == 0)
         ) {
-          parseOutput.errorString = `Division by zero at pos: ${currentPosition}`;
+          parseOutput.errorString = `Division by zero at position ${currentPosition}`;
           tokenClassName += " error";
           expectation = Expectation.UNDEFINED;
         }
@@ -221,7 +225,8 @@ export class Parser {
 
     // If the formula ends with a mathematical operator, or has unclosed `(`
     if (this.mathematicalOperators.has(previousToken)) {
-      parseOutput.errorString = "Unexpected ending of formula.";
+      // parseOutput.errorString = "Unexpected ending of formula.";
+      parseOutput.recommendations = Array.from(this.variables.keys());
     } else if (!parentheses.isEmpty()) {
       parseOutput.errorString = `Unclosed '(' at position: ${parentheses.top()}`;
     }
