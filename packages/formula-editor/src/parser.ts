@@ -144,7 +144,7 @@ export class Parser {
           token != "(" &&
           !(
             (token == "-" || token == "+") &&
-            this.mathematicalOperators.has(previousToken)
+            (this.mathematicalOperators.has(previousToken) || previousToken === "")
           )
         ) {
           parseOutput.errorString = `Expected variable/number at position ${currentPosition}`;
@@ -258,7 +258,9 @@ export class Parser {
     for (const token of tokens) {
       if (
         (token == "+" || token == "-") &&
-        this.mathematicalOperators.has(previousToken)
+        (this.mathematicalOperators.has(previousToken) ||
+          previousToken === "" ||
+          previousToken === "(")
       ) {
         carriedToken = token;
       } else if (carriedToken) {
