@@ -58,7 +58,7 @@ export class FormulaEditor extends LitElement {
   content: string = "";
 
   @property()
-  placeholder: string = ""
+  placeholder: string = "Type your formula..."
 
   @property({
     type: Map<string, number>,
@@ -251,6 +251,17 @@ export class FormulaEditor extends LitElement {
     this.parseInput();
     this._recommendations = null;
     this.requestUpdate();
+  }
+
+  async updated(_changedProperties){
+
+    if(_changedProperties.has("content")){
+      if(!this.content.trim()){
+        this._recommendations= Array.from(this.variables.keys());
+      }
+      
+    }
+
   }
 
   render() {

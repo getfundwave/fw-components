@@ -67,6 +67,22 @@ export class Parser {
     };
 
 
+    if(!formula.trim()){
+      if(recommendation){
+        formattedString = `<span class="wysiwygInternals">${recommendation}</span>`;
+        currentPosition += recommendation.length;
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(formattedString, "text/html");
+
+        parseOutput.formattedContent = doc.querySelector("body")!;
+        parseOutput.formattedString = formattedString;
+        parseOutput.newCursorPosition = recommendation.length;
+        return parseOutput;
+      }
+    }
+
+    
     tokens.forEach((token) => {
       // It is a number is either it's in the defined variables, or
       // it's a valid number literal.
@@ -144,7 +160,7 @@ export class Parser {
           token != "(" &&
           !(
             (token == "-" || token == "+") &&
-            (this.mathematicalOperators.has(previousToken) || previousToken === "")
+            (this.mathematicalOperators.has(previousToken))
           )
         ) {
           parseOutput.errorString = `Expected variable/number at position ${currentPosition}`;
@@ -258,9 +274,7 @@ export class Parser {
     for (const token of tokens) {
       if (
         (token == "+" || token == "-") &&
-        (this.mathematicalOperators.has(previousToken) ||
-          previousToken === "" ||
-          previousToken === "(")
+        (this.mathematicalOperators.has(previousToken))
       ) {
         carriedToken = token;
       } else if (carriedToken) {
