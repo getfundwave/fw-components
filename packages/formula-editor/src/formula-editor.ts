@@ -259,10 +259,15 @@ export class FormulaEditor extends LitElement {
       if(!this.content.trim()){
         this._recommendations= Array.from(this.variables.keys());
       }
-      
     }
 
   }
+
+  handleFocusOut(e: FocusEvent) {
+      this._recommendations = null;
+      this.requestUpdate();
+  }
+  
 
   render() {
     return html`
@@ -277,12 +282,14 @@ export class FormulaEditor extends LitElement {
           autocomplete="off"
           @input=${this.handleChange}
           @keydown=${this.handleKeyboardEvents}
+          @blur=${this.handleFocusOut}
         ></div>
       ${this._recommendations
         ? html` <suggestion-menu
               .recommendations=${this._recommendations}
               .currentSelection=${this._selectedRecommendation}
               .onClickRecommendation=${(e: any) => this.onClickRecommendation(e)}
+               @mousedown=${(e: MouseEvent) => e.preventDefault()}
             ></suggestion-menu>`
         : html``}
       <p>${this._calculatedResult}</p>
