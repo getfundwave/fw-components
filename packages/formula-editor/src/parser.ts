@@ -57,6 +57,8 @@ export class Parser {
     // Previous 'token' (not a space or a new line) that we just encountered.
     let previousToken = "";
 
+    let currentTokens = "";
+
     // The object that we return as the output of the parsing result.
     let parseOutput: ParseResult = {
       recommendations: null,
@@ -160,7 +162,7 @@ export class Parser {
           token != "(" &&
           !(
             (token == "-" || token == "+") &&
-            (this.mathematicalOperators.has(previousToken))
+            (!currentTokens.trim() || this.mathematicalOperators.has(previousToken))
           )
         ) {
           parseOutput.errorString = `Expected variable/number at position ${currentPosition}`;
@@ -237,6 +239,7 @@ export class Parser {
 
       currentPosition += token.length;
       previousToken = token;
+      currentTokens += token;
     });
 
     // If the formula ends with a mathematical operator, or has unclosed `(`
@@ -270,11 +273,12 @@ export class Parser {
     let previousToken = "";
     let carriedToken: string | null = null;
     const parsedTokens: string[] = [];
+    let currentTokens = "";
 
     for (const token of tokens) {
       if (
         (token == "+" || token == "-") &&
-        (this.mathematicalOperators.has(previousToken))
+        (!currentTokens.trim() || this.mathematicalOperators.has(previousToken))
       ) {
         carriedToken = token;
       } else if (carriedToken) {
