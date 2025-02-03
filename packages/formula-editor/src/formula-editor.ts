@@ -264,6 +264,11 @@ export class FormulaEditor extends LitElement {
       }
     }
 
+    if(_changedProperties.has("variables")){
+      this._parser = new Parser(this.variables, this.minSuggestionLen);
+      this.parseInput(null, false);
+    }
+
   }
 
   handleFocusOut(e: FocusEvent) {
