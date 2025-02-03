@@ -289,6 +289,7 @@ export class Parser {
       }
 
       previousToken = token;
+      currentTokens+= token;
     }
 
     /**
