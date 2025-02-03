@@ -60,6 +60,9 @@ export class FormulaEditor extends LitElement {
   @property()
   placeholder: string = "Type your formula..."
 
+  @property()
+  label: string;
+
   @property({
     type: Map<string, number>,
     converter: {
@@ -274,6 +277,13 @@ export class FormulaEditor extends LitElement {
       <style>
         ${FormulaEditorStyles}
       </style>
+
+        ${this.label
+          ? html`<label for="wysiwyg-editor" class="formula-editor-label">
+              ${this.label}
+            </label>`
+          : ""}
+        
         <div
           contenteditable
           placeholder=${this.placeholder}

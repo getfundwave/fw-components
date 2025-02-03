@@ -1,6 +1,14 @@
 import { css } from "lit";
 
 export const FormulaEditorStyles = css`
+
+  .formula-editor-label {
+    display: block;
+    font-size: var(--fe-label-font-size, 0.9rem);
+    color: var(--fe-label-color, #343434);
+    margin-bottom: var(--fe-label-margin-bottom, 1px);
+  }
+
   #wysiwyg-editor {
     display: inline-block;
     padding: var(--fe-padding, 4px);
