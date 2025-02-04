@@ -275,6 +275,12 @@ export class FormulaEditor extends LitElement {
       this._recommendations = null;
       this.requestUpdate();
   }
+
+  handleFocus(e: FocusEvent){
+    if(!this.content.trim()){
+      this._recommendations= Array.from(this.variables.keys());
+    }
+  }
   
 
   render() {
@@ -298,6 +304,7 @@ export class FormulaEditor extends LitElement {
           @input=${this.handleChange}
           @keydown=${this.handleKeyboardEvents}
           @blur=${this.handleFocusOut}
+          @focus=${this.handleFocus}
         ></div>
       ${this._recommendations
         ? html` <suggestion-menu
