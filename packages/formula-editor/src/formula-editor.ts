@@ -187,7 +187,6 @@ export class FormulaEditor extends LitElement {
     this._formattedContent = parseOutput.formattedContent;
     this.errorString = parseOutput.errorString;
 
-    // console.log("this._recommendation",parseOutput)
 
     /**
      * Don't modify the text stream manually if the text is being composed,
