@@ -242,6 +242,18 @@ export class Parser {
       currentTokens += token;
     });
 
+    if(recommendation){
+
+      parseOutput.newCursorPosition = Math.min(
+        parseOutput.newCursorPosition +
+          recommendation.length,
+        formula.length + recommendation.length
+      );
+
+      formattedString = `${formattedString}<span class="wysiwygInternals">${recommendation}</span>`;
+
+    }
+
     // If the formula ends with a mathematical operator, or has unclosed `(`
     if (this.mathematicalOperators.has(previousToken)) {
       // parseOutput.errorString = "Unexpected ending of formula.";
