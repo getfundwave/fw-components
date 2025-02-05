@@ -305,7 +305,7 @@ export class FormulaEditor extends LitElement {
           @blur=${this.handleFocusOut}
           @focus=${this.handleFocus}
         ></div>
-      ${this._recommendations
+      ${this._recommendations && this.currentCursorPosition
         ? html` <suggestion-menu
               .recommendations=${this._recommendations}
               .currentSelection=${this._selectedRecommendation}

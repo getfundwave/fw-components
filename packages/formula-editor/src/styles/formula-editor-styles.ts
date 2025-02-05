@@ -4,8 +4,8 @@ export const FormulaEditorStyles = css`
 
   .formula-editor-label {
     display: block;
-    font-size: var(--fe-label-font-size, 0.9rem);
-    color: var(--fe-label-color, #343434);
+    font-size: var(--fe-label-font-size, 0.8rem);
+    color: var(--fe-label-color, #515151);
     margin-bottom: var(--fe-label-margin-bottom, 1px);
   }
 
@@ -20,6 +20,7 @@ export const FormulaEditorStyles = css`
     border-radius: var(--fe-border-radius, 4px);
     overflow: auto;
     border: var(--fe-border, 2px solid black);
+    border-bottom: var(--fe-border-bottom, 0px solid black);
     outline: 0px solid black;
     white-space: pre-wrap;
     background-color: var(--fe-background-color, #222222);

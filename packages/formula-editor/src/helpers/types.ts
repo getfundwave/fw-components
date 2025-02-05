@@ -8,8 +8,8 @@ export enum Operator {
 
 export class Formula {
   constructor(name: string, formulaString: string, precision: number = -1) {
-    this.name = name;
-    this.formulaString = formulaString;
+    this.name = name || "";
+    this.formulaString = formulaString || "";
     this.precision = precision;
   }
 
