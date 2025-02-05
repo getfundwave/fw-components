@@ -54,6 +54,9 @@ export class FormulaEditor extends LitElement {
   @state()
   _selectedRecommendation: string; 
 
+  @state()
+  isFocus: Boolean = false;
+
   @property()
   content: string = "";
 
@@ -271,11 +274,13 @@ export class FormulaEditor extends LitElement {
   }
 
   handleFocusOut(e: FocusEvent) {
+      this.isFocus = false;
       this._recommendations = null;
       this.requestUpdate();
   }
 
   handleFocus(e: FocusEvent){
+    this.isFocus = true;
     if(!this.content.trim()){
       this._recommendations= Array.from(this.variables.keys());
     }
@@ -305,7 +310,7 @@ export class FormulaEditor extends LitElement {
           @blur=${this.handleFocusOut}
           @focus=${this.handleFocus}
         ></div>
-      ${this._recommendations && this.currentCursorPosition
+      ${this._recommendations && this.isFocus
         ? html` <suggestion-menu
               .recommendations=${this._recommendations}
               .currentSelection=${this._selectedRecommendation}
