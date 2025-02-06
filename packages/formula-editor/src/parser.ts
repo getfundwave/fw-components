@@ -38,7 +38,7 @@ export class Parser {
     prevCurPos: number | null = null,
     recommendation: string | null = null
   ): ParseResult {
-    let tokens = formula.match(/'[^']*'|\d+|[A-Za-z_][A-Za-z0-9_]*|[+\-(),*^\/:\?\s]/g);
+    let tokens = formula.match(/'[^']*'|\d+|[A-Za-z_][A-Za-z0-9_]*|[-+(),*^/:?\s]/g);
 
     // Stores the positions of opening parentheses. This allows us to
     // show "Unclosed parenthesis error" for positions which are far behind
@@ -277,7 +277,7 @@ export class Parser {
     }
 
     const tokens = formula
-      .match(/'[^']*'|\d+|[A-Za-z_][A-Za-z0-9_]*|[+\-(),*^\/:\?\s]/g)
+      .match(/'[^']*'|\d+|[A-Za-z_][A-Za-z0-9_]*|[-+(),*^/:?\s]/g)
       ?.filter((el: string) => !/\s+/.test(el) && el !== "");
 
     // Handling the special case of unary `-` and `+`.
