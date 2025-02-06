@@ -38,7 +38,7 @@ export class Parser {
     prevCurPos: number | null = null,
     recommendation: string | null = null
   ): ParseResult {
-    let tokens = formula.split(/([-+(),*^/:?\s])/g);
+    let tokens = formula.match(/'[^']*'|\d+|[A-Za-z_][A-Za-z0-9_]*|[+\-(),*^\/:\?\s]/g);
 
     // Stores the positions of opening parentheses. This allows us to
     // show "Unclosed parenthesis error" for positions which are far behind
@@ -85,7 +85,7 @@ export class Parser {
     }
 
     
-    tokens.forEach((token) => {
+    tokens?.forEach((token) => {
       // It is a number is either it's in the defined variables, or
       // it's a valid number literal.
       let isNumber = this.variables.has(token) || !Number.isNaN(Number(token)),
@@ -277,8 +277,8 @@ export class Parser {
     }
 
     const tokens = formula
-      .split(/([-+(),*^/:?\s])/g)
-      .filter((el: string) => !/\s+/.test(el) && el !== "");
+      .match(/'[^']*'|\d+|[A-Za-z_][A-Za-z0-9_]*|[+\-(),*^\/:\?\s]/g)
+      ?.filter((el: string) => !/\s+/.test(el) && el !== "");
 
     // Handling the special case of unary `-` and `+`.
 
