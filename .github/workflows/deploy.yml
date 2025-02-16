@@ -26,9 +26,6 @@ jobs:
 
     - name: Install and Build All Showcases 
       run: |
-        # Reference: Discussion on dependency issues and NODE_OPTIONS usage
-        # https://github.com/webpack/webpack/issues/14532#
-        export NODE_OPTIONS=--openssl-legacy-provider
         mkdir -p deployment
         ls showcase | xargs -I {} bash -c '
           if [ -d "showcase/{}" ]; then
