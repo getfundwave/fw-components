@@ -16,15 +16,23 @@ export interface CalculateResult {
 }
 
 export class Parser {
+  private static readonly MAX_FORMULA_LENGTH = 1000;
+  private static readonly CACHE_SIZE = 100;
+  private readonly _recommender: Recommender;
+  private readonly _parseCache: Map<string, ParseResult> = new Map();
+  private readonly _rpnCache: Map<string, Queue<string> | null> = new Map();
+
   constructor(variables: Map<string, number>, minSuggestionLen: number) {
     this.variables = variables;
     this._recommender = new Recommender(this.variables, minSuggestionLen);
   }
 
-  private _recommender: Recommender;
-
   variables: Map<string, number>;
-  mathematicalOperators: Set<string> = new Set(["^", "+", "-", "*", "/"]);
+  mathematicalOperators: Set<string> = new Set(["^", "+", "-", "*", "/", "sin", "cos", "tan", "sqrt", "log"]);
+  constants: Map<string, number> = new Map([
+    ["pi", Math.PI],
+    ["e", Math.E]
+  ]);
   operatorPrecedence: { [key: string]: number } = {
     "^": 3,
     "/": 2,
@@ -33,12 +41,41 @@ export class Parser {
     "-": 1,
   };
 
+  private clearCacheIfNeeded() {
+    if (this._parseCache.size > Parser.CACHE_SIZE) {
+      const entriesToDelete = Array.from(this._parseCache.keys())
+        .slice(0, Math.floor(Parser.CACHE_SIZE / 2));
+      entriesToDelete.forEach(key => this._parseCache.delete(key));
+    }
+    if (this._rpnCache.size > Parser.CACHE_SIZE) {
+      const entriesToDelete = Array.from(this._rpnCache.keys())
+        .slice(0, Math.floor(Parser.CACHE_SIZE / 2));
+      entriesToDelete.forEach(key => this._rpnCache.delete(key));
+    }
+  }
+
   parseInput(
     formula: string,
     prevCurPos: number | null = null,
     recommendation: string | null = null
   ): ParseResult {
-    let tokens = formula.match(/'[^']*'|\d+|[A-Za-z_][A-Za-z0-9_]*|[-+(),*^/:?\s]/g);
+    // Check formula length
+    if (formula.length > Parser.MAX_FORMULA_LENGTH) {
+      return {
+        recommendations: null,
+        formattedContent: null,
+        formattedString: null,
+        newCursorPosition: prevCurPos ?? -1,
+        errorString: `Formula length exceeds maximum limit of ${Parser.MAX_FORMULA_LENGTH} characters`
+      };
+    }
+
+    // Check cache for exact matches without recommendation
+    const cacheKey = `${formula}-${prevCurPos}`;
+    if (!recommendation && this._parseCache.has(cacheKey)) {
+      return { ...this._parseCache.get(cacheKey)! };
+    }
+    let tokens = formula.match(/'[^']*'|\d+|[A-Za-z_][A-Za-z0-9_]*|[-+(),*^/:?\s]|sin|cos|tan|sqrt|log/g);
 
     // Stores the positions of opening parentheses. This allows us to
     // show "Unclosed parenthesis error" for positions which are far behind
@@ -86,9 +123,9 @@ export class Parser {
 
     
     tokens?.forEach((token) => {
-      // It is a number is either it's in the defined variables, or
+      // It is a number if it's in the defined variables, constants, or
       // it's a valid number literal.
-      let isNumber = this.variables.has(token) || !Number.isNaN(Number(token)),
+      let isNumber = this.variables.has(token) || this.constants.has(token) || !Number.isNaN(Number(token)),
         isOperator = this.mathematicalOperators.has(token),
         isSpace = token.trim() == "",
         isBracket = token == "(" || token == ")";
@@ -268,10 +305,21 @@ export class Parser {
     parseOutput.formattedContent = doc.querySelector("body")!;
     parseOutput.formattedString = formattedString;
 
+    // Cache the result if no recommendation was used
+    if (!recommendation) {
+      this._parseCache.set(cacheKey, { ...parseOutput });
+      this.clearCacheIfNeeded();
+    }
+
     return parseOutput;
   }
 
   buildRPN(formula: string): Queue<string> | null {
+    // Check cache
+    if (this._rpnCache.has(formula)) {
+      const cached = this._rpnCache.get(formula);
+      return cached ? cached.clone() : null;
+    }
     if (this.parseInput(formula).errorString) {
       return null;
     }
@@ -338,6 +386,10 @@ export class Parser {
     while (operatorStack.top()) {
       outputQueue.enqueue(operatorStack.pop()!);
     }
+
+    // Cache the result
+    this._rpnCache.set(formula, outputQueue ? outputQueue.clone() : null);
+    this.clearCacheIfNeeded();
 
     return outputQueue;
   }
@@ -431,6 +483,21 @@ export class Parser {
     } else throw `${lexedRPN} is not a correct RPN`;
   }
 
+  private evaluateFunction(name: string, value: number): number {
+    switch (name) {
+      case 'sin': return Math.sin(value);
+      case 'cos': return Math.cos(value);
+      case 'tan': return Math.tan(value);
+      case 'sqrt': 
+        if (value < 0) throw new Error('Cannot calculate square root of negative number');
+        return Math.sqrt(value);
+      case 'log':
+        if (value <= 0) throw new Error('Cannot calculate logarithm of non-positive number');
+        return Math.log(value);
+      default: throw new Error(`Unknown function: ${name}`);
+    }
+  }
+
   calculate(formula: string): CalculateResult {
     let rpn = this.buildRPN(formula);
     let calculationResult: CalculateResult = {
@@ -461,6 +528,24 @@ export class Parser {
         let numA = calcStack.pop()!;
 
         try {
+          // Handle constants
+          if (this.constants.has(frontItem)) {
+            calcStack.push(Big(this.constants.get(frontItem)!));
+            continue;
+          }
+
+          // Handle functions
+          if (['sin', 'cos', 'tan', 'sqrt', 'log'].includes(frontItem)) {
+            const value = calcStack.pop()!;
+            try {
+              calcStack.push(Big(this.evaluateFunction(frontItem, parseFloat(value.toString()))));
+            } catch (error: any) {
+              calculationResult.errorString = error.message;
+              return calculationResult;
+            }
+            continue;
+          }
+
           switch (operator) {
             case "+":
               calcStack.push(Big(numA).add(Big(numB)));
