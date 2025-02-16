@@ -8,6 +8,10 @@ import "./suggestion-menu.js";
 @customElement("formula-editor")
 export class FormulaEditor extends LitElement {
   private _parser: Parser;
+  private _undoStack: string[] = [];
+  private _redoStack: string[] = [];
+  private _isCalculating: boolean = false;
+  private _inputDebounceTimer: number | null = null;
 
   constructor() {
     super();
@@ -94,10 +98,57 @@ export class FormulaEditor extends LitElement {
     event.preventDefault();
 
     this.lastInputType = event.inputType;
-    this.content = (event.target as HTMLDivElement).innerText;
-    this.parseInput();
+    const newContent = (event.target as HTMLDivElement).innerText;
+    
+    // Save state for undo/redo if content actually changed
+    if (newContent !== this.content) {
+      this._undoStack.push(this.content);
+      this._redoStack = []; // Clear redo stack on new changes
+      if (this._undoStack.length > 50) this._undoStack.shift(); // Limit stack size
+    }
+    
+    this.content = newContent;
+
+    // Debounce input parsing
+    if (this._inputDebounceTimer) {
+      window.clearTimeout(this._inputDebounceTimer);
+    }
+    this._inputDebounceTimer = window.setTimeout(() => {
+      this.parseInput();
+      this._inputDebounceTimer = null;
+    }, 150);
 
     (event.target as HTMLDivElement).focus();
+  }
+
+  handlePaste(event: ClipboardEvent) {
+    event.preventDefault();
+    const text = event.clipboardData?.getData('text/plain') || '';
+    
+    // Clean and sanitize pasted content
+    const sanitizedText = text
+      .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces
+      .replace(/\r\n/g, ' ') // Convert Windows line endings
+      .replace(/\n/g, ' ') // Convert remaining line endings
+      .trim();
+    
+    document.execCommand('insertText', false, sanitizedText);
+  }
+
+  undo() {
+    if (this._undoStack.length > 0) {
+      this._redoStack.push(this.content);
+      this.content = this._undoStack.pop()!;
+      this.parseInput();
+    }
+  }
+
+  redo() {
+    if (this._redoStack.length > 0) {
+      this._undoStack.push(this.content);
+      this.content = this._redoStack.pop()!;
+      this.parseInput();
+    }
   }
 
   navigateRecommendations(direction: string) {
@@ -130,7 +181,7 @@ export class FormulaEditor extends LitElement {
   }
 
   handleKeyboardEvents(event: KeyboardEvent) {
-    if (event.code == "Tab" && this._recommendations?.length == 1) {
+    if (event.code === "Tab" && this._recommendations?.length == 1) {
       this._selectedRecommendation = null;
       event.preventDefault();
       this.parseInput(this._recommendations[0]);
@@ -145,7 +196,14 @@ export class FormulaEditor extends LitElement {
       this.parseInput(this._selectedRecommendation);
       this._selectedRecommendation = null; 
     }
-  
+    else if ((event.metaKey || event.ctrlKey) && event.code === "KeyZ") {
+      event.preventDefault();
+      if (event.shiftKey) {
+        this.redo();
+      } else {
+        this.undo();
+      }
+    }
   }
 
   onClickRecommendation(recommendation: string) {
@@ -231,21 +289,26 @@ export class FormulaEditor extends LitElement {
     );
   }
 
-  requestCalculate() {
+  async requestCalculate() {
     if (this._parser.parseInput(this.content).errorString) {
       return;
     }
 
-    const calculatedResult = this._parser.calculate(this.content);
-
-    this.content = this._parser.addParentheses(this.content) ?? this.content;
-    this.parseInput();
-
-    this._calculatedResult = calculatedResult.result;
-    this.errorString = calculatedResult.errorString;
-
-    this._recommendations = null;
+    this._isCalculating = true;
     this.requestUpdate();
+
+    try {
+      const calculatedResult = this._parser.calculate(this.content);
+      this.content = this._parser.addParentheses(this.content) ?? this.content;
+      this.parseInput();
+
+      this._calculatedResult = calculatedResult.result;
+      this.errorString = calculatedResult.errorString;
+    } finally {
+      this._isCalculating = false;
+      this._recommendations = null;
+      this.requestUpdate();
+    }
   }
 
   requestFormat() {
@@ -305,20 +368,37 @@ export class FormulaEditor extends LitElement {
           id="wysiwyg-editor"
           spellcheck="false"
           autocomplete="off"
+          role="textbox"
+          class=${this._isCalculating ? 'loading' : ''}
+          aria-label="Formula editor"
+          aria-placeholder=${this.placeholder}
+          aria-invalid=${Boolean(this.errorString)}
+          aria-describedby=${this.errorString ? "error-message" : null}
           @input=${this.handleChange}
           @keydown=${this.handleKeyboardEvents}
           @blur=${this.handleFocusOut}
           @focus=${this.handleFocus}
+          @paste=${this.handlePaste}
         ></div>
-      ${this._recommendations && this.isFocus
-        ? html` <suggestion-menu
-              .recommendations=${this._recommendations}
-              .currentSelection=${this._selectedRecommendation}
-              .onClickRecommendation=${(e: any) => this.onClickRecommendation(e)}
-               @mousedown=${(e: MouseEvent) => e.preventDefault()}
-            ></suggestion-menu>`
-        : html``}
-      <p>${this._calculatedResult}</p>
+        ${this.errorString ? html`
+          <div id="error-message" class="error-message" role="alert">
+            ${this.errorString}
+          </div>
+        ` : null}
+      ${this.isFocus ? html`
+        <suggestion-menu
+          .recommendations=${this._recommendations ?? []}
+          .currentSelection=${this._selectedRecommendation}
+          .onClickRecommendation=${(e: any) => this.onClickRecommendation(e)}
+          .variables=${this.variables}
+          .constants=${this._parser.constants}
+          .isLoading=${this._inputDebounceTimer !== null}
+          @mousedown=${(e: MouseEvent) => e.preventDefault()}
+        ></suggestion-menu>
+      ` : html``}
+      ${this._calculatedResult !== undefined ? html`
+        <p role="status" aria-live="polite">Result: ${this._calculatedResult}</p>
+      ` : null}
     `;
   }
 }

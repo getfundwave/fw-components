@@ -53,6 +53,26 @@ export class Queue<Type> {
   print(): void {
     console.log(this._elements);
   }
+
+  toArray(): Type[] {
+    const result: Type[] = [];
+    for (let i = this._head; i < this._tail; i++) {
+      if (this._elements[i] !== undefined) {
+        result.push(this._elements[i]);
+      }
+    }
+    return result;
+  }
+
+  clone(): Queue<Type> {
+    const newQueue = new Queue<Type>();
+    Object.entries(this._elements).forEach(([key, value]) => {
+      newQueue._elements[parseInt(key)] = value;
+    });
+    newQueue._head = this._head;
+    newQueue._tail = this._tail;
+    return newQueue;
+  }
 }
 
 export enum Expectation {

@@ -13,7 +13,47 @@ export class SuggestionMenu extends LitElement {
   @property()
   currentSelection = "";
 
+  @property()
+  isLoading = false;
+
+  @property()
+  variables: Map<string, number> = new Map();
+
+  @property()
+  constants: Map<string, number> = new Map();
+
   static styles = css`
+      .container {
+        position: relative;
+      }
+
+      .loading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100000;
+      }
+
+      .empty-state {
+        padding: 1rem;
+        text-align: center;
+        color: var(--fe-suggestion-color, #bab6c0);
+      }
+
+      .group-label {
+        padding: 0.5em 1rem;
+        font-size: 0.8em;
+        color: var(--fe-suggestion-group-color, #69676c);
+        background-color: var(--fe-suggestion-group-background, #f5f5f5);
+        font-weight: bold;
+      }
+
       ul {
         position: relative;
         border: 1px solid var(--fe-suggestion-color, white);
@@ -91,18 +131,55 @@ export class SuggestionMenu extends LitElement {
 
   render() {
     return html`
-      <ul class="wysiwyg-suggestion-menu">
-        ${this.recommendations.map((recommendation) => {
-          return html`<li
-            class="${this.currentSelection === recommendation ? 'selected' : ''}"
-            tabindex="0"
-            @click=${(e: any) => this.onClickRecommendation(recommendation)}
-            @keydown=${(e: any) => this.handleKeydown(e, recommendation)}
-          >
-            ${recommendation}
-          </li>`;
-        })}
-      </ul>
+      <div class="container" role="combobox" aria-expanded="true" aria-haspopup="listbox">
+        ${this.isLoading ? html`
+          <div class="loading" role="status" aria-label="Loading suggestions">
+            <span class="loading-spinner"></span>
+          </div>
+        ` : ''}
+        
+        ${this.recommendations.length === 0 ? html`
+          <div class="empty-state" role="status">
+            No suggestions available
+          </div>
+        ` : html`
+          <ul class="wysiwyg-suggestion-menu" role="listbox" aria-label="Suggestions">
+            ${this.recommendations.some(r => this.variables.has(r)) ? html`
+              <li class="group-label" role="presentation">Variables</li>
+              ${this.recommendations.filter(r => this.variables.has(r)).map((recommendation) => html`
+                <li
+                  role="option"
+                  aria-selected="${this.currentSelection === recommendation}"
+                  class="${this.currentSelection === recommendation ? 'selected' : ''}"
+                  tabindex="0"
+                  @click=${() => this.onClickRecommendation(recommendation)}
+                  @keydown=${(e: KeyboardEvent) => this.handleKeydown(e, recommendation)}
+                >
+                  ${recommendation}
+                  <span class="value">${this.variables.get(recommendation)}</span>
+                </li>
+              `)}
+            ` : ''}
+            
+            ${this.recommendations.some(r => this.constants.has(r)) ? html`
+              <li class="group-label" role="presentation">Constants</li>
+              ${this.recommendations.filter(r => this.constants.has(r)).map((recommendation) => html`
+                <li
+                  role="option"
+                  aria-selected="${this.currentSelection === recommendation}"
+                  class="${this.currentSelection === recommendation ? 'selected' : ''}"
+                  tabindex="0"
+                  @click=${() => this.onClickRecommendation(recommendation)}
+                  @keydown=${(e: KeyboardEvent) => this.handleKeydown(e, recommendation)}
+                >
+                  ${recommendation}
+                  <span class="value">${this.constants.get(recommendation)}</span>
+                </li>
+              `)}
+            ` : ''}
+          </ul>
+        `}
+      </div>
     `;
   }
 }
