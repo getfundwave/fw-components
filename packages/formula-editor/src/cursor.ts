@@ -91,16 +91,40 @@ export class Cursor {
     return false;
   }
 
-  static getCaretPosition(shadowRoot: ShadowRoot, element: HTMLElement) {
+  static _getComposedRange(shadowRoot: ShadowRoot): Range | null {
     // `getSelection` is not defined for the type ShadowRoot in TS,
     // but it does exist.
-    const range = (shadowRoot as any).getSelection()!.getRangeAt(0);
+    const sr = shadowRoot as any;
+    if (sr.getSelection && typeof sr.getSelection === 'function') {
+      const selection = sr.getSelection();
+      if (selection && selection.rangeCount > 0) {
+        return selection.getRangeAt(0);
+      }
+    }
+    
+    // Fallback for browsers like Firefox/Safari.
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      if (shadowRoot.contains(range.startContainer)) {
+        return range;
+      }
+    }
+    return null;
+  }
+  
+  
+  static getCaretPosition(shadowRoot: ShadowRoot, element: HTMLElement) {
+    const range = Cursor._getComposedRange(shadowRoot);
+    if (!range) {
+      return 0;
+    }
     const prefix = range.cloneRange();
     prefix.selectNodeContents(element);
     prefix.setEnd(range.endContainer, range.endOffset);
     return prefix.toString().length;
   }
-
+  
   static setCaretPosition = (pos: any, parent: any) => {
     for (const node of parent.childNodes) {
       if (node.nodeType == Node.TEXT_NODE) {
@@ -124,11 +148,10 @@ export class Cursor {
     }
     return pos;
   };
-
+  
   static getCursorRect(shadowRoot: ShadowRoot) {
-    return (shadowRoot as any)
-      .getSelection()
-      ?.getRangeAt(0)
-      ?.getClientRects()[0];
+    const range = Cursor._getComposedRange(shadowRoot);
+    return range ? range.getClientRects()[0] : undefined;
   }
+  
 }
