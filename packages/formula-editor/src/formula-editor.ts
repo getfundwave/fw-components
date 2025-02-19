@@ -130,7 +130,7 @@ export class FormulaEditor extends LitElement {
       this.parseInput(this._recommendations[0]);
     }
     else if (event.code === "ArrowDown" || event.code === "ArrowUp") {
-      event.preventDefault();
+      if(this._recommendations) event.preventDefault();
       this.navigateRecommendations(event.code);
       this.requestUpdate();
     }
