@@ -162,7 +162,7 @@ export class FormulaEditor extends LitElement {
 
     if(!this.content) editor.style.height = "var(--fe-height, 30px)";
    
-    if(editor.scrollHeight > editor.clientHeight) editor.style.height = (editor.scrollHeight)+"px"
+    if(editor.scrollHeight > editor.clientHeight) editor.style.height = (editor.scrollHeight + 5)+"px"
   }
 
   /**
