@@ -109,16 +109,7 @@ export class Parser {
           // to a variable.
           isNumber = true;
 
-          if (this.mathematicalOperators.has(token)) {
-            // append recommendation at the end if token is an operator
-            const updatedTokenString = `${token} ${recommendation}`;
-            formattedString += updatedTokenString;
-            currentPosition += updatedTokenString.length;
-            parseOutput.newCursorPosition = currentPosition;
-
-            recommendation = null;
-            return;            
-          };
+          if (this.mathematicalOperators.has(token)) token += recommendation;    
 
           // If the new cursor length somehow becomes larger than the
           // length of the formula string, setting the caret to that
