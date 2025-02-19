@@ -131,7 +131,7 @@ export class Parser {
           recommendation = null;
         }
 
-        parseOutput.recommendations = this.mathematicalOperators.has(token) ? Array.from(this.variables.keys()) : this._recommender.getRecommendation(token);
+        parseOutput.recommendations = this._recommender.getRecommendation(token);
       }
 
       let tokenClassName = "";
