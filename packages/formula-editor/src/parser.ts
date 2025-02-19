@@ -434,19 +434,11 @@ export class Parser {
     while (!rpn.isEmpty()) {
       const frontItem = rpn.dequeue()!;
       if (!this.mathematicalOperators.has(frontItem)) {
+        const [sign, variableKey] = /^[+-]/.test(frontItem) ? [frontItem[0], frontItem.slice(1)] : ["", frontItem];
+        const operandValue = Number.parseFloat(this.variables.get(variableKey)?.toString() ?? variableKey);
 
-        const sign =
-            frontItem[0] === "+" || frontItem[0] === "-" ? frontItem[0] : "";
-
-        const key = sign ? frontItem.substring(1) : frontItem;
-
-        const number = sign + (this.variables.get(key)?.toString() ?? key);
-
-        calcStack.push(
-          Big(
-            Number.parseFloat(number)
-          )
-        );
+        const number = Number.parseFloat(sign + "1") * operandValue;
+        calcStack.push(Big(number));
       } else {
         let operator = frontItem;
         let numB = calcStack.pop()!;
