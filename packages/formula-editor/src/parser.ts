@@ -140,7 +140,7 @@ export class Parser {
       if (expectation != Expectation.UNDEFINED) {
 
         if(this.mathematicalOperators.has(previousToken) && isOperator) {
-          parseOutput.errorString = `Unexpected same operator at position ${currentPosition}`;
+          parseOutput.errorString = `Multiple operators at position ${currentPosition}`;
           expectation = Expectation.UNDEFINED;
         }
 
