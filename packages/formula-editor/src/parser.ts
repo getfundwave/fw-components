@@ -84,7 +84,8 @@ export class Parser {
     tokens?.forEach((token) => {
       // It is a number is either it's in the defined variables, or
       // it's a valid number literal.
-      let isNumber = this.variables.has(token) || !Number.isNaN(Number(token));
+      
+      let isNumber = token.trim() !== "" && (this.variables.has(token) || !Number.isNaN(Number(token)));
       let isOperator = this.mathematicalOperators.has(token);
       let isSpace = token.trim() == "";
       let isBracket = token == "(" || token == ")";
@@ -118,9 +119,10 @@ export class Parser {
           recommendation = null;
         }
         if(!isSpace) parseOutput.recommendations = this._recommender.getRecommendation(token);
-        previousToken = isSpace ? previousToken : token;
+        
       }
       
+      previousToken = isSpace ? previousToken : token;
 
       let tokenClassName = "";
 
@@ -140,6 +142,7 @@ export class Parser {
         else if (
           expectation == Expectation.VARIABLE &&
           !isNumber &&
+          !isSpace && 
           token != "(" &&
           !(
             (token == "-" || token == "+") &&
@@ -156,6 +159,7 @@ export class Parser {
         else if (
           expectation == Expectation.OPERATOR &&
           !isOperator &&
+          !isSpace &&
           token != ")"
         ) {
           parseOutput.errorString = `Expected mathematical operator at position ${currentPosition}`;
@@ -164,7 +168,7 @@ export class Parser {
         }
 
         // Unknown symbol/variable/word
-        else if (!(isNumber || isOperator || isBracket)) {
+        else if (!(isNumber || isOperator || isBracket || isSpace)) {
           parseOutput.errorString = `Unknown word at position ${currentPosition}`;
           tokenClassName += " error";
           expectation = Expectation.UNDEFINED;
@@ -202,6 +206,9 @@ export class Parser {
         }
       }
 
+      if (token == "(") parentheses.push(currentPosition);
+      else if (token == ")") parentheses.pop();
+      
       formattedString = `${formattedString}${token}`;
 
       currentPosition += token.length;
