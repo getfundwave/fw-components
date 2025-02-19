@@ -138,8 +138,14 @@ export class Parser {
 
       // Don't check for errors if an error has already been encountered.
       if (expectation != Expectation.UNDEFINED) {
+
+        if(this.mathematicalOperators.has(previousToken) && isOperator) {
+          parseOutput.errorString = `Unexpected same operator at position ${currentPosition}`;
+          expectation = Expectation.UNDEFINED;
+        }
+
         // Unnecessary closing parenthesis
-        if (parentheses.isEmpty() && token == ")") {
+        else if (parentheses.isEmpty() && token == ")") {
           parseOutput.errorString = `Unexpected ')' at position ${currentPosition}`;
           tokenClassName += " error";
           expectation = Expectation.UNDEFINED;
@@ -426,13 +432,18 @@ export class Parser {
 
     while (!rpn.isEmpty()) {
       const frontItem = rpn.dequeue()!;
-
       if (!this.mathematicalOperators.has(frontItem)) {
+
+        const sign =
+            frontItem[0] === "+" || frontItem[0] === "-" ? frontItem[0] : "";
+
+        const key = sign ? frontItem.substring(1) : frontItem;
+
+        const number = sign + (this.variables.get(key)?.toString() ?? key);
+
         calcStack.push(
           Big(
-            Number.parseFloat(
-              this.variables.get(frontItem)?.toString() ?? frontItem
-            )
+            Number.parseFloat(number)
           )
         );
       } else {
