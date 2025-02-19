@@ -9,9 +9,8 @@ export const FormulaEditorStyles = css`
   }
 
   #wysiwyg-editor {
-    display: inline-block;
-    resize: vertical;
-    overflow-y: auto;
+    display: block;
+    resize: none;
     padding: var(--fe-padding, 4px);
     caret-color: var(--fe-caret-color, #fff);
     color: var(--fe-text-color, #f7f1ff);
