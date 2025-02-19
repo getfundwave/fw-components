@@ -299,6 +299,7 @@ export class FormulaEditor extends LitElement {
         <textarea
           placeholder=${this.placeholder}
           id="wysiwyg-editor"
+          class=${this.errorString?.length ? "error" : ""}
           .value=${this.content}
           @keydown=${this.handleKeyboardEvents}
           @blur=${this.handleFocusOut}

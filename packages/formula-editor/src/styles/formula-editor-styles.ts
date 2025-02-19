@@ -31,4 +31,11 @@ export const FormulaEditorStyles = css`
     color: var(--fe-placeholder-color, grey);
     pointer-events: none;
   }
+
+  #wysiwyg-editor.error {
+    text-decoration: underline;
+    -webkit-text-decoration-style: wavy;
+    text-decoration-style: wavy;
+    text-decoration-color: var(--fe-err-underline-color, red);
+  }
 `;
