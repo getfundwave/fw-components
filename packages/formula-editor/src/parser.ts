@@ -270,7 +270,7 @@ export class Parser {
     for (const token of tokens) {
       if (
         (token == "+" || token == "-") &&
-        (!currentTokens.trim() || currentTokens.trim() === "(" || this.mathematicalOperators.has(previousToken))
+        (!currentTokens.trim() || previousToken === "(" || this.mathematicalOperators.has(previousToken))
       ) {
         carriedToken = token;
       } else if (carriedToken) {
