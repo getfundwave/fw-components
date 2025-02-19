@@ -90,6 +90,12 @@ export class Parser {
       let isSpace = token.trim() == "";
       let isBracket = token == "(" || token == ")";
 
+      if(isSpace) {
+        formattedString = `${formattedString}${token}`;
+        currentPosition += token.length;
+        return;
+      }
+
       // If the cursor position is 'inside` the current token:
       //
       // 1. If we've got a recommendation to add, simply replace the
@@ -103,26 +109,30 @@ export class Parser {
           // to a variable.
           isNumber = true;
 
-          if (this.mathematicalOperators.has(token)) recommendation = token + recommendation;
+          if (this.mathematicalOperators.has(token)) {
+            // append recommendation at the end if token is an operator
+            const updatedTokenString = `${token} ${recommendation}`;
+            formattedString += updatedTokenString;
+            currentPosition += updatedTokenString.length;
+            parseOutput.newCursorPosition = currentPosition;
+
+            recommendation = null;
+            return;            
+          };
 
           // If the new cursor length somehow becomes larger than the
           // length of the formula string, setting the caret to that
           // length will move the caret to the start. Although this overflow
           // won't happen, but still, this check prevents that.
-          const updatedTokenLength = recommendation.length -
-          (isSpace ? 0 : token.length);
-
+          const updatedTokenLength = recommendation.length - token.length;
           parseOutput.newCursorPosition = Math.min(parseOutput.newCursorPosition, formula.length) + updatedTokenLength;
 
-          token = isSpace ? ` ${recommendation}` : recommendation;
-          
+          token = recommendation;
           recommendation = null;
         }
-        if(!isSpace) parseOutput.recommendations = this._recommender.getRecommendation(token);
-        
+
+        parseOutput.recommendations = this.mathematicalOperators.has(token) ? Array.from(this.variables.keys()) : this._recommender.getRecommendation(token);
       }
-      
-      previousToken = isSpace ? previousToken : token;
 
       let tokenClassName = "";
 
@@ -210,7 +220,7 @@ export class Parser {
       else if (token == ")") parentheses.pop();
       
       formattedString = `${formattedString}${token}`;
-
+      previousToken = token;
       currentPosition += token.length;
       currentTokens += token;
     });
