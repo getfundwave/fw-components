@@ -356,6 +356,7 @@ export class Parser {
       // and can be directly put into the result stack.
 
       if (
+        ((symbol === "+" || symbol[0] === "-") && this.variables.has(symbol.substring(1))) || 
         this.variables.has(symbol) ||
         (!isNaN(parseFloat(symbol)) && isFinite(parseFloat(symbol)))
       ) {
