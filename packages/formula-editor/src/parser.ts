@@ -241,10 +241,13 @@ export class Parser {
       formattedString = `${formattedString}${recommendation}`;
     }
 
-    // If the formula ends with a mathematical operator, or has unclosed `(`
+    // formula ends with a mathematical operator
     if (this.mathematicalOperators.has(previousToken) || !previousToken.trim().length) {
-      parseOutput.recommendations = Array.from(this.variables.keys());
-    } else if (!parentheses.isEmpty()) {
+      parseOutput.recommendations = !parseOutput.errorString?.length ? Array.from(this.variables.keys()) : [];
+    } 
+    
+    // formula has unclosed `(`
+    if (!parentheses.isEmpty()) {
       parseOutput.errorString = `Unclosed '(' at position: ${parentheses.top()}`;
     }
 
