@@ -28,20 +28,11 @@ export const SuggestionMenuStyles = css`
     color: var(--secondary-color, #bab6c0);
   }
 
-  li:hover,
-  li:focus-visible {
-    font-weight: bold;
+  li:hover, li:focus-visible, li.selected {
     color: var(--fe-suggestion-focus-color, #69676c);
+    background: rgba(var(--fe-suggestion-focus-background, 86, 86, 86), 0.1);
   }
 
-  li.selected {
-    color: var(--fe-suggestion-focus-color, #69676c);
-    font-weight: bold;
-  }
-
-  li[focused] {
-    font-weight: bold;
-  }
 
   /* Scrollbar styling */
   ::-webkit-scrollbar {

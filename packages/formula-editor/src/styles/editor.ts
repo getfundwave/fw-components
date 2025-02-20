@@ -14,7 +14,7 @@ export const FormulaEditorStyles = css`
     padding: var(--fe-padding, 4px);
     caret-color: var(--fe-caret-color, #fff);
     color: var(--fe-text-color, #f7f1ff);
-    font-size: var(--fe-text-font-size, 12px);
+    font-size: var(--fe-text-font-size, 14px);
     min-width: 100%;
     min-height: 30px;
     height: var(--fe-height, 30px);
