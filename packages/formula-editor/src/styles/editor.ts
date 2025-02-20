@@ -1,7 +1,7 @@
 import { css } from "lit";
 
 export const FormulaEditorStyles = css`
-  .formula-editor-label {
+  .editor-label {
     display: block;
     font-size: var(--fe-label-font-size, 0.8rem);
     color: var(--fe-label-color, #515151);
