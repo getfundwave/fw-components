@@ -4,6 +4,7 @@ import { customElement, property, state, query } from "lit/decorators.js";
 import "./suggestion-menu.js";
 import { Parser } from "./utils/parser.js";
 import { FormulaEditorStyles } from "./styles/editor.js";
+import { SuggestionMenu } from "./suggestion-menu.js";
 @customElement("formula-editor")
 export class FormulaEditor extends LitElement {
   /**
@@ -52,6 +53,9 @@ export class FormulaEditor extends LitElement {
 
   @query("#wysiwyg-editor")
   editor: HTMLTextAreaElement;
+
+  @query("suggestion-menu")
+  suggestionMenu: SuggestionMenu;
   
   protected firstUpdated(_changedProperties: PropertyValues): void {
     const inputListener = this.handleContentUpdate.bind(this);
@@ -152,6 +156,25 @@ export class FormulaEditor extends LitElement {
     this.isFocused = focus;
   }
 
+  handleKeydown(event: KeyboardEvent) {
+    if (event.code === "Tab") {
+      event.preventDefault();
+      if (this.recommendations?.length === 1) {
+        this.suggestionMenu._handleRecommendationSelect();
+      } else {
+        const direction = event.shiftKey ? "up" : "down";
+        this.suggestionMenu.navigate(direction);
+      }
+    } else if (event.code === "ArrowDown" || event.code === "ArrowUp") {
+      event.preventDefault();
+      const direction = event.code === "ArrowDown" ? "down" : "up";
+      this.suggestionMenu.navigate(direction);
+    } else if (event.code === "Enter") {
+      event.preventDefault();
+      this.suggestionMenu._handleRecommendationSelect();
+    }
+  }
+
   render() {
     return html`
       <style>${FormulaEditorStyles}</style>
@@ -165,6 +188,7 @@ export class FormulaEditor extends LitElement {
         .placeholder=${this.placeholder}
         spellcheck="false"
         autocomplete="off"
+        @keydown=${this.handleKeydown}
         @blur=${() => this.handleFocus(false)}
         @focus=${() => this.handleFocus(true)}
       ></textarea>

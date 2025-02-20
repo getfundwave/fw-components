@@ -23,13 +23,6 @@ export class SuggestionMenu extends LitElement {
   @query(".wysiwyg-suggestion-menu") 
   suggestionList: HTMLUListElement
 
-  protected firstUpdated(_changedProperties: PropertyValues): void {
-    this.abortController = new AbortController();
-
-    const handleKeydown = this.handleKeydown.bind(this);
-    document.addEventListener("keydown", handleKeydown, { signal: this.abortController?.signal });
-  }
-
   scrollToSelectedRecommendation(index: number) {
     const listItem = this.suggestionList?.querySelectorAll("li")[index];
     if(!listItem) return;
@@ -53,35 +46,12 @@ export class SuggestionMenu extends LitElement {
     this.scrollToSelectedRecommendation(newIndex);
   }
 
-  handleKeydown(event: KeyboardEvent) {
-    if (event.code === "Tab") {
-      event.preventDefault();
-      if (this.recommendations?.length === 1) {
-        this._handleRecommendationSelect();
-      } else {
-        const direction = event.shiftKey ? "up" : "down";
-        this.navigate(direction);
-      }
-    } else if (event.code === "ArrowDown" || event.code === "ArrowUp") {
-      event.preventDefault();
-      const direction = event.code === "ArrowDown" ? "down" : "up";
-      this.navigate(direction);
-    } else if (event.code === "Enter") {
-      event.preventDefault();
-      this._handleRecommendationSelect();
-    }
-  }
-
   _handleRecommendationSelect(index: number = this._selectedRecommendationIndex) {
     const recommendation = this.recommendations[index];
     if(!recommendation) return;
 
     this.onClickRecommendation(recommendation);
     this._selectedRecommendationIndex = -1;
-  }
-
-  disconnectedCallback(): void {
-    this.abortController?.abort();
   }
 
   render() {
