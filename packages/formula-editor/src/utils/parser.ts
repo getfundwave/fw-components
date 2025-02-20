@@ -1,30 +1,13 @@
 import Big from "big.js";
-import { Expectation, Queue, Stack } from "./helpers.js";
 import { Recommender } from "./recommendor.js";
-
-export interface ParseResult {
-  recommendations: string[];
-  formattedString: string | null;
-  newCursorPosition: number;
-  errorString: string | null;
-}
-
-export interface CalculateResult {
-  result: number | undefined;
-  errorString: string | null;
-}
+import { Stack } from "./stack.js";
+import { Queue } from "./queue.js";
+import { CalculateResult, Expectation, ParseResult } from "../types";
+import { mathematicalOperators, operatorPrecedence } from "./constants.js";
 
 export class Parser {
   private _recommender: Recommender;
   variables: Map<string, number>;
-  mathematicalOperators: Set<string> = new Set(["^", "+", "-", "*", "/"]);
-  operatorPrecedence: { [key: string]: number } = {
-    "^": 3,
-    "/": 2,
-    "*": 2,
-    "+": 1,
-    "-": 1,
-  };
 
   constructor(variables: Map<string, number>, minSuggestionLen: number) {
     this.variables = variables;
@@ -77,7 +60,7 @@ export class Parser {
     
     tokens?.forEach((token) => {
       let isNumber = token.trim() !== "" && (this.variables.has(token) || !Number.isNaN(Number(token)));
-      const isOperator = this.mathematicalOperators.has(token);
+      const isOperator = mathematicalOperators.has(token);
       const isSpace = token.trim() == "";
       const isBracket = token == "(" || token == ")";
 
@@ -101,7 +84,7 @@ export class Parser {
            */
           isNumber = true;
 
-          if (this.mathematicalOperators.has(token)) {
+          if (mathematicalOperators.has(token)) {
             /**
              * append recommendation at the end if token is an operator
              */
@@ -130,7 +113,7 @@ export class Parser {
        * skip error check if there is one already
        */
       if (expectation != Expectation.UNDEFINED) {
-        if (this.mathematicalOperators.has(previousToken) && isOperator) {
+        if (mathematicalOperators.has(previousToken) && isOperator) {
           parseOutput.errorString = `Multiple operators at position ${currentPosition}`;
           expectation = Expectation.UNDEFINED;
         }
@@ -145,7 +128,7 @@ export class Parser {
          * No error for Unary `+` and `-` as they might represent a positive or negative number respectively
          */
         else if (expectation == Expectation.VARIABLE && !isNumber && !isSpace && token != "(" 
-          && !((token == "-" || token == "+") && (!currentTokens.trim() || previousToken === "(" || this.mathematicalOperators.has(previousToken)))
+          && !((token == "-" || token == "+") && (!currentTokens.trim() || previousToken === "(" || mathematicalOperators.has(previousToken)))
         ) {
           parseOutput.errorString = `Expected variable/number at position ${currentPosition}`;
           expectation = Expectation.UNDEFINED;
@@ -212,7 +195,7 @@ export class Parser {
     /**
      * formula ending with a mathematical operator or a space
      */
-    if (this.mathematicalOperators.has(previousToken) || !previousToken.trim().length) {
+    if (mathematicalOperators.has(previousToken) || !previousToken.trim().length) {
       parseOutput.recommendations = !parseOutput.errorString?.length ? Array.from(this.variables.keys()) : [];
     } 
     
@@ -250,7 +233,7 @@ export class Parser {
     for (const token of tokens) {
       if (
         (token == "+" || token == "-") &&
-        (!currentTokens.trim() || previousToken === "(" || this.mathematicalOperators.has(previousToken))
+        (!currentTokens.trim() || previousToken === "(" || mathematicalOperators.has(previousToken))
       ) {
         carriedToken = token;
       } else if (carriedToken) {
@@ -280,11 +263,11 @@ export class Parser {
         }
 
         operatorStack.pop();
-      } else if (this.mathematicalOperators.has(token)) {
+      } else if (mathematicalOperators.has(token)) {
         while (
-          this.mathematicalOperators.has(operatorStack.top()!) &&
-          this.operatorPrecedence[token] <=
-            this.operatorPrecedence[operatorStack.top()!]
+          mathematicalOperators.has(operatorStack.top()!) &&
+          operatorPrecedence[token] <=
+            operatorPrecedence[operatorStack.top()!]
         ) {
           outputQueue.enqueue(operatorStack.pop()!);
         }
@@ -343,7 +326,7 @@ export class Parser {
       // them with the current one, adds brackets accordingly to the `results`
       // around it, and then finally add it to the `operatorStack` for
       // future reference.
-      else if (Object.keys(this.operatorPrecedence).includes(symbol)) {
+      else if (Object.keys(operatorPrecedence).includes(symbol)) {
         let [rightExpression, leftExpression, operatorA, operatorB] = [
           resultStack.pop()!,
           resultStack.pop()!,
@@ -354,10 +337,10 @@ export class Parser {
         // The conditions that govern when to show a parenthesis.
 
         if (
-          this.operatorPrecedence[operatorB] <=
-            this.operatorPrecedence[symbol] ||
-          (this.operatorPrecedence[operatorB] ===
-            this.operatorPrecedence[symbol] &&
+          operatorPrecedence[operatorB] <=
+            operatorPrecedence[symbol] ||
+          (operatorPrecedence[operatorB] ===
+            operatorPrecedence[symbol] &&
             ["/", "-"].includes(symbol))
         ) {
           parsedLeftExpression = `(${leftExpression})`;
@@ -366,10 +349,10 @@ export class Parser {
         }
 
         if (
-          this.operatorPrecedence[operatorA] <=
-            this.operatorPrecedence[symbol] ||
-          (this.operatorPrecedence[operatorA] ===
-            this.operatorPrecedence[symbol] &&
+          operatorPrecedence[operatorA] <=
+            operatorPrecedence[symbol] ||
+          (operatorPrecedence[operatorA] ===
+            operatorPrecedence[symbol] &&
             ["/", "-"].includes(symbol))
         ) {
           parsedRightExpression = `(${rightExpression})`;
@@ -407,7 +390,7 @@ export class Parser {
 
     while (!rpn.isEmpty()) {
       const frontItem = rpn.dequeue()!;
-      if (!this.mathematicalOperators.has(frontItem)) {
+      if (!mathematicalOperators.has(frontItem)) {
         const [sign, variableKey] = /^[+-]/.test(frontItem) ? [frontItem[0], frontItem.slice(1)] : ["", frontItem];
         const operandValue = Number.parseFloat(this.variables.get(variableKey)?.toString() ?? variableKey);
 

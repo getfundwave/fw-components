@@ -1,5 +1,6 @@
 import { html, LitElement, PropertyValues } from "lit";
 import { customElement, property, query, state } from "lit/decorators.js";
+
 import { SuggestionMenuStyles } from "./styles/suggestion-menu";
 
 @customElement("suggestion-menu")

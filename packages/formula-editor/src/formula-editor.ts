@@ -1,9 +1,9 @@
-import { html, LitElement, PropertyValueMap, PropertyValues } from "lit";
+import { html, LitElement, PropertyValues } from "lit";
 import { customElement, property, state, query } from "lit/decorators.js";
-import { FormulaEditorStyles } from "./styles/editor.js";
-import { Parser } from "./helpers/parser.js";
-import "./suggestion-menu.js";
 
+import "./suggestion-menu.js";
+import { Parser } from "./utils/parser.js";
+import { FormulaEditorStyles } from "./styles/editor.js";
 @customElement("formula-editor")
 export class FormulaEditor extends LitElement {
   /**
@@ -59,8 +59,9 @@ export class FormulaEditor extends LitElement {
     this.editor.focus();
   }
 
-  updated(changedProperties: PropertyValueMap<any>) {
-    if (changedProperties.has("content")) {
+
+  protected updated(_changedProperties: PropertyValues): void {
+    if (_changedProperties.has("content")) {
       if (!this.content?.trim()) {
         this.recommendations = Array.from(this.variables.keys());
       }
@@ -68,7 +69,7 @@ export class FormulaEditor extends LitElement {
       this._adjustTextAreaHeight();
     }
 
-    if (changedProperties.has("variables") && this.variables.size) {
+    if (_changedProperties.has("variables") && this.variables.size) {
       this._parser = new Parser(this.variables, this.minSuggestionLen);
     }
   }

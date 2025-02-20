@@ -1,3 +1,9 @@
+export enum Expectation {
+  VARIABLE,
+  OPERATOR,
+  UNDEFINED,
+}
+
 export enum Operator {
   PLUS = "+",
   MINUS = "-",
@@ -17,4 +23,16 @@ export class Formula {
   formulaString: string;
   precision: number;
   error: string | null = null;
+}
+
+export interface ParseResult {
+  recommendations: string[];
+  formattedString: string | null;
+  newCursorPosition: number;
+  errorString: string | null;
+}
+
+export interface CalculateResult {
+  result: number | undefined;
+  errorString: string | null;
 }
