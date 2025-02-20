@@ -16,30 +16,10 @@ export class Parser {
 
   parseInput(formula: string, prevCurPos: number | null = null, recommendation: string | null = null): ParseResult {
     const tokens = formula.match(/'[^']*'|\d+|[A-Za-z_][A-Za-z0-9_]*|[-+(),*^/:?\s]/g);
-
-    /**
-     * Tracks the positions of opening parentheses to detect unclosed parentheses errors, even if they occur far behind the current token
-     */
     const parentheses = new Stack<number>();
-    
-    /**
-     * The expected type of the current token in the parsing process
-     */
     let expectation = Expectation.VARIABLE;
-
-    /**
-     * Keeps track of the current token's position within the formula string
-     */
     let currentPosition = 0;
-
-    /**
-     * Stores the last encountered meaningful token (excluding spaces and new lines)
-     */
     let previousToken = "";
-    
-    /**
-     * Accumulates the current sequence of tokens being processed
-     */
     let currentTokens = "";
 
     const parseOutput: ParseResult = {
@@ -79,15 +59,9 @@ export class Parser {
        */
       if (currentPosition <= prevCurPos! && currentPosition + token.length >= prevCurPos!)  {
         if (recommendation) {
-          /**
-           * Recommendation will always be a variable
-           */
           isNumber = true;
 
           if (mathematicalOperators.has(token)) {
-            /**
-             * append recommendation at the end if token is an operator
-             */
             const updatedTokenString = `${token} ${recommendation}`;
 
             parseOutput.formattedString += updatedTokenString;
@@ -192,21 +166,15 @@ export class Parser {
       parseOutput.formattedString += recommendation;
     }
 
-    /**
-     * formula ending with a mathematical operator or a space
-     */
     if (mathematicalOperators.has(previousToken) || !previousToken.trim().length) {
       parseOutput.recommendations = !parseOutput.errorString?.length ? Array.from(this.variables.keys()) : [];
     } 
     
     
-    if (this.mathematicalOperators.has(previousToken)) {
+    if (mathematicalOperators.has(previousToken)) {
       parseOutput.errorString = `Unexpected ending with mathematical operator at position: ${currentPosition}`;
     } 
 
-    /**
-     * unclosed `(`
-     */
     if (!parentheses.isEmpty()) {
       parseOutput.errorString = `Unclosed '(' at position: ${parentheses.top()}`;
     }
