@@ -1,6 +1,6 @@
 import { html, LitElement, PropertyValueMap } from "lit";
 import { customElement, property, state, query } from "lit/decorators.js";
-import { FormulaEditorStyles } from "./styles/formula-editor-styles.js";
+import { FormulaEditorStyles } from "./styles/editor.js";
 import { Parser } from "./parser.js";
 import "./suggestion-menu.js";
 
