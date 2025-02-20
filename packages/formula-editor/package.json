@@ -3,6 +3,12 @@
   "version": "2.0.7-formula-editor-enhancements.12",
   "description": "A WYSIWYG type formula editor",
   "main": "dist/formula-editor/src/formula-editor.js",
+  "exports": {
+    "." : "./dist/formula-editor/src/formula-editor.js",
+    "./types" : "./dist/formula-editor/src/types",
+    "./types/*.js" : "./dist/formula-editor/src/types/*.js",
+    "./utils/*.js" : "./dist/formula-editor/src/utils/*.js"
+  },
   "publishConfig": {
     "access": "public"
   },
