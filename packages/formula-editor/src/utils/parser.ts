@@ -20,7 +20,7 @@ export class Parser {
     let expectation = Expectation.VARIABLE;
     let currentPosition = 0;
     let previousToken = "";
-    let currentTokens = "";
+    let parsedString = "";
 
     const parseOutput: ParseResult = {
       recommendations: [],
@@ -102,7 +102,7 @@ export class Parser {
          * No error for Unary `+` and `-` as they might represent a positive or negative number respectively
          */
         else if (expectation == Expectation.VARIABLE && !isNumber && !isSpace && token != "(" 
-          && !((token == "-" || token == "+") && (!currentTokens.trim() || previousToken === "(" || mathematicalOperators.has(previousToken)))
+          && !((token == "-" || token == "+") && (!parsedString.trim() || previousToken === "(" || mathematicalOperators.has(previousToken)))
         ) {
           parseOutput.errorString = `Expected variable/number at position ${currentPosition}`;
           expectation = Expectation.UNDEFINED;
@@ -157,7 +157,7 @@ export class Parser {
       
       parseOutput.formattedString += token;
       currentPosition += token.length;
-      currentTokens += token;
+      parsedString += token;
       previousToken = token;
     });
 
