@@ -79,7 +79,7 @@ export class Parser {
           recommendation = null;
         }
 
-        parseOutput.recommendations = this._recommender.getRecommendation(token);
+        parseOutput.recommendations = this._recommender.getRecommendations(token);
       }
 
       /**

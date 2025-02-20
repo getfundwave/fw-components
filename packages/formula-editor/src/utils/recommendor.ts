@@ -9,7 +9,7 @@ export class Recommender {
     this.variableList = variables;
   }
 
-  getRecommendation(word: string): string[] {
+  getRecommendations(word: string): string[] {
     if (word.length < this._minimumSuggestionLength) return [];
 
     const recommendations = matchSorter(this.variableList, word);
