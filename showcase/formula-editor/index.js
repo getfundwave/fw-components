@@ -1,6 +1,7 @@
 import { LitElement, html, css } from "lit";
-import { property } from "lit/decorators.js";
+import { property, query, state } from "lit/decorators.js";
 import "@fw-components/formula-editor";
+import { Parser } from "@fw-components/formula-editor/dist/formula-editor/src/parser";
 
 class Formula {
   constructor(name, formulaString, precision = -1) {
@@ -21,19 +22,23 @@ class Formula {
 }
 
 export class FWFormulaEditorShowcase extends LitElement {
-  @property({ type: Object }) currentFormula = new Formula(
-    "Total Sales",
-    "sales_in_quarter + additional_cost",
-    2
-  );
+  @property({ type: Object })
+  formula = new Formula("Total Sales", "sales_in_quarter + additional_cost", 2);
 
-  @property({ type: Object }) variables = new Map([
+  @state()
+  calculatedResult;
+
+  @property({ type: Object })
+  variables = new Map([
     ["sales_expense", 5000],
     ["sales_in_quarter", 30000],
     ["sales_cummulative", 70000],
     ["cummulative_sum", 80000],
     ["additional_cost", 2000],
   ]);
+
+  @query("formula-editor")
+  formulaEditor;
 
   static styles = css`
     .container {
@@ -60,12 +65,42 @@ export class FWFormulaEditorShowcase extends LitElement {
       width: 99%;
       margin-top: 20px;
     }
+
+    .metric-name-div {
+      margin: 10px 0;
+    }
+
+    .formula-label {
+      display: block;
+      margin: 10px 0;
+    }
+
+    #wysiwyg-err {
+      border-radius: 4px;
+      color: var(--fe-err-text-color, #fc514f);
+      border: var(--fe-err-border-width, 2px) solid black;
+      /* border-top: 0px; */
+      background-color: var(--fe-background-color, #222222);
+      padding: 8px;
+      margin: 10px 0px 8px 0px;
+    }
+
+    .wysiwyg-no-err {
+      color: #098668 !important;
+    }
   `;
 
-  handleFormulaChange(event) {
-    const { name, rawFormula, precision } = event.detail;
-    this.currentFormula = new Formula(name, rawFormula, precision);
-  }
+  handleCalculate = () => {
+    // this.formulaEditor?.requestCalculate();
+    const formulaParser = new Parser(this.variables, "0");
+    const calculatedResult = formulaParser.calculate(this.formula.formulaString);
+
+    this.calculatedResult = calculatedResult.errorString ? "(!)" : calculatedResult.result;
+  };
+
+  handleFormat = () => {
+    this.formulaEditor?.formatFormula();
+  };
 
   render() {
     return html`
@@ -86,19 +121,42 @@ export class FWFormulaEditorShowcase extends LitElement {
         </div>
 
         <div class="formula-builder-container">
-          <formula-builder
-            id="formula-builder-showcase"
+          <div class="metric-name-div">
+            <label for="metric-name-input">Metric Name</label>
+            <input
+              id="metric-name-input"
+              .value=${this.formula.name}
+              @input=${(e) => {
+                this.formula.name = e.target.value;
+                this.requestUpdate();
+              }}
+            />
+          </div>
+          <label class="formula-label">Formula</label>
+          <formula-editor
+            class="fe"
+            minSuggestionLen="0"
+            @fw-formula-content-changed=${(e) => {
+              this.formula.formulaString = e.detail.formulaString;
+              this.formula.error = e.detail.error;
+              this.requestUpdate();
+            }}
             .variables=${this.variables}
-            .formula=${this.currentFormula}
-            @fw-formula-changed=${this.handleFormulaChange}
-          ></formula-builder>
+            .content=${this.formula.formulaString}
+            .errorString=${this.formula.error}
+          >
+          </formula-editor>
+
+          <label class="formula-label">Formula Output</label>
+          <div id="wysiwyg-err" class="${this.formula.error ?? "wysiwyg-no-err"}">${this.formula.error ?? `${this.formula.name} = ${this.formula.formulaString}`}</div>
+
+          ${this.calculatedResult ? html`<p>Result: ${this.calculatedResult}</p>` : ``}
+          <button class="primary-text-button" @click=${this.handleCalculate}>Calculate</button>
+          <button class="primary-text-button" @click=${this.handleFormat}>Format</button>
         </div>
       </div>
     `;
   }
 }
 
-window.customElements.define(
-  "fw-formula-editor-showcase",
-  FWFormulaEditorShowcase
-);
+window.customElements.define("fw-formula-editor-showcase", FWFormulaEditorShowcase);
