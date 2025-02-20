@@ -31,10 +31,7 @@ export class FormulaEditor extends LitElement {
    */
 
   @state()
-  _formattedContent: Element | null = null;
-
-  @state()
-  _recommendations: string[] | null = null;
+  _recommendations: string[] = [];
 
   @state()
   _calculatedResult: number | undefined = undefined;
@@ -186,7 +183,6 @@ export class FormulaEditor extends LitElement {
     );
 
     this._recommendations = parseOutput.recommendations;
-    this._formattedContent = parseOutput.formattedContent;
     this.errorString = parseOutput.errorString;
 
     /**
@@ -256,7 +252,7 @@ export class FormulaEditor extends LitElement {
   async updated(_changedProperties){
 
     if(_changedProperties.has("content")){
-      if(!this.content.trim()){
+      if(!this.content?.trim()){
         this._recommendations= Array.from(this.variables.keys());
       }
 
@@ -277,7 +273,7 @@ export class FormulaEditor extends LitElement {
 
   handleFocus(e: FocusEvent){
     this.isFocus = true;
-    if(!this.content.trim()){
+    if(!this.content?.trim()){
       this._recommendations = Array.from(this.variables.keys());
     }
   }
@@ -304,7 +300,7 @@ export class FormulaEditor extends LitElement {
           @blur=${this.handleFocusOut}
           @focus=${this.handleFocus}
         ></textarea>
-      ${this._recommendations && this.isFocus
+      ${this._recommendations?.length && this.isFocus
         ? html` <suggestion-menu
               .recommendations=${this._recommendations}
               .currentSelection=${this._selectedRecommendation}
