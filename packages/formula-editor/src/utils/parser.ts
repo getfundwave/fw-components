@@ -164,12 +164,12 @@ export class Parser {
     if (recommendation){
       parseOutput.newCursorPosition = Math.min(parseOutput.newCursorPosition, formula.length) + recommendation.length;
       parseOutput.formattedString += recommendation;
+      previousToken = recommendation;
     }
 
     if (mathematicalOperators.has(previousToken) || !previousToken.trim().length) {
       parseOutput.recommendations = !parseOutput.errorString?.length ? Array.from(this.variables.keys()) : [];
     } 
-    
     
     if (mathematicalOperators.has(previousToken)) {
       parseOutput.errorString = `Unexpected ending with mathematical operator at position: ${currentPosition}`;
