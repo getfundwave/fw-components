@@ -33,11 +33,7 @@ export class Parser {
     "-": 1,
   };
 
-  parseInput(
-    formula: string,
-    prevCurPos: number | null = null,
-    recommendation: string | null = null
-  ): ParseResult {
+  parseInput(formula: string, prevCurPos: number | null = null, recommendation: string | null = null): ParseResult {
     let tokens = formula.match(/'[^']*'|\d+|[A-Za-z_][A-Za-z0-9_]*|[-+(),*^/:?\s]/g);
 
     // Stores the positions of opening parentheses. This allows us to
@@ -71,7 +67,7 @@ export class Parser {
 
     if(!formula.trim()){
       if(recommendation){
-        formattedString = `<span class="wysiwygInternals">${recommendation}</span>`;
+        formattedString = `${recommendation}`;
         currentPosition += recommendation.length;
 
         const parser = new DOMParser();
@@ -88,14 +84,13 @@ export class Parser {
     tokens?.forEach((token) => {
       // It is a number is either it's in the defined variables, or
       // it's a valid number literal.
-      let isNumber = this.variables.has(token) || !Number.isNaN(Number(token)),
-        isOperator = this.mathematicalOperators.has(token),
-        isSpace = token.trim() == "",
-        isBracket = token == "(" || token == ")";
+      
+      let isNumber = token.trim() !== "" && (this.variables.has(token) || !Number.isNaN(Number(token)));
+      let isOperator = this.mathematicalOperators.has(token);
+      let isSpace = token.trim() == "";
+      let isBracket = token == "(" || token == ")";
 
-      // We don't really want anything for the spaces, other than simply
-      // adding them back to the view.
-      if (isSpace) {
+      if(isSpace) {
         formattedString = `${formattedString}${token}`;
         currentPosition += token.length;
         return;
@@ -108,45 +103,49 @@ export class Parser {
       // 2. Ask the recommendor to fetch recommendations for this specific
       //    token/word.
 
-      if (
-        currentPosition <= prevCurPos! &&
-        currentPosition + token.length >= prevCurPos!
-      ) {
-        // If a recommendation was provided, replace the correspoding
-        // word with it and move the cursor forward, accordingly.
+      if (currentPosition <= prevCurPos! && currentPosition + token.length >= prevCurPos!)  {
         if (recommendation) {
           // Since we are sure that the recommendation will always correspond
           // to a variable.
           isNumber = true;
 
           if (this.mathematicalOperators.has(token)) {
-            recommendation = token + recommendation;
-          } 
+            // append recommendation at the end if token is an operator
+            const updatedTokenString = `${token} ${recommendation}`;
+            formattedString += updatedTokenString;
+            currentPosition += updatedTokenString.length;
+            parseOutput.newCursorPosition = currentPosition;
+
+            recommendation = null;
+            return;            
+          };
 
           // If the new cursor length somehow becomes larger than the
           // length of the formula string, setting the caret to that
           // length will move the caret to the start. Although this overflow
           // won't happen, but still, this check prevents that.
-          parseOutput.newCursorPosition = Math.min(
-            parseOutput.newCursorPosition +
-              recommendation.length -
-              token.length,
-            formula.length + recommendation.length - token.length
-          );
+          const updatedTokenLength = recommendation.length - token.length;
+          parseOutput.newCursorPosition = Math.min(parseOutput.newCursorPosition, formula.length) + updatedTokenLength;
+
           token = recommendation;
           recommendation = null;
         }
-        // Fetch recommendations nonetheless.
-        parseOutput.recommendations =
-          this._recommender.getRecommendation(token);
+
+        parseOutput.recommendations = this._recommender.getRecommendation(token);
       }
 
       let tokenClassName = "";
 
       // Don't check for errors if an error has already been encountered.
       if (expectation != Expectation.UNDEFINED) {
+
+        if(this.mathematicalOperators.has(previousToken) && isOperator) {
+          parseOutput.errorString = `Multiple operators at position ${currentPosition}`;
+          expectation = Expectation.UNDEFINED;
+        }
+
         // Unnecessary closing parenthesis
-        if (parentheses.isEmpty() && token == ")") {
+        else if (parentheses.isEmpty() && token == ")") {
           parseOutput.errorString = `Unexpected ')' at position ${currentPosition}`;
           tokenClassName += " error";
           expectation = Expectation.UNDEFINED;
@@ -159,10 +158,11 @@ export class Parser {
         else if (
           expectation == Expectation.VARIABLE &&
           !isNumber &&
+          !isSpace && 
           token != "(" &&
           !(
             (token == "-" || token == "+") &&
-            (!currentTokens.trim() || this.mathematicalOperators.has(previousToken))
+            (!currentTokens.trim() || previousToken === "(" || this.mathematicalOperators.has(previousToken))
           )
         ) {
           parseOutput.errorString = `Expected variable/number at position ${currentPosition}`;
@@ -175,6 +175,7 @@ export class Parser {
         else if (
           expectation == Expectation.OPERATOR &&
           !isOperator &&
+          !isSpace &&
           token != ")"
         ) {
           parseOutput.errorString = `Expected mathematical operator at position ${currentPosition}`;
@@ -183,7 +184,7 @@ export class Parser {
         }
 
         // Unknown symbol/variable/word
-        else if (!(isNumber || isOperator || isBracket)) {
+        else if (!(isNumber || isOperator || isBracket || isSpace)) {
           parseOutput.errorString = `Unknown word at position ${currentPosition}`;
           tokenClassName += " error";
           expectation = Expectation.UNDEFINED;
@@ -221,50 +222,43 @@ export class Parser {
         }
       }
 
-      if (token == "(") {
-        parentheses.push(currentPosition);
-        tokenClassName += " bracket";
-      } else if (token == ")") {
-        parentheses.pop();
-        tokenClassName += " bracket";
-      } else if (isOperator) {
-        tokenClassName += " operator";
-      } else if (expectation == Expectation.UNDEFINED) {
-        tokenClassName += " error";
-      }
-
-      // Since not using ShadowDOM, having these specific class names will prevent
-      // name collision.
-      formattedString = `${formattedString}<span class="wysiwygInternals ${tokenClassName}">${token}</span>`;
-
-      currentPosition += token.length;
+      if (token == "(") parentheses.push(currentPosition);
+      else if (token == ")") parentheses.pop();
+      
+      formattedString = `${formattedString}${token}`;
       previousToken = token;
+      currentPosition += token.length;
       currentTokens += token;
     });
 
     if(recommendation){
-
       parseOutput.newCursorPosition = Math.min(
         parseOutput.newCursorPosition +
           recommendation.length,
         formula.length + recommendation.length
       );
 
-      formattedString = `${formattedString}<span class="wysiwygInternals">${recommendation}</span>`;
-
+      formattedString = `${formattedString}${recommendation}`;
     }
 
-    // If the formula ends with a mathematical operator, or has unclosed `(`
+    // formula ends with a mathematical operator
+    if (this.mathematicalOperators.has(previousToken) || !previousToken.trim().length) {
+      parseOutput.recommendations = !parseOutput.errorString?.length ? Array.from(this.variables.keys()) : [];
+    } 
+    
+    //formula ends with mathematical operator
     if (this.mathematicalOperators.has(previousToken)) {
-      // parseOutput.errorString = "Unexpected ending of formula.";
-      parseOutput.recommendations = Array.from(this.variables.keys());
-    } else if (!parentheses.isEmpty()) {
+      parseOutput.errorString = `Unexpected ending with mathematical operator at position: ${currentPosition}`;
+    } 
+
+    // formula has unclosed `(`
+    if (!parentheses.isEmpty()) {
       parseOutput.errorString = `Unclosed '(' at position: ${parentheses.top()}`;
     }
 
     const parser = new DOMParser();
     const doc = parser.parseFromString(formattedString, "text/html");
-
+    
     parseOutput.formattedContent = doc.querySelector("body")!;
     parseOutput.formattedString = formattedString;
 
@@ -290,7 +284,7 @@ export class Parser {
     for (const token of tokens) {
       if (
         (token == "+" || token == "-") &&
-        (!currentTokens.trim() || this.mathematicalOperators.has(previousToken))
+        (!currentTokens.trim() || previousToken === "(" || this.mathematicalOperators.has(previousToken))
       ) {
         carriedToken = token;
       } else if (carriedToken) {
@@ -370,6 +364,7 @@ export class Parser {
       // and can be directly put into the result stack.
 
       if (
+        ((symbol[0] === "+" || symbol[0] === "-") && this.variables.has(symbol.substring(1))) || 
         this.variables.has(symbol) ||
         (!isNaN(parseFloat(symbol)) && isFinite(parseFloat(symbol)))
       ) {
@@ -446,15 +441,12 @@ export class Parser {
 
     while (!rpn.isEmpty()) {
       const frontItem = rpn.dequeue()!;
-
       if (!this.mathematicalOperators.has(frontItem)) {
-        calcStack.push(
-          Big(
-            Number.parseFloat(
-              this.variables.get(frontItem)?.toString() ?? frontItem
-            )
-          )
-        );
+        const [sign, variableKey] = /^[+-]/.test(frontItem) ? [frontItem[0], frontItem.slice(1)] : ["", frontItem];
+        const operandValue = Number.parseFloat(this.variables.get(variableKey)?.toString() ?? variableKey);
+
+        const number = Number.parseFloat(sign + "1") * operandValue;
+        calcStack.push(Big(number));
       } else {
         let operator = frontItem;
         let numB = calcStack.pop()!;

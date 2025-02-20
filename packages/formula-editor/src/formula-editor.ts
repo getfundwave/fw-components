@@ -14,11 +14,15 @@ export class FormulaEditor extends LitElement {
     this._parser = new Parser(this.variables, this.minSuggestionLen);
   }
 
-  protected firstUpdated(
-    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
-  ): void {
+  protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
     this._parser = new Parser(this.variables, this.minSuggestionLen);
-    this.parseInput(null, false);
+
+    let editor : HTMLElement = this.shadowRoot?.getElementById("wysiwyg-editor");
+
+    const inputListener = this.handleContentUpdate.bind(this);
+    editor.addEventListener("input", inputListener);
+
+    editor.focus();
   }
 
   /**
@@ -49,7 +53,7 @@ export class FormulaEditor extends LitElement {
   currentCursorRect: DOMRect | undefined = undefined;
 
   @state()
-  lastInputType: string = "undef";
+  lastInputType: string = "";
 
   @state()
   _selectedRecommendation: string; 
@@ -88,17 +92,7 @@ export class FormulaEditor extends LitElement {
   errorString: string | null = null;
 
   @query("wysiwyg-editor")
-  editor: any;
-
-  handleChange(event: InputEvent) {
-    event.preventDefault();
-
-    this.lastInputType = event.inputType;
-    this.content = (event.target as HTMLDivElement).innerText;
-    this.parseInput();
-
-    (event.target as HTMLDivElement).focus();
-  }
+  editor: HTMLTextAreaElement;
 
   navigateRecommendations(direction: string) {
     if (!this._recommendations) return;
@@ -136,7 +130,7 @@ export class FormulaEditor extends LitElement {
       this.parseInput(this._recommendations[0]);
     }
     else if (event.code === "ArrowDown" || event.code === "ArrowUp") {
-      event.preventDefault();
+      if(this._recommendations) event.preventDefault();
       this.navigateRecommendations(event.code);
       this.requestUpdate();
     }
@@ -153,7 +147,22 @@ export class FormulaEditor extends LitElement {
     if (!editor) return;
 
     this.parseInput(recommendation);
-    this.currentCursorPosition = null;
+  }
+
+  handleContentUpdate(event: any) {
+    event.preventDefault(); 
+
+    this.lastInputType = event.inputType;
+    this.content = event.target.value;
+    this.parseInput();
+  }
+
+  _adjustInputHeight() {
+    const editor = this.shadowRoot?.getElementById("wysiwyg-editor");
+
+    if(!this.content) editor.style.height = "var(--fe-height, 30px)";
+   
+    if(editor.scrollHeight > editor.clientHeight) editor.style.height = (editor.scrollHeight + 5)+"px"
   }
 
   /**
@@ -164,21 +173,12 @@ export class FormulaEditor extends LitElement {
    * needed when manual insertion of text is required (eg: during initialization)
    * @returns void
    */
-  parseInput(
-    recommendation: string | null = null,
-    manageCursor: boolean = true
-  ) {
-    let editor = this.shadowRoot?.getElementById("wysiwyg-editor");
+  parseInput(recommendation: string | null = null) {
+    let editor = <HTMLTextAreaElement>this.shadowRoot?.getElementById("wysiwyg-editor");
+
     if (!editor) return;
 
-    /**
-     * @see https://github.com/WICG/webcomponents/issues/79
-     */
-
-    if (manageCursor)
-      this.currentCursorPosition = recommendation
-        ? this.currentCursorPosition
-        : Cursor.getCaretPosition(this.shadowRoot!, editor);
+    this.currentCursorPosition = editor.selectionStart;
 
     const parseOutput = this._parser.parseInput(
       this.content,
@@ -190,7 +190,6 @@ export class FormulaEditor extends LitElement {
     this._formattedContent = parseOutput.formattedContent;
     this.errorString = parseOutput.errorString;
 
-
     /**
      * Don't modify the text stream manually if the text is being composed,
      * unless the user manually chooses to do so by selecting a suggestion.
@@ -199,25 +198,20 @@ export class FormulaEditor extends LitElement {
      * @see https://bugs.chromium.org/p/chromium/issues/detail?id=689541
      * */
 
-    if (this.lastInputType != "insertCompositionText" || recommendation) {
-      editor.innerHTML = parseOutput.formattedString!;
+    if (this.lastInputType !== "insertCompositionText" || recommendation) {
+      const formattedString = parseOutput.formattedString!;
+      this.content = formattedString;
     }
-
-    this.content = (editor as HTMLDivElement).innerText;
 
     if (recommendation) {
       this._recommendations = null;
       this.currentCursorPosition = parseOutput.newCursorPosition;
+      
+      setTimeout(() => {
+        editor.setSelectionRange(this.currentCursorPosition, this.currentCursorPosition);
+      }, 0);
     }
 
-    if (manageCursor)
-      Cursor.setCaretPosition(this.currentCursorPosition!, editor);
-    editor?.focus();
-
-    if (manageCursor)
-      this.currentCursorRect = Cursor.getCursorRect(this.shadowRoot!);
-
-    this.requestUpdate();
 
     this.dispatchEvent(
       new CustomEvent("fw-formula-content-changed", {
@@ -229,6 +223,8 @@ export class FormulaEditor extends LitElement {
         bubbles: true,
       })
     );
+
+    editor.focus();
   }
 
   requestCalculate() {
@@ -264,25 +260,26 @@ export class FormulaEditor extends LitElement {
       if(!this.content.trim()){
         this._recommendations= Array.from(this.variables.keys());
       }
+
+      this._adjustInputHeight();
     }
 
     if(_changedProperties.has("variables")){
       this._parser = new Parser(this.variables, this.minSuggestionLen);
-      this.parseInput(null, false);
     }
 
   }
 
   handleFocusOut(e: FocusEvent) {
-      this.isFocus = false;
-      this._recommendations = null;
-      this.requestUpdate();
+    this.isFocus = false;
+    this._recommendations = null;
+    this.requestUpdate();
   }
 
   handleFocus(e: FocusEvent){
     this.isFocus = true;
     if(!this.content.trim()){
-      this._recommendations= Array.from(this.variables.keys());
+      this._recommendations = Array.from(this.variables.keys());
     }
   }
   
@@ -299,17 +296,15 @@ export class FormulaEditor extends LitElement {
             </label>`
           : ""}
         
-        <div
-          contenteditable
+        <textarea
           placeholder=${this.placeholder}
           id="wysiwyg-editor"
-          spellcheck="false"
-          autocomplete="off"
-          @input=${this.handleChange}
+          class=${this.errorString?.length ? "error" : ""}
+          .value=${this.content}
           @keydown=${this.handleKeyboardEvents}
           @blur=${this.handleFocusOut}
           @focus=${this.handleFocus}
-        ></div>
+        ></textarea>
       ${this._recommendations && this.isFocus
         ? html` <suggestion-menu
               .recommendations=${this._recommendations}
