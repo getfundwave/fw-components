@@ -164,6 +164,8 @@ export class FormulaEditor extends LitElement {
         class=${this.errorString?.length ? "error" : ""}
         .value=${this.content}
         .placeholder=${this.placeholder}
+        spellcheck="false"
+        autocomplete="off"
         @blur=${() => this.handleFocus(false)}
         @focus=${() => this.handleFocus(true)}
       ></textarea>
