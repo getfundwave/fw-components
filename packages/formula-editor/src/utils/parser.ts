@@ -41,8 +41,8 @@ export class Parser {
     tokens?.forEach((token) => {
       let isNumber = token.trim() !== "" && (this.variables.has(token) || !Number.isNaN(Number(token)));
       const isOperator = mathematicalOperators.has(token);
-      const isSpace = token.trim() == "";
-      const isBracket = token == "(" || token == ")";
+      const isSpace = token.trim() === "";
+      const isBracket = token === "(" || token === ")";
 
       if (isSpace) {
         parseOutput.formattedString += token;
@@ -92,7 +92,7 @@ export class Parser {
           expectation = Expectation.UNDEFINED;
         }
 
-        else if (parentheses.isEmpty() && token == ")") {
+        else if (parentheses.isEmpty() && token === ")") {
           parseOutput.errorString = `Unexpected ')' at position ${currentPosition}`;
           expectation = Expectation.UNDEFINED;
         }
@@ -101,8 +101,8 @@ export class Parser {
          * Operator or ')' after an operator (Eg: '23 / *' or '23 / )')
          * No error for Unary `+` and `-` as they might represent a positive or negative number respectively
          */
-        else if (expectation == Expectation.VARIABLE && !isNumber && !isSpace && token != "(" 
-          && !((token == "-" || token == "+") && (!parsedString.trim() || previousToken === "(" || mathematicalOperators.has(previousToken)))
+        else if (expectation === Expectation.VARIABLE && !isNumber && !isSpace && token != "(" 
+          && !((token === "-" || token === "+") && (!parsedString.trim() || previousToken === "(" || mathematicalOperators.has(previousToken)))
         ) {
           parseOutput.errorString = `Expected variable/number at position ${currentPosition}`;
           expectation = Expectation.UNDEFINED;
@@ -111,7 +111,7 @@ export class Parser {
         /**
          * Multiple number/variable together without operator
          */
-        else if (expectation == Expectation.OPERATOR && !isOperator && !isSpace && token != ")") {
+        else if (expectation === Expectation.OPERATOR && !isOperator && !isSpace && token != ")") {
           parseOutput.errorString = `Expected mathematical operator at position ${currentPosition}`;
           expectation = Expectation.UNDEFINED;
         }
@@ -127,7 +127,7 @@ export class Parser {
         /**
          * division by zero
          */
-        else if (isNumber && previousToken == "/" && (this.variables.get(token) == 0 || Number(token) == 0)) {
+        else if (isNumber && previousToken === "/" && (this.variables.get(token) === 0 || Number(token) === 0)) {
           parseOutput.errorString = `Division by zero at position ${currentPosition}`;
           expectation = Expectation.UNDEFINED;
         }
@@ -135,7 +135,7 @@ export class Parser {
         /**
          * Empty brackets
          */
-        else if (previousToken == "(" && token == ")") {
+        else if (previousToken === "(" && token === ")") {
           parseOutput.errorString = `Empty brackets at position ${currentPosition}`;
           expectation = Expectation.UNDEFINED;
         }
@@ -145,15 +145,15 @@ export class Parser {
        * Setting the expectation for the next token, if no error is there till now
        */
       if (expectation != Expectation.UNDEFINED) {
-        if (token == "(" || isOperator) {
+        if (token === "(" || isOperator) {
           expectation = Expectation.VARIABLE;
-        } else if (token == ")" || isNumber) {
+        } else if (token === ")" || isNumber) {
           expectation = Expectation.OPERATOR;
         }
       }
 
-      if (token == "(") parentheses.push(currentPosition);
-      else if (token == ")") parentheses.pop();
+      if (token === "(") parentheses.push(currentPosition);
+      else if (token === ")") parentheses.pop();
       
       parseOutput.formattedString += token;
       currentPosition += token.length;
@@ -200,7 +200,7 @@ export class Parser {
 
     for (const token of tokens) {
       if (
-        (token == "+" || token == "-") &&
+        (token === "+" || token === "-") &&
         (!currentTokens.trim() || previousToken === "(" || mathematicalOperators.has(previousToken))
       ) {
         carriedToken = token;
@@ -223,9 +223,9 @@ export class Parser {
     const outputQueue = new Queue<string>();
 
     for (const token of parsedTokens) {
-      if (token == "(") {
+      if (token === "(") {
         operatorStack.push("(");
-      } else if (token == ")") {
+      } else if (token === ")") {
         while (operatorStack.top() != "(") {
           outputQueue.enqueue(operatorStack.pop()!);
         }
@@ -381,7 +381,7 @@ export class Parser {
               calcStack.push(Big(numA).mul(Big(numB)));
               break;
             case "/":
-              if (parseFloat(Big(numB).toString()) == 0) {
+              if (parseFloat(Big(numB).toString()) === 0) {
                 calculationResult.errorString = "Division by zero encountered";
                 return calculationResult;
               }

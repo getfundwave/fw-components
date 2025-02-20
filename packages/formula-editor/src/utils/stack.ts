@@ -14,7 +14,7 @@ export class Stack<Type> {
   }
 
   isEmpty(): boolean {
-    return this._elements.length == 0;
+    return this._elements.length === 0;
   }
 
   print(): void {

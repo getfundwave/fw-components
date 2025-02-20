@@ -23,7 +23,7 @@ export class Queue<Type> {
   }
 
   isEmpty(): boolean {
-    return this._head == this._tail;
+    return this._head === this._tail;
   }
 
   print(): void {
