@@ -1,25 +1,8 @@
 import { LitElement, html, css } from "lit";
 import { property, query, state } from "lit/decorators.js";
 import "@fw-components/formula-editor";
-import { Parser } from "@fw-components/formula-editor/dist/formula-editor/src/parser";
-
-class Formula {
-  constructor(name, formulaString, precision = -1) {
-    this.name = name;
-    this.formulaString = formulaString;
-    this.precision = precision;
-    this.error = null;
-  }
-
-  get formulaString() {
-    return this._formulaString;
-  }
-
-  set formulaString(value) {
-    this._formulaString = value;
-    this.error = null;
-  }
-}
+import { Parser } from "@fw-components/formula-editor/dist/formula-editor/src/helpers/parser";
+import { Formula } from "@fw-components/formula-editor/dist/formula-editor/src/helpers/types";
 
 export class FWFormulaEditorShowcase extends LitElement {
   @property({ type: Object })
@@ -139,6 +122,7 @@ export class FWFormulaEditorShowcase extends LitElement {
             @fw-formula-content-changed=${(e) => {
               this.formula.formulaString = e.detail.formulaString;
               this.formula.error = e.detail.error;
+              this.calculatedResult = 0;
               this.requestUpdate();
             }}
             .variables=${this.variables}
