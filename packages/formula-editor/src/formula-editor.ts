@@ -89,7 +89,7 @@ export class FormulaEditor extends LitElement {
   _adjustTextAreaHeight() {
     if (!this.content) this.editor.style.height = "var(--fe-height, 30px)";
 
-    if (this.editor.scrollHeight > this.editor.clientHeight) this.editor.style.height = this.editor.scrollHeight + 5 + "px";
+    if (this.editor.scrollHeight > this.editor.clientHeight) this.editor.style.height = String(this.editor.scrollHeight + 5).concat("px");
   }
 
   /**
@@ -113,8 +113,7 @@ export class FormulaEditor extends LitElement {
      * @see https://bugs.chromium.org/p/chromium/issues/detail?id=689541
      */
     if (this.lastInputType !== "insertCompositionText" || recommendation) {
-      const formattedString = parseOutput.formattedString!;
-      this.content = formattedString;
+      this.content = parseOutput.formattedString!;
     }
 
     if (Boolean(recommendation)) {
