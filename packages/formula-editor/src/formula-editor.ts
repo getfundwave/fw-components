@@ -1,4 +1,4 @@
-import { html, LitElement, PropertyValueMap } from "lit";
+import { html, LitElement, PropertyValueMap, PropertyValues } from "lit";
 import { customElement, property, state, query } from "lit/decorators.js";
 import { FormulaEditorStyles } from "./styles/editor.js";
 import { Parser } from "./parser.js";
@@ -52,8 +52,8 @@ export class FormulaEditor extends LitElement {
 
   @query("#wysiwyg-editor")
   editor: HTMLTextAreaElement;
-
-  firstUpdated() {
+  
+  protected firstUpdated(_changedProperties: PropertyValues): void {
     const inputListener = this.handleContentUpdate.bind(this);
     this.editor.addEventListener("input", inputListener);
     this.editor.focus();
@@ -70,50 +70,6 @@ export class FormulaEditor extends LitElement {
 
     if (changedProperties.has("variables") && this.variables.size) {
       this._parser = new Parser(this.variables, this.minSuggestionLen);
-    }
-  }
-
-  navigateRecommendations(direction: string) {
-    if (!this.recommendations) return;
-
-    const currentIndex = this.recommendations.indexOf(this._selectedRecommendation);
-    const newIndex =
-      direction === "ArrowDown"
-        ? (currentIndex + 1) % this.recommendations.length
-        : direction === "ArrowUp"
-        ? (currentIndex - 1 + this.recommendations.length) % this.recommendations.length
-        : currentIndex;
-
-    this._selectedRecommendation = this.recommendations[newIndex];
-
-    this.scrollToSelectedRecommendation(newIndex);
-  }
-
-  scrollToSelectedRecommendation(index: number) {
-    const suggestionMenu = this.shadowRoot?.querySelector("suggestion-menu");
-    if (suggestionMenu) {
-      const listItem = suggestionMenu.shadowRoot?.querySelectorAll("li")[index];
-      if (listItem) {
-        listItem.scrollIntoView({
-          block: "nearest",
-          inline: "nearest",
-        });
-      }
-    }
-  }
-
-  handleKeyboardEvents(event: KeyboardEvent) {
-    if (event.code == "Tab" && this.recommendations?.length == 1) {
-      this._selectedRecommendation = null;
-      event.preventDefault();
-      this.parseInput(this.recommendations[0]);
-    } else if (event.code === "ArrowDown" || event.code === "ArrowUp") {
-      if (this.recommendations) event.preventDefault();
-      this.navigateRecommendations(event.code);
-    } else if (event.code === "Enter" && this._selectedRecommendation) {
-      event.preventDefault();
-      this.parseInput(this._selectedRecommendation);
-      this._selectedRecommendation = null;
     }
   }
 
@@ -207,7 +163,6 @@ export class FormulaEditor extends LitElement {
         class=${this.errorString?.length ? "error" : ""}
         .value=${this.content}
         .placeholder=${this.placeholder}
-        @keydown=${this.handleKeyboardEvents}
         @blur=${() => this.handleFocus(false)}
         @focus=${() => this.handleFocus(true)}
       ></textarea>
@@ -216,8 +171,7 @@ export class FormulaEditor extends LitElement {
         ? html`<suggestion-menu
             .recommendations=${this.recommendations}
             .currentSelection=${this._selectedRecommendation}
-            .onClickRecommendation=${(e: any) => this.onClickRecommendation(e)}
-            @mousedown=${(e: MouseEvent) => e.preventDefault()}
+            .onClickRecommendation=${this.onClickRecommendation.bind(this)}
           ></suggestion-menu>`
         : ''}
     `;
