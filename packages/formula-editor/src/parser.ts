@@ -246,6 +246,11 @@ export class Parser {
       parseOutput.recommendations = !parseOutput.errorString?.length ? Array.from(this.variables.keys()) : [];
     } 
     
+    //formula ends with mathematical operator
+    if (this.mathematicalOperators.has(previousToken)) {
+      parseOutput.errorString = `Unexpected ending with mathematical operator at position: ${currentPosition}`;
+    } 
+
     // formula has unclosed `(`
     if (!parentheses.isEmpty()) {
       parseOutput.errorString = `Unclosed '(' at position: ${parentheses.top()}`;
@@ -359,7 +364,7 @@ export class Parser {
       // and can be directly put into the result stack.
 
       if (
-        ((symbol === "+" || symbol[0] === "-") && this.variables.has(symbol.substring(1))) || 
+        ((symbol[0] === "+" || symbol[0] === "-") && this.variables.has(symbol.substring(1))) || 
         this.variables.has(symbol) ||
         (!isNaN(parseFloat(symbol)) && isFinite(parseFloat(symbol)))
       ) {
