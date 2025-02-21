@@ -35,7 +35,7 @@ export class SuggestionMenu extends LitElement {
   }
 
   navigate(direction: string) {
-    if (!this.recommendations) return;
+    if (!this.recommendations?.length) return;
     
     let newIndex = this._selectedRecommendationIndex;
 
