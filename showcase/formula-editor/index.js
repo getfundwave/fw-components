@@ -74,11 +74,20 @@ export class FWFormulaEditorShowcase extends LitElement {
   `;
 
   handleCalculate = () => {
-    // this.formulaEditor?.requestCalculate();
-    const formulaParser = new Parser(this.variables, "0");
-    const calculatedResult = formulaParser.calculate(this.formula.formulaString);
+    try {
+      const formulaParser = new Parser(this.variables, "0");
+      const calculatedResult = formulaParser.calculate(this.formula.formulaString);
 
-    this.calculatedResult = calculatedResult.errorString ? "(!)" : calculatedResult.result;
+      if(this.calculatedResult.errorString) {
+        this.calculatedResult = "Error: Invalid formula";
+        console.error("Formula calculation error:", calculatedResult.errorString);
+      } else {
+        this.calculatedResult = calculatedResult.result;
+      }
+    } catch (error) {
+      console.error("Calculation failed:", error);
+      this.calculatedResult = "Error: Calculation failed";
+    }
   };
 
   handleFormat = () => {
