@@ -267,7 +267,7 @@ export class Parser {
       // check if the symbol is a number or variable or unaryOperatorPreceded Variable
       if (((unaryOperators.includes(symbol[0])) && this.variables.has(symbol.substring(1))) || 
         this.variables.has(symbol) ||
-        (!isNaN(parseFloat(symbol)) && isFinite(parseFloat(symbol)))
+        (!Number.isNaN(parseFloat(symbol)) && Number.isFinite(parseFloat(symbol)))
       ) {
         resultStack.push(symbol);
         operatorStack.push(null);
