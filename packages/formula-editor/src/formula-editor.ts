@@ -28,7 +28,7 @@ export class FormulaEditor extends LitElement {
   _selectedRecommendation: string;
 
   @state()
-  isFocused: Boolean = false;
+  isFocused: boolean = false;
 
   /**
    * Text area input value
@@ -124,9 +124,7 @@ export class FormulaEditor extends LitElement {
       this.recommendations = [];
       this.currentCursorPosition = parseOutput.newCursorPosition;
 
-      /**
-       * update cursor position in text area
-       */
+      /* update cursor position in text area */
       setTimeout(() => {
         this.editor.setSelectionRange(this.currentCursorPosition, this.currentCursorPosition);
       }, 0);
@@ -152,7 +150,7 @@ export class FormulaEditor extends LitElement {
     this.recommendations = [];
   }
 
-  handleFocus(focus: Boolean) {
+  handleFocus(focus: boolean) {
     this.isFocused = focus;
   }
 
