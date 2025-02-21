@@ -17,7 +17,7 @@ export class Parser {
   getFormulaTokens(formulaString: string): string[] {
     if(!formulaString?.length) return [];
 
-    return formulaString.match(/'[^']*'|\d+|[A-Za-z_][A-Za-z0-9_]*|[-+(),*^/:?\s]/g);
+    return formulaString.match(/'[^']*'|([\d\w]){48}|([\d\w]){24}|\d+|[A-Za-z_#][A-Za-z0-9_#]*|[-+(),*^/:?\s]/g);
   }
 
   parseInput(formula: string, prevCurPos: number | null = null, recommendation: string | null = null): ParseResult {
