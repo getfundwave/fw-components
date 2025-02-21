@@ -40,7 +40,7 @@ export class SuggestionMenu extends LitElement {
     this.scrollToSelectedRecommendation(newIndex);
   }
 
-  _handleRecommendationSelect(index: number = this._selectedRecommendationIndex) {
+  handleRecommendationSelect(index: number = this._selectedRecommendationIndex) {
     const recommendation = this.recommendations[index];
     if(!recommendation) return;
 
@@ -55,7 +55,7 @@ export class SuggestionMenu extends LitElement {
         ${this.recommendations.map((recommendation, index) =>
             html`<li
               class="${this._selectedRecommendationIndex === index ? "selected" : ""}"
-              @click=${(e: MouseEvent) => this._handleRecommendationSelect(index)}
+              @click=${(e: MouseEvent) => this.handleRecommendationSelect(index)}
             >${recommendation}</li>`
         )}
       </ul>

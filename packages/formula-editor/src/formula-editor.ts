@@ -156,7 +156,7 @@ export class FormulaEditor extends LitElement {
     if (event.code === "Tab") {
       event.preventDefault();
       if (this.recommendations?.length === 1) {
-        this.suggestionMenu._handleRecommendationSelect();
+        this.suggestionMenu.handleRecommendationSelect();
       } else {
         const direction = event.shiftKey ? "up" : "down";
         this.suggestionMenu.navigate(direction);
@@ -167,7 +167,7 @@ export class FormulaEditor extends LitElement {
       this.suggestionMenu.navigate(direction);
     } else if (event.code === "Enter") {
       event.preventDefault();
-      this.suggestionMenu._handleRecommendationSelect();
+      this.suggestionMenu.handleRecommendationSelect();
     }
   }
 
