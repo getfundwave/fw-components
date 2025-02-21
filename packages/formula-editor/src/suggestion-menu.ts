@@ -14,12 +14,6 @@ export class SuggestionMenu extends LitElement {
   @state()
   _selectedRecommendationIndex: number = -1;
 
-  /**
-   * abort controller for keydown event listener
-   */
-  @state()
-  abortController: AbortController;
-
   @query(".wysiwyg-suggestion-menu") 
   suggestionList: HTMLUListElement
 
