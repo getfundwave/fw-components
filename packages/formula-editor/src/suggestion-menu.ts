@@ -9,7 +9,7 @@ export class SuggestionMenu extends LitElement {
   recommendations: string[] = [];
 
   @property()
-  onClickRecommendation: (recommendation: string) => void = () => {};
+  onRecommendationClick: (recommendation: string) => void = () => {};
 
   @state()
   _selectedRecommendationIndex: number = -1;
@@ -44,7 +44,7 @@ export class SuggestionMenu extends LitElement {
     const recommendation = this.recommendations[index];
     if(!recommendation) return;
 
-    this.onClickRecommendation(recommendation);
+    this.onRecommendationClick(recommendation);
     this._selectedRecommendationIndex = -1;
   }
 

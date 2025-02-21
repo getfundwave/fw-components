@@ -76,7 +76,7 @@ export class FormulaEditor extends LitElement {
     }
   }
 
-  onClickRecommendation(recommendation: string) {
+  onRecommendationClick(recommendation: string) {
     this.parseInput(recommendation);
   }
 
@@ -194,7 +194,7 @@ export class FormulaEditor extends LitElement {
         ? html`<suggestion-menu
             .recommendations=${this.recommendations}
             .currentSelection=${this._selectedRecommendation}
-            .onClickRecommendation=${this.onClickRecommendation.bind(this)}
+            .onRecommendationClick=${this.onRecommendationClick.bind(this)}
           ></suggestion-menu>`
         : ''}
     `;
