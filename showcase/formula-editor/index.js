@@ -78,7 +78,7 @@ export class FWFormulaEditorShowcase extends LitElement {
       const formulaParser = new Parser(this.variables, "0");
       const calculatedResult = formulaParser.calculate(this.formula.formulaString);
 
-      if(this.calculatedResult.errorString) {
+      if (calculatedResult.errorString) {
         this.calculatedResult = "Error: Invalid formula";
         console.error("Formula calculation error:", calculatedResult.errorString);
       } else {
