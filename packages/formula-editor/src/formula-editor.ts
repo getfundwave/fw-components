@@ -153,6 +153,8 @@ export class FormulaEditor extends LitElement {
   }
 
   handleKeydown(event: KeyboardEvent) {
+    if(!this.recommendations?.length) return;
+
     if (event.code === "Tab") {
       event.preventDefault();
       if (this.recommendations?.length === 1) {
