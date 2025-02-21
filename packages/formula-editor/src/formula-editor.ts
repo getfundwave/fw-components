@@ -58,8 +58,6 @@ export class FormulaEditor extends LitElement {
   suggestionMenu: SuggestionMenu;
   
   protected firstUpdated(_changedProperties: PropertyValues): void {
-    const inputListener = this.handleContentUpdate.bind(this);
-    this.editor.addEventListener("input", inputListener);
     this.editor.focus();
   }
 
@@ -186,6 +184,7 @@ export class FormulaEditor extends LitElement {
         .placeholder=${this.placeholder}
         spellcheck="false"
         autocomplete="off"
+        @input=${this.handleContentUpdate}
         @keydown=${this.handleKeydown}
         @blur=${() => this.handleFocus(false)}
         @focus=${() => this.handleFocus(true)}
