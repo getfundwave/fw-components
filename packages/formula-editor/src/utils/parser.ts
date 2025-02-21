@@ -235,7 +235,7 @@ export class Parser {
         }
 
         operatorStack.push(token);
-      } else if (!Number.isNaN(token) && token != "") {
+      } else if ((!Number.isNaN(Number(token)) || this.variables.has(token)) && token.trim().length) {
         outputQueue.enqueue(token);
       }
     }
