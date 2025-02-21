@@ -9,7 +9,7 @@ export class SuggestionMenu extends LitElement {
   recommendations: string[] = [];
 
   @property()
-  onClickRecommendation: Function = (recommendation: string) => {};
+  onClickRecommendation: (recommendation: string) => void = () => {};
 
   @state()
   _selectedRecommendationIndex: number = -1;
