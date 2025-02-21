@@ -3,7 +3,7 @@ import { Recommender } from "./recommendor.js";
 import { Stack } from "./stack.js";
 import { Queue } from "./queue.js";
 import { CalculateResult, Expectation, ParseResult } from "../types";
-import { mathematicalOperators, operatorPrecedence } from "./constants.js";
+import { mathematicalOperators, operatorPrecedence, unaryOperators } from "./constants.js";
 
 export class Parser {
   private _recommender: Recommender;
@@ -14,8 +14,14 @@ export class Parser {
     this._recommender = new Recommender(Array.from(this.variables.keys()), minSuggestionLen);
   }
 
+  getFormulaTokens(formulaString: string): string[] {
+    if(!formulaString?.length) return [];
+
+    return formulaString.match(/'[^']*'|\d+|[A-Za-z_][A-Za-z0-9_]*|[-+(),*^/:?\s]/g);
+  }
+
   parseInput(formula: string, prevCurPos: number | null = null, recommendation: string | null = null): ParseResult {
-    const tokens = formula.match(/'[^']*'|\d+|[A-Za-z_][A-Za-z0-9_]*|[-+(),*^/:?\s]/g);
+    const tokens = this.getFormulaTokens(formula);
     const parentheses = new Stack<number>();
     let expectation = Expectation.VARIABLE;
     let currentPosition = 0;
@@ -102,7 +108,7 @@ export class Parser {
          * No error for Unary `+` and `-` as they might represent a positive or negative number respectively
          */
         else if (expectation === Expectation.VARIABLE && !isNumber && !isSpace && token != "(" 
-          && !((token === "-" || token === "+") && (!parsedString.trim() || previousToken === "(" || mathematicalOperators.has(previousToken)))
+          && !((unaryOperators.includes(token)) && (!parsedString.trim() || previousToken === "(" || mathematicalOperators.has(previousToken)))
         ) {
           parseOutput.errorString = `Expected variable/number at position ${currentPosition}`;
           expectation = Expectation.UNDEFINED;
@@ -183,26 +189,18 @@ export class Parser {
   }
 
   buildRPN(formula: string): Queue<string> | null {
-    if (this.parseInput(formula).errorString) {
-      return null;
-    }
+    if (this.parseInput(formula).errorString) return null;    
 
-    const tokens = formula
-      .match(/'[^']*'|\d+|[A-Za-z_][A-Za-z0-9_]*|[-+(),*^/:?\s]/g)
-      ?.filter((el: string) => !/\s+/.test(el) && el !== "");
-
-    // Handling the special case of unary `-` and `+`.
+    const tokens = this.getFormulaTokens(formula)?.filter((el: string) => !/\s+/.test(el) && el !== "");
 
     let previousToken = "";
     let carriedToken: string | null = null;
     const parsedTokens: string[] = [];
     let currentTokens = "";
-
+    
+    // Check if variables include unary operators `-` and `+`.
     for (const token of tokens) {
-      if (
-        (token === "+" || token === "-") &&
-        (!currentTokens.trim() || previousToken === "(" || mathematicalOperators.has(previousToken))
-      ) {
+      if ((unaryOperators.includes(token)) && (!currentTokens.trim() || previousToken === "(" || mathematicalOperators.has(previousToken))) {
         carriedToken = token;
       } else if (carriedToken) {
         parsedTokens.push(carriedToken + token);
@@ -218,7 +216,6 @@ export class Parser {
     /**
      * Shunting Yard Algorithm (EW Dijkstra)
      */
-
     const operatorStack = new Stack<string>();
     const outputQueue = new Queue<string>();
 
@@ -233,10 +230,7 @@ export class Parser {
         operatorStack.pop();
       } else if (mathematicalOperators.has(token)) {
         while (
-          mathematicalOperators.has(operatorStack.top()!) &&
-          operatorPrecedence[token] <=
-            operatorPrecedence[operatorStack.top()!]
-        ) {
+          mathematicalOperators.has(operatorStack.top()!) && operatorPrecedence[token] <= operatorPrecedence[operatorStack.top()!]) {
           outputQueue.enqueue(operatorStack.pop()!);
         }
 
@@ -255,10 +249,7 @@ export class Parser {
 
   addParentheses(formula: string): string | null {
     const rpn = this.buildRPN(formula);
-
-    if (!rpn) {
-      return null;
-    }
+    if (!rpn) return null;
 
     const lexedRPN: string[] = [];
 
@@ -266,98 +257,71 @@ export class Parser {
       lexedRPN.push(rpn.dequeue()!);
     }
 
-    // Stores the operators that we encounter in the RPN
-    let operatorStack = new Stack<string | null>();
-
-    // Stores the `results`, which are essentially individual groups
-    // of tokens showing a meaningful value.
-    let resultStack = new Stack<string>();
+    const operatorStack = new Stack<string | null>();
+    const resultStack = new Stack<string>();
 
     lexedRPN.forEach((symbol) => {
-      let parsedLeftExpression: string, parsedRightExpression: string;
+      let parsedLeftExpression: string;
+      let parsedRightExpression: string;
 
-      // If we encounter a number or a variable in the RPN, it is itself
-      // a calculated entity (say a result in itself), needs no modification
-      // and can be directly put into the result stack.
-
-      if (
-        ((symbol[0] === "+" || symbol[0] === "-") && this.variables.has(symbol.substring(1))) || 
+      // check if the symbol is a number or variable or unaryOperatorPreceded Variable
+      if (((unaryOperators.includes(symbol[0])) && this.variables.has(symbol.substring(1))) || 
         this.variables.has(symbol) ||
         (!isNaN(parseFloat(symbol)) && isFinite(parseFloat(symbol)))
       ) {
         resultStack.push(symbol);
         operatorStack.push(null);
       }
-
-      // If it is not a number/variable then it is an operator. We will
-      // take out previous operators from the `operatorStack`, compare
-      // them with the current one, adds brackets accordingly to the `results`
-      // around it, and then finally add it to the `operatorStack` for
-      // future reference.
+      
+      // If symbol is an operator, check operatorStack, adds brackets accordingly to the result and add it to operatorStack
       else if (Object.keys(operatorPrecedence).includes(symbol)) {
-        let [rightExpression, leftExpression, operatorA, operatorB] = [
+        const [rightExpression, leftExpression, operatorA, operatorB] = [
           resultStack.pop()!,
           resultStack.pop()!,
           operatorStack.pop()!,
           operatorStack.pop()!,
         ];
 
-        // The conditions that govern when to show a parenthesis.
-
-        if (
-          operatorPrecedence[operatorB] <=
-            operatorPrecedence[symbol] ||
-          (operatorPrecedence[operatorB] ===
-            operatorPrecedence[symbol] &&
-            ["/", "-"].includes(symbol))
+        if ((operatorPrecedence[operatorB] <= operatorPrecedence[symbol]) || 
+          (operatorPrecedence[operatorB] === operatorPrecedence[symbol] && ["/", "-"].includes(symbol))
         ) {
           parsedLeftExpression = `(${leftExpression})`;
         } else {
           parsedLeftExpression = leftExpression;
         }
 
-        if (
-          operatorPrecedence[operatorA] <=
-            operatorPrecedence[symbol] ||
-          (operatorPrecedence[operatorA] ===
-            operatorPrecedence[symbol] &&
-            ["/", "-"].includes(symbol))
+        if (operatorPrecedence[operatorA] <= operatorPrecedence[symbol] ||
+          (operatorPrecedence[operatorA] === operatorPrecedence[symbol] && ["/", "-"].includes(symbol))
         ) {
           parsedRightExpression = `(${rightExpression})`;
         } else {
           parsedRightExpression = rightExpression;
         }
 
-        // The bracket included expression is now itself a `result`
-
-        resultStack.push(
-          `${parsedLeftExpression} ${symbol} ${parsedRightExpression}`
-        );
+        resultStack.push(`${parsedLeftExpression} ${symbol} ${parsedRightExpression}`);
 
         operatorStack.push(symbol);
       } else throw `${symbol} is not a recognized symbol`;
     });
 
-    if (!resultStack.isEmpty()) {
-      return resultStack.pop()!;
-    } else throw `${lexedRPN} is not a correct RPN`;
+    if (resultStack.isEmpty()) throw `${lexedRPN} is not a correct RPN`;
+
+    return resultStack.pop()!;
   }
 
   calculate(formula: string): CalculateResult {
-    let rpn = this.buildRPN(formula);
-    let calculationResult: CalculateResult = {
+    const formulaRPN = this.buildRPN(formula);
+    const calculationResult: CalculateResult = {
       result: undefined,
       errorString: null,
     };
 
-    if (!rpn) {
-      return calculationResult;
-    }
+    if (!formulaRPN) return calculationResult;
 
-    let calcStack = new Stack<Big>();
+    const calcStack = new Stack<Big>();
 
-    while (!rpn.isEmpty()) {
-      const frontItem = rpn.dequeue()!;
+    while (!formulaRPN.isEmpty()) {
+      const frontItem = formulaRPN.dequeue()!;
       if (!mathematicalOperators.has(frontItem)) {
         const [sign, variableKey] = /^[+-]/.test(frontItem) ? [frontItem[0], frontItem.slice(1)] : ["", frontItem];
         const operandValue = Number.parseFloat(this.variables.get(variableKey)?.toString() ?? variableKey);
@@ -365,9 +329,9 @@ export class Parser {
         const number = Number.parseFloat(sign + "1") * operandValue;
         calcStack.push(Big(number));
       } else {
-        let operator = frontItem;
-        let numB = calcStack.pop()!;
-        let numA = calcStack.pop()!;
+        const operator = frontItem;
+        const numB = calcStack.pop()!;
+        const numA = calcStack.pop()!;
 
         try {
           switch (operator) {
@@ -388,10 +352,6 @@ export class Parser {
 
               calcStack.push(Big(numA).div(Big(numB)));
               break;
-
-            // Big.js doesn't support exponentiating a Big to a Big, which
-            // is obvious due to performance overheads. Use this case with care.
-
             case "^":
               calcStack.push(Big(numA).pow(parseFloat(Big(numB).toString())));
           }
