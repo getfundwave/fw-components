@@ -71,7 +71,7 @@ export class FormulaEditor extends LitElement {
       this._adjustTextAreaHeight();
     }
 
-    if (_changedProperties.has("variables") && this.variables.size) {
+    if (_changedProperties.has("variables")) {
       this._parser = new Parser(this.variables, this.minSuggestionLen);
     }
   }
