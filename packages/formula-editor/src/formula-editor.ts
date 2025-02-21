@@ -143,7 +143,7 @@ export class FormulaEditor extends LitElement {
   }
 
   formatFormula() {
-    if (!Boolean(this.content)) return;
+    if (!this.content) return;
 
     this.content = this._parser.addParentheses(this.content) ?? this.content;
     this.parseInput();
