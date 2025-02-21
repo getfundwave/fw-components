@@ -24,6 +24,7 @@ export const FormulaEditorStyles = css`
     outline: 0px solid black;
     background-color: var(--fe-background-color, #222222);
     box-sizing: border-box;
+    line-height: 1.5;
   }
 
   #wysiwyg-editor:empty:before {
