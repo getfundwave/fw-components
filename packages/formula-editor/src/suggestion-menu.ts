@@ -12,7 +12,7 @@ export class SuggestionMenu extends LitElement {
   onClickRecommendation: Function = (recommendation: string) => {};
 
   @state()
-  _selectedRecommendationIndex: number = 0;
+  _selectedRecommendationIndex: number = -1;
 
   /**
    * abort controller for keydown event listener
