@@ -19,6 +19,8 @@ export class Queue<Type> {
   }
 
   peek(): Type {
+    if (this.isEmpty()) throw new Error("Cannot peek an empty queue");
+
     return this._elements[this._head];
   }
 
