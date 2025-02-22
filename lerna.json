@@ -3,7 +3,7 @@
     "packages/*"
   ],
   "useWorkspaces": true,
-  "version": "2.0.7-formula-editor.32",
+  "version": "2.0.7-formula-editor.33",
   "command": {
     "version": {
       "message": "chore(release): publish %s \n [skip ci]"
