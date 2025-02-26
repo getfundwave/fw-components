@@ -4,24 +4,21 @@ import { Stack } from "./stack.js";
 import { Queue } from "./queue.js";
 import { CalculateResult, Expectation, ParseResult } from "../types";
 import { mathematicalOperators, operatorPrecedence, unaryOperators } from "./constants.js";
+import { getFormulaTokens } from "./get-formula-tokens.js";
 
 export class Parser {
   private _recommender: Recommender;
   variables: Map<string, number>;
+  formulaRegex: RegExp;
 
-  constructor(variables: Map<string, number>, minSuggestionLen: number) {
+  constructor(variables: Map<string, number>, formulaRegex : RegExp, minSuggestionLen: number) {
     this.variables = variables;
+    this.formulaRegex = formulaRegex;
     this._recommender = new Recommender(Array.from(this.variables.keys()), minSuggestionLen);
   }
 
-  getFormulaTokens(formulaString: string): string[] {
-    if(!formulaString?.length) return [];
-
-    return formulaString.match(/'[^']*'|[A-Za-z0-9_#@]+|[-+(),*^/\s]/g);
-  }
-
   parseInput(formula: string, prevCurPos: number | null = null, recommendation: string | null = null): ParseResult {
-    const tokens = this.getFormulaTokens(formula);
+    const tokens = getFormulaTokens(formula,this.formulaRegex);
     const parentheses = new Stack<number>();
     let expectation = Expectation.VARIABLE;
     let currentPosition = 0;
@@ -191,7 +188,7 @@ export class Parser {
   buildRPN(formula: string): Queue<string> | null {
     if (this.parseInput(formula).errorString) return null;    
 
-    const tokens = this.getFormulaTokens(formula)?.filter((el: string) => !/\s+/.test(el) && el !== "");
+    const tokens = getFormulaTokens(formula,this.formulaRegex)?.filter((el: string) => !/\s+/.test(el) && el !== "");
 
     let previousToken = "";
     let carriedToken: string | null = null;

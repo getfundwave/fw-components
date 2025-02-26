@@ -5,6 +5,7 @@ import "./suggestion-menu.js";
 import { Parser } from "./utils/parser.js";
 import { FormulaEditorStyles } from "./styles/editor.js";
 import { SuggestionMenu } from "./suggestion-menu.js";
+import { getFormulaTokens } from "./utils/get-formula-tokens.js";
 @customElement("formula-editor")
 export class FormulaEditor extends LitElement {
   /**
@@ -51,6 +52,9 @@ export class FormulaEditor extends LitElement {
   @property()
   errorString: string = "";
 
+  @property()
+  formulaRegex: RegExp =  /'[^']*'|[A-Za-z0-9_#@]+|[-+(),*^/\s]/g;
+
   @query("#wysiwyg-editor")
   editor: HTMLTextAreaElement;
 
@@ -72,7 +76,7 @@ export class FormulaEditor extends LitElement {
     }
 
     if (_changedProperties.has("variables")) {
-      this._parser = new Parser(this.variables, this.minSuggestionLen);
+      this._parser = new Parser(this.variables, this.formulaRegex, this.minSuggestionLen);
       this.recommendations = Array.from(this.variables.keys());
     }
   }
@@ -135,6 +139,7 @@ export class FormulaEditor extends LitElement {
           formulaString: this.content,
           error: this.errorString,
           recommendations: this.recommendations,
+          formulaTokens: getFormulaTokens(this.content || "",this.formulaRegex)
         },
         bubbles: true,
       })
