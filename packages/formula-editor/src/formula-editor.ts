@@ -39,6 +39,9 @@ export class FormulaEditor extends LitElement {
 
   @property()
   placeholder: string = "Type your formula...";
+  
+  @property()
+  recommendationLabels: Map<string, number> = new Map();
 
   @property()
   label: string;
@@ -55,16 +58,17 @@ export class FormulaEditor extends LitElement {
   @property()
   formulaRegex: RegExp =  /'[^']*'|[A-Za-z0-9_#@]+|[-+(),*^/\s]/g;
 
+  @property()
+  allowedNumbers: boolean = true;
+
+  @property()
+  allowedOperators: Set<string> = new Set(["^", "+", "-", "*", "/"]);
+
   @query("#wysiwyg-editor")
   editor: HTMLTextAreaElement;
 
   @query("suggestion-menu")
   suggestionMenu: SuggestionMenu;
-  
-  protected firstUpdated(_changedProperties: PropertyValues): void {
-    this.editor.focus();
-  }
-
 
   protected updated(_changedProperties: PropertyValues): void {
     if (_changedProperties.has("content")) {
@@ -76,7 +80,7 @@ export class FormulaEditor extends LitElement {
     }
 
     if (_changedProperties.has("variables")) {
-      this._parser = new Parser(this.variables, this.formulaRegex, this.minSuggestionLen);
+      this._parser = new Parser(this.variables, this.formulaRegex, this.allowedNumbers, this.allowedOperators, this.minSuggestionLen);
       this.recommendations = Array.from(this.variables.keys());
     }
   }
@@ -203,6 +207,7 @@ export class FormulaEditor extends LitElement {
             .recommendations=${this.recommendations}
             .currentSelection=${this._selectedRecommendation}
             .onRecommendationClick=${this.onRecommendationClick.bind(this)}
+            .recommendationLabels=${this.recommendationLabels}
           ></suggestion-menu>`
         : ''}
     `;

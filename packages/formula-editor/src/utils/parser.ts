@@ -3,18 +3,30 @@ import { Recommender } from "./recommendor.js";
 import { Stack } from "./stack.js";
 import { Queue } from "./queue.js";
 import { CalculateResult, Expectation, ParseResult } from "../types";
-import { mathematicalOperators, operatorPrecedence, unaryOperators } from "./constants.js";
+import { operatorPrecedence, unaryOperators } from "./constants.js";
 import { getFormulaTokens } from "./get-formula-tokens.js";
 
 export class Parser {
   private _recommender: Recommender;
   variables: Map<string, number>;
   formulaRegex: RegExp;
+  allowedNumbers: boolean;
+  allowedOperators :  Set<string>;
 
-  constructor(variables: Map<string, number>, formulaRegex : RegExp, minSuggestionLen: number) {
+  constructor(variables: Map<string, number>, formulaRegex : RegExp, allowedNumbers: boolean, allowedOperators :  Set<string>, minSuggestionLen: number) {
     this.variables = variables;
     this.formulaRegex = formulaRegex;
     this._recommender = new Recommender(Array.from(this.variables.keys()), minSuggestionLen);
+    this.allowedNumbers = allowedNumbers;
+    this.allowedOperators = allowedOperators;
+  }
+
+  isNumber(value: string) {
+
+    if(!this.allowedNumbers || value.trim() === "") return false;
+
+    return !Number.isNaN(Number(value));
+
   }
 
   parseInput(formula: string, prevCurPos: number | null = null, recommendation: string | null = null): ParseResult {
@@ -42,8 +54,8 @@ export class Parser {
 
     
     tokens?.forEach((token) => {
-      let isNumber = token.trim() !== "" && (this.variables.has(token) || !Number.isNaN(Number(token)));
-      const isOperator = mathematicalOperators.has(token);
+      let isNumber =this.variables.has(token) || this.isNumber(token);
+      const isOperator = this.allowedOperators.has(token);
       const isSpace = token.trim() === "";
       const isBracket = token === "(" || token === ")";
 
@@ -64,7 +76,7 @@ export class Parser {
         if (recommendation) {
           isNumber = true;
 
-          if (mathematicalOperators.has(token)) {
+          if (this.allowedOperators.has(token)) {
             const updatedTokenString = `${token} ${recommendation}`;
 
             parseOutput.formattedString += updatedTokenString;
@@ -90,7 +102,7 @@ export class Parser {
        * skip error check if there is one already
        */
       if (expectation != Expectation.UNDEFINED) {
-        if (mathematicalOperators.has(previousToken) && isOperator) {
+        if (this.allowedOperators.has(previousToken) && isOperator) {
           parseOutput.errorString = `Multiple operators at position ${currentPosition}`;
           expectation = Expectation.UNDEFINED;
         }
@@ -105,7 +117,7 @@ export class Parser {
          * No error for Unary `+` and `-` as they might represent a positive or negative number respectively
          */
         else if (expectation === Expectation.VARIABLE && !isNumber && !isSpace && token != "(" 
-          && !((unaryOperators.includes(token)) && (!parsedString.trim() || previousToken === "(" || mathematicalOperators.has(previousToken)))
+          && !((unaryOperators.includes(token)) && (!parsedString.trim() || previousToken === "(" || this.allowedOperators.has(previousToken)))
         ) {
           parseOutput.errorString = `Expected variable/number at position ${currentPosition}`;
           expectation = Expectation.UNDEFINED;
@@ -170,11 +182,11 @@ export class Parser {
       previousToken = recommendation;
     }
 
-    if (mathematicalOperators.has(previousToken) || !previousToken.trim().length) {
+    if (this.allowedOperators.has(previousToken) || !previousToken.trim().length) {
       parseOutput.recommendations = !parseOutput.errorString?.length ? Array.from(this.variables.keys()) : [];
     } 
     
-    if (mathematicalOperators.has(previousToken)) {
+    if (this.allowedOperators.has(previousToken)) {
       parseOutput.errorString = `Unexpected ending with mathematical operator at position: ${currentPosition}`;
     } 
 
@@ -197,7 +209,7 @@ export class Parser {
     
     // Check if variables include unary operators `-` and `+`.
     for (const token of tokens) {
-      if ((unaryOperators.includes(token)) && (!currentTokens.trim() || previousToken === "(" || mathematicalOperators.has(previousToken))) {
+      if ((unaryOperators.includes(token)) && (!currentTokens.trim() || previousToken === "(" || this.allowedOperators.has(previousToken))) {
         carriedToken = token;
       } else if (carriedToken) {
         parsedTokens.push(carriedToken + token);
@@ -225,9 +237,9 @@ export class Parser {
         }
 
         operatorStack.pop();
-      } else if (mathematicalOperators.has(token)) {
+      } else if (this.allowedOperators.has(token)) {
         while (
-          mathematicalOperators.has(operatorStack.top()!) && operatorPrecedence[token] <= operatorPrecedence[operatorStack.top()!]) {
+          this.allowedOperators.has(operatorStack.top()!) && operatorPrecedence[token] <= operatorPrecedence[operatorStack.top()!]) {
           outputQueue.enqueue(operatorStack.pop()!);
         }
 
@@ -319,7 +331,7 @@ export class Parser {
 
     while (!formulaRPN.isEmpty()) {
       const frontItem = formulaRPN.dequeue()!;
-      if (!mathematicalOperators.has(frontItem)) {
+      if (!this.allowedOperators.has(frontItem)) {
         const [sign, variableKey] = /^[+-]/.test(frontItem) ? [frontItem[0], frontItem.slice(1)] : ["", frontItem];
         const operandValue = Number.parseFloat(this.variables.get(variableKey)?.toString() ?? variableKey);
 
