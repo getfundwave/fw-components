@@ -9,6 +9,9 @@ export class SuggestionMenu extends LitElement {
   recommendations: string[] = [];
 
   @property()
+  recommendationLabels: Map<string, number> = new Map();
+
+  @property()
   onRecommendationClick: (recommendation: string) => void = () => {};
 
   @state()
@@ -56,7 +59,7 @@ export class SuggestionMenu extends LitElement {
             html`<li
               class="${this._selectedRecommendationIndex === index ? "selected" : ""}"
               @click=${(e: MouseEvent) => this.handleRecommendationSelect(index)}
-            >${recommendation}</li>`
+            >${this.recommendationLabels.get(recommendation) ?? recommendation}</li>`
         )}
       </ul>
     `;
