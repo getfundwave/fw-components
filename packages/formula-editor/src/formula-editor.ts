@@ -64,6 +64,9 @@ export class FormulaEditor extends LitElement {
   @property()
   allowedOperators: Set<string> = new Set(["^", "+", "-", "*", "/"]);
 
+  @property()
+  variableType: string;
+
   @query("#wysiwyg-editor")
   editor: HTMLTextAreaElement;
 
@@ -80,7 +83,7 @@ export class FormulaEditor extends LitElement {
     }
 
     if (_changedProperties.has("variables")) {
-      this._parser = new Parser(this.variables, this.formulaRegex, this.allowedNumbers, this.allowedOperators, this.minSuggestionLen);
+      this._parser = new Parser(this.variables, this.formulaRegex, this.allowedNumbers, this.allowedOperators, this.variableType, this.minSuggestionLen);
       this.recommendations = Array.from(this.variables.keys());
     }
   }

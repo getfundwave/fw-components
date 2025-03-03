@@ -12,13 +12,15 @@ export class Parser {
   formulaRegex: RegExp;
   allowedNumbers: boolean;
   allowedOperators :  Set<string>;
+  variableType: string;
 
-  constructor(variables: Map<string, number>, formulaRegex : RegExp, allowedNumbers: boolean, allowedOperators :  Set<string>, minSuggestionLen: number) {
+  constructor(variables: Map<string, number>, formulaRegex : RegExp, allowedNumbers: boolean, allowedOperators :  Set<string>, variableType: string, minSuggestionLen: number) {
     this.variables = variables;
     this.formulaRegex = formulaRegex;
     this._recommender = new Recommender(Array.from(this.variables.keys()), minSuggestionLen);
     this.allowedNumbers = allowedNumbers;
     this.allowedOperators = allowedOperators;
+    this.variableType = variableType;
   }
 
   isNumber(value: string) {
@@ -100,15 +102,23 @@ export class Parser {
       /**
        * Error checks
        * skip error check if there is one already
-       */
-      if (expectation != Expectation.UNDEFINED) {
-        if (this.allowedOperators.has(previousToken) && isOperator) {
-          parseOutput.errorString = `Multiple operators at position ${currentPosition}`;
+      */
+     if (expectation != Expectation.UNDEFINED) {
+        /**
+         * Unknown symbol/variable/word
+         */
+        if (!(isNumber || isOperator || isBracket || isSpace)) {
+          parseOutput.errorString = `${this.variableType} : ${token} does not exist`;
+          expectation = Expectation.UNDEFINED;
+        }
+
+        else if (this.allowedOperators.has(previousToken) && isOperator) {
+          parseOutput.errorString = `Use ${this.variableType}${this.allowedNumbers ? " or numbers" : ""} after ${previousToken}. Pls do not use consecutive two mathametical operators (+,-,*,/,^)`;
           expectation = Expectation.UNDEFINED;
         }
 
         else if (parentheses.isEmpty() && token === ")") {
-          parseOutput.errorString = `Unexpected ')' at position ${currentPosition}`;
+          parseOutput.errorString = "Unexpected closing bracket. Make sure all opening brackets '(' have matching closing brackets ')'.";
           expectation = Expectation.UNDEFINED;
         }
 
@@ -119,7 +129,7 @@ export class Parser {
         else if (expectation === Expectation.VARIABLE && !isNumber && !isSpace && token != "(" 
           && !((unaryOperators.includes(token)) && (!parsedString.trim() || previousToken === "(" || this.allowedOperators.has(previousToken)))
         ) {
-          parseOutput.errorString = `Expected variable/number at position ${currentPosition}`;
+          parseOutput.errorString = `Use ${this.variableType}${this.allowedNumbers ? " or numbers" : ""} after ${previousToken}.`;
           expectation = Expectation.UNDEFINED;
         }
 
@@ -127,23 +137,16 @@ export class Parser {
          * Multiple number/variable together without operator
          */
         else if (expectation === Expectation.OPERATOR && !isOperator && !isSpace && token != ")") {
-          parseOutput.errorString = `Expected mathematical operator at position ${currentPosition}`;
+          parseOutput.errorString = `Use mathametical operators (${Array.from(this.allowedOperators).join(",")}) after ${previousToken}.`;
           expectation = Expectation.UNDEFINED;
         }
 
-        /**
-         * Unknown symbol/variable/word
-         */
-        else if (!(isNumber || isOperator || isBracket || isSpace)) {
-          parseOutput.errorString = `Unknown word at position ${currentPosition}`;
-          expectation = Expectation.UNDEFINED;
-        }
 
         /**
          * division by zero
          */
         else if (isNumber && previousToken === "/" && (this.variables.get(token) === 0 || Number(token) === 0)) {
-          parseOutput.errorString = `Division by zero at position ${currentPosition}`;
+          parseOutput.errorString = `Division by zero is not possible`;
           expectation = Expectation.UNDEFINED;
         }
 
@@ -151,7 +154,7 @@ export class Parser {
          * Empty brackets
          */
         else if (previousToken === "(" && token === ")") {
-          parseOutput.errorString = `Empty brackets at position ${currentPosition}`;
+          parseOutput.errorString = `Pls do not use empty brackets ().`;
           expectation = Expectation.UNDEFINED;
         }
       }
@@ -187,11 +190,11 @@ export class Parser {
     } 
     
     if (this.allowedOperators.has(previousToken)) {
-      parseOutput.errorString = `Unexpected ending with mathematical operator at position: ${currentPosition}`;
+      parseOutput.errorString = `Pls do not use mathametical operators (${Array.from(this.allowedOperators).join(",")}) at the end.`;
     } 
 
     if (!parentheses.isEmpty()) {
-      parseOutput.errorString = `Unclosed '(' at position: ${parentheses.top()}`;
+      parseOutput.errorString = "Unexpected opening bracket. Make sure all closing brackets ')' have matching opening brackets '('.";
     }
 
     return parseOutput;
