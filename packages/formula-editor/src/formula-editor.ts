@@ -50,6 +50,9 @@ export class FormulaEditor extends LitElement {
   variables: Map<string, number> = new Map();
 
   @property()
+  variableType: string;
+
+  @property()
   minSuggestionLen: number = 2;
 
   @property()
@@ -64,10 +67,7 @@ export class FormulaEditor extends LitElement {
   @property()
   allowedOperators: Set<string> = new Set(["^", "+", "-", "*", "/"]);
 
-  @property()
-  variableType: string;
-
-  @query("#wysiwyg-editor")
+  @query("#fw-formula-editor")
   editor: HTMLTextAreaElement;
 
   @query("suggestion-menu")
@@ -83,7 +83,7 @@ export class FormulaEditor extends LitElement {
     }
 
     if (_changedProperties.has("variables")) {
-      this._parser = new Parser(this.variables, this.formulaRegex, this.allowedNumbers, this.allowedOperators, this.variableType, this.minSuggestionLen);
+      this._parser = new Parser(this.variables, this.minSuggestionLen, this.formulaRegex, this.allowedNumbers, this.allowedOperators, this.variableType);
       this.recommendations = Array.from(this.variables.keys());
     }
   }
@@ -114,10 +114,11 @@ export class FormulaEditor extends LitElement {
   parseInput(recommendation: string = "") {
     this.currentCursorPosition = this.editor.selectionStart;
 
-    const parseOutput = this._parser.parseInput(this.content, this.currentCursorPosition, recommendation);
+    const { recommendations, errorString, formattedString, newCursorPosition } = 
+        this._parser.parseInput(this.content, this.currentCursorPosition, recommendation);
 
-    this.recommendations = parseOutput.recommendations;
-    this.errorString = parseOutput.errorString;
+    this.recommendations = recommendations;
+    this.errorString = errorString;
 
     /**
      * Don't modify the text stream manually if the text is being composed,
@@ -127,12 +128,12 @@ export class FormulaEditor extends LitElement {
      * @see https://bugs.chromium.org/p/chromium/issues/detail?id=689541
      */
     if (this.lastInputType !== "insertCompositionText" || recommendation) {
-      this.content = parseOutput.formattedString!;
+      this.content = formattedString!;
     }
 
     if (Boolean(recommendation)) {
       this.recommendations = [];
-      this.currentCursorPosition = parseOutput.newCursorPosition;
+      this.currentCursorPosition = newCursorPosition;
 
       /* update cursor position in text area */
       setTimeout(() => {
@@ -156,7 +157,9 @@ export class FormulaEditor extends LitElement {
   formatFormula() {
     if (!this.content) return;
 
-    this.content = this._parser.addParentheses(this.content) ?? this.content;
+    const newContent = this._parser.addParentheses(this.content);
+    this.content = newContent && newContent.length ? newContent : this.content;
+
     this.parseInput();
     this.recommendations = [];
   }
@@ -190,10 +193,10 @@ export class FormulaEditor extends LitElement {
     return html`
       <style>${FormulaEditorStyles}</style>
 
-      ${this.label ? html`<label for="wysiwyg-editor" class="editor-label">${this.label}</label>` : ""}
+      ${this.label ? html`<label for="fw-formula-editor" class="editor-label">${this.label}</label>` : ""}
 
       <textarea
-        id="wysiwyg-editor"
+        id="fw-formula-editor"
         class=${this.errorString?.length ? "error" : ""}
         .value=${this.content}
         .placeholder=${this.placeholder}

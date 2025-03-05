@@ -3,7 +3,7 @@ import { Recommender } from "./recommendor.js";
 import { Stack } from "./stack.js";
 import { Queue } from "./queue.js";
 import { CalculateResult, Expectation, ParseResult } from "../types";
-import { operatorPrecedence, unaryOperators } from "./constants.js";
+import { operatorPrecedence, unaryOperators, mathematicalOperators } from "./constants.js";
 import { getFormulaTokens } from "./get-formula-tokens.js";
 
 export class Parser {
@@ -14,12 +14,12 @@ export class Parser {
   allowedOperators :  Set<string>;
   variableType: string;
 
-  constructor(variables: Map<string, number>, formulaRegex : RegExp, allowedNumbers: boolean, allowedOperators :  Set<string>, variableType: string, minSuggestionLen: number) {
+  constructor(variables: Map<string, number>, minSuggestionLen: number, formulaRegex : RegExp, allowedNumbers: boolean, allowedOperators :  Set<string>, variableType: string) {
     this.variables = variables;
     this.formulaRegex = formulaRegex;
     this._recommender = new Recommender(Array.from(this.variables.keys()), minSuggestionLen);
-    this.allowedNumbers = allowedNumbers;
-    this.allowedOperators = allowedOperators;
+    this.allowedNumbers = allowedNumbers ?? true;
+    this.allowedOperators = allowedOperators ?? mathematicalOperators;
     this.variableType = variableType;
   }
 

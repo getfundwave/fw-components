@@ -17,7 +17,4 @@ export class Stack<Type> {
     return this._elements.length === 0;
   }
 
-  print(): void {
-    console.log(this._elements);
-  }
 }

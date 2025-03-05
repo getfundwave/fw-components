@@ -36,7 +36,7 @@ export const SuggestionMenuStyles = css`
 
   /* Scrollbar styling */
   ::-webkit-scrollbar {
-    width: 10px;
+    width: 7px;
   }
 
   ::-webkit-scrollbar-track {
@@ -50,10 +50,5 @@ export const SuggestionMenuStyles = css`
 
   ::-webkit-scrollbar-thumb:hover {
     background: #aaa;
-  }
-
-  /* Optional shadow for the dropdown */
-  .content {
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.13);
   }
 `;

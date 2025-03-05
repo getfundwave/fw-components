@@ -58,7 +58,7 @@ export class FWFormulaEditorShowcase extends LitElement {
       margin: 10px 0;
     }
 
-    #wysiwyg-err {
+    #fw-formula-err {
       border-radius: 4px;
       color: var(--fe-err-text-color, #fc514f);
       border: var(--fe-err-border-width, 2px) solid black;
@@ -68,7 +68,7 @@ export class FWFormulaEditorShowcase extends LitElement {
       margin: 10px 0px 8px 0px;
     }
 
-    .wysiwyg-no-err {
+    .fw-formula-no-err {
       color: #098668 !important;
     }
   `;
@@ -141,7 +141,7 @@ export class FWFormulaEditorShowcase extends LitElement {
           </formula-editor>
 
           <label class="formula-label">Formula Output</label>
-          <div id="wysiwyg-err" class="${this.formula.error ?? "wysiwyg-no-err"}">${this.formula.error ?? `${this.formula.name} = ${this.formula.formulaString}`}</div>
+          <div id="fw-formula-err" class="${this.formula.error ?? "fw-formula-no-err"}">${this.formula.error ?? `${this.formula.name} = ${this.formula.formulaString}`}</div>
 
           ${this.calculatedResult ? html`<p>Result: ${this.calculatedResult}</p>` : ``}
           <button class="primary-text-button" @click=${this.handleCalculate}>Calculate</button>

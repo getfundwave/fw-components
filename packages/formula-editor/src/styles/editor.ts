@@ -8,7 +8,7 @@ export const FormulaEditorStyles = css`
     margin-bottom: var(--fe-label-margin-bottom, 1px);
   }
 
-  #wysiwyg-editor {
+  #fw-formula-editor {
     display: block;
     resize: none;
     padding: var(--fe-padding, 4px);
@@ -27,13 +27,13 @@ export const FormulaEditorStyles = css`
     line-height: 1.5;
   }
 
-  #wysiwyg-editor:empty:before {
+  #fw-formula-editor:empty:before {
     content: attr(placeholder);
     color: var(--fe-placeholder-color, grey);
     pointer-events: none;
   }
 
-  #wysiwyg-editor.error {
+  #fw-formula-editor.error {
     text-decoration: underline;
     -webkit-text-decoration-style: wavy;
     text-decoration-style: wavy;

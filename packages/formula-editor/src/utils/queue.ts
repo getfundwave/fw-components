@@ -19,7 +19,7 @@ export class Queue<Type> {
   }
 
   peek(): Type {
-    if (this.isEmpty()) throw new Error("Cannot peek an empty queue");
+    if (this.isEmpty()) return undefined;
 
     return this._elements[this._head];
   }
@@ -28,7 +28,4 @@ export class Queue<Type> {
     return this._head === this._tail;
   }
 
-  print(): void {
-    console.log(this._elements);
-  }
 }

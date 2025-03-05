@@ -4,14 +4,6 @@ export enum Expectation {
   UNDEFINED,
 }
 
-export enum Operator {
-  PLUS = "+",
-  MINUS = "-",
-  MUL = "*",
-  DIV = "/",
-  NONE = "",
-}
-
 export class Formula {
   constructor(name: string, formulaString: string, precision: number = -1) {
     this.name = name || "";

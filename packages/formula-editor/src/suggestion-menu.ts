@@ -15,9 +15,9 @@ export class SuggestionMenu extends LitElement {
   onRecommendationClick: (recommendation: string) => void = () => {};
 
   @state()
-  _selectedRecommendationIndex: number = -1;
+  _currentFocusedIndex: number = -1;
 
-  @query(".wysiwyg-suggestion-menu") 
+  @query(".fw-formula-suggestion-menu") 
   suggestionList: HTMLUListElement
 
   scrollToSelectedRecommendation(index: number) {
@@ -34,30 +34,30 @@ export class SuggestionMenu extends LitElement {
   navigate(direction: string) {
     if (!this.recommendations?.length) return;
     
-    let newIndex = this._selectedRecommendationIndex;
+    let newIndex = this._currentFocusedIndex;
 
-    if (direction === "down") newIndex = (this._selectedRecommendationIndex + 1) % this.recommendations.length;
-    else if (direction === "up") newIndex = (this._selectedRecommendationIndex - 1 + this.recommendations.length) % this.recommendations.length;
+    if (direction === "down") newIndex = (this._currentFocusedIndex + 1) % this.recommendations.length;
+    else if (direction === "up") newIndex = (this._currentFocusedIndex - 1 + this.recommendations.length) % this.recommendations.length;
     
-    this._selectedRecommendationIndex = newIndex;
+    this._currentFocusedIndex = newIndex;
     this.scrollToSelectedRecommendation(newIndex);
   }
 
-  handleRecommendationSelect(index: number = this._selectedRecommendationIndex) {
+  handleRecommendationSelect(index: number = this._currentFocusedIndex) {
     const recommendation = this.recommendations[index];
     if(!recommendation) return;
 
     this.onRecommendationClick(recommendation);
-    this._selectedRecommendationIndex = -1;
+    this._currentFocusedIndex = -1;
   }
 
   render() {
     return html`
       <style>${SuggestionMenuStyles}</style>
-      <ul class="wysiwyg-suggestion-menu" @mousedown=${(e: MouseEvent) => e.preventDefault()}>
+      <ul class="fw-formula-suggestion-menu" @mousedown=${(e: MouseEvent) => e.preventDefault()}>
         ${this.recommendations.map((recommendation, index) =>
             html`<li
-              class="${this._selectedRecommendationIndex === index ? "selected" : ""}"
+              class="${this._currentFocusedIndex === index ? "selected" : ""}"
               @click=${(e: MouseEvent) => this.handleRecommendationSelect(index)}
             >${this.recommendationLabels.get(recommendation) ?? recommendation}</li>`
         )}
