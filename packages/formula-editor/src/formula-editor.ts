@@ -35,7 +35,7 @@ export class FormulaEditor extends LitElement {
    * Text area input value
    */
   @property()
-  content: string = "";
+  formulaString: string = "";
 
   @property()
   placeholder: string = "Type your formula...";
@@ -59,13 +59,13 @@ export class FormulaEditor extends LitElement {
   errorString: string = "";
 
   @property()
-  formulaRegex: RegExp =  /'[^']*'|[A-Za-z0-9_#@]+|[-+(),*^/\s]/g;
+  formulaRegex: RegExp;
 
   @property()
   allowedNumbers: boolean = true;
 
   @property()
-  allowedOperators: Set<string> = new Set(["^", "+", "-", "*", "/"]);
+  allowedOperators: Set<string>;
 
   @query("#fw-formula-editor")
   editor: HTMLTextAreaElement;
@@ -74,8 +74,8 @@ export class FormulaEditor extends LitElement {
   suggestionMenu: SuggestionMenu;
 
   protected updated(_changedProperties: PropertyValues): void {
-    if (_changedProperties.has("content")) {
-      if (!this.content?.trim()) {
+    if (_changedProperties.has("formulaString")) {
+      if (!this.formulaString?.trim()) {
         this.recommendations = Array.from(this.variables.keys());
       }
 
@@ -96,12 +96,12 @@ export class FormulaEditor extends LitElement {
     event.preventDefault();
 
     this.lastInputType = event.inputType;
-    this.content = (event.target as HTMLInputElement).value;
+    this.formulaString = (event.target as HTMLInputElement).value;
     this.parseInput();
   }
 
   _adjustTextAreaHeight() {
-    if (!this.content) this.editor.style.height = "var(--fe-height, 30px)";
+    if (!this.formulaString) this.editor.style.height = "var(--fe-height, 30px)";
 
     if (this.editor.scrollHeight > this.editor.clientHeight) this.editor.style.height = String(this.editor.scrollHeight + 5).concat("px");
   }
@@ -115,7 +115,7 @@ export class FormulaEditor extends LitElement {
     this.currentCursorPosition = this.editor.selectionStart;
 
     const { recommendations, errorString, formattedString, newCursorPosition } = 
-        this._parser.parseInput(this.content, this.currentCursorPosition, recommendation);
+        this._parser.parseInput(this.formulaString, this.currentCursorPosition, recommendation);
 
     this.recommendations = recommendations;
     this.errorString = errorString;
@@ -128,7 +128,7 @@ export class FormulaEditor extends LitElement {
      * @see https://bugs.chromium.org/p/chromium/issues/detail?id=689541
      */
     if (this.lastInputType !== "insertCompositionText" || recommendation) {
-      this.content = formattedString!;
+      this.formulaString = formattedString!;
     }
 
     if (Boolean(recommendation)) {
@@ -144,10 +144,10 @@ export class FormulaEditor extends LitElement {
     this.dispatchEvent(
       new CustomEvent("fw-formula-content-changed", {
         detail: {
-          formulaString: this.content,
+          formulaString: this.formulaString,
           error: this.errorString,
           recommendations: this.recommendations,
-          formulaTokens: getFormulaTokens(this.content || "",this.formulaRegex)
+          formulaTokens: getFormulaTokens(this.formulaString || "",this.formulaRegex)
         },
         bubbles: true,
       })
@@ -155,10 +155,10 @@ export class FormulaEditor extends LitElement {
   }
 
   formatFormula() {
-    if (!this.content) return;
+    if (!this.formulaString) return;
 
-    const newContent = this._parser.addParentheses(this.content);
-    this.content = newContent && newContent.length ? newContent : this.content;
+    const newContent = this._parser.addParentheses(this.formulaString);
+    this.formulaString = newContent && newContent.length ? newContent : this.formulaString;
 
     this.parseInput();
     this.recommendations = [];
@@ -198,7 +198,7 @@ export class FormulaEditor extends LitElement {
       <textarea
         id="fw-formula-editor"
         class=${this.errorString?.length ? "error" : ""}
-        .value=${this.content}
+        .value=${this.formulaString}
         .placeholder=${this.placeholder}
         spellcheck="false"
         autocomplete="off"

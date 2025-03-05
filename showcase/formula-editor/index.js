@@ -135,7 +135,7 @@ export class FWFormulaEditorShowcase extends LitElement {
               this.requestUpdate();
             }}
             .variables=${this.variables}
-            .content=${this.formula.formulaString}
+            .formulaString=${this.formula.formulaString}
             .errorString=${this.formula.error}
           >
           </formula-editor>
