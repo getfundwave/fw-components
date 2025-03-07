@@ -31,6 +31,16 @@ export class Parser {
 
   }
 
+  formatFormulaToken(token: string) {
+    for (let existingKey of this.variables.keys()) {
+      if (existingKey.toLowerCase() === token.toLowerCase()) {
+        return existingKey; 
+      }
+    }
+    return token; 
+  }
+
+
   parseInput(formula: string, prevCurPos: number | null = null, recommendation: string | null = null): ParseResult {
     const tokens = getFormulaTokens(formula,this.formulaRegex);
     const parentheses = new Stack<number>();
@@ -56,6 +66,7 @@ export class Parser {
 
     
     tokens?.forEach((token) => {
+      token = this.formatFormulaToken(token);
       let isNumber =this.variables.has(token) || this.isNumber(token);
       const isOperator = this.allowedOperators.has(token);
       const isSpace = token.trim() === "";
@@ -108,12 +119,12 @@ export class Parser {
          * Unknown symbol/variable/word
          */
         if (!(isNumber || isOperator || isBracket || isSpace)) {
-          parseOutput.errorString = `${this.variableType} : ${token} does not exist`;
+          parseOutput.errorString = `${this.variableType} : '${token}' does not exist`;
           expectation = Expectation.UNDEFINED;
         }
 
         else if (this.allowedOperators.has(previousToken) && isOperator) {
-          parseOutput.errorString = `Use ${this.variableType}${this.allowedNumbers ? " or numbers" : ""} after ${previousToken}. Pls do not use consecutive two mathametical operators (+,-,*,/,^)`;
+          parseOutput.errorString = `Please use ${this.variableType}${this.allowedNumbers ? " or numbers" : ""} after '${previousToken}'. Pls do not use consecutive two mathametical operators (+ ,- ,* ,/ ,^)`;
           expectation = Expectation.UNDEFINED;
         }
 
@@ -129,7 +140,7 @@ export class Parser {
         else if (expectation === Expectation.VARIABLE && !isNumber && !isSpace && token != "(" 
           && !((unaryOperators.includes(token)) && (!parsedString.trim() || previousToken === "(" || this.allowedOperators.has(previousToken)))
         ) {
-          parseOutput.errorString = `Use ${this.variableType}${this.allowedNumbers ? " or numbers" : ""} after ${previousToken}.`;
+          parseOutput.errorString = `Please use ${this.variableType}${this.allowedNumbers ? " or numbers" : ""} after '${previousToken}'.`;
           expectation = Expectation.UNDEFINED;
         }
 
@@ -137,7 +148,7 @@ export class Parser {
          * Multiple number/variable together without operator
          */
         else if (expectation === Expectation.OPERATOR && !isOperator && !isSpace && token != ")") {
-          parseOutput.errorString = `Use mathametical operators (${Array.from(this.allowedOperators).join(",")}) after ${previousToken}.`;
+          parseOutput.errorString = `Please use mathametical operators (${Array.from(this.allowedOperators).join(", ")}) after ${previousToken}.`;
           expectation = Expectation.UNDEFINED;
         }
 

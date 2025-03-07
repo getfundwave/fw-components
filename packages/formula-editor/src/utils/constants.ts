@@ -1,4 +1,4 @@
-export const mathematicalOperators: Set<string> = new Set(["^", "+", "-", "*", "/"]);
+export const mathematicalOperators: Set<string> = new Set(["+", "-", "*", "/", "^"]);
 
 export const unaryOperators: string[] = ["+", "-"];
 
