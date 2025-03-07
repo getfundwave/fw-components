@@ -124,7 +124,7 @@ export class Parser {
         }
 
         else if (this.allowedOperators.has(previousToken) && isOperator) {
-          parseOutput.errorString = `Please use ${this.variableType}${this.allowedNumbers ? " or numbers" : ""} after '${previousToken}'. Pls do not use consecutive two mathametical operators (+ ,- ,* ,/ ,^)`;
+          parseOutput.errorString = `Please use ${this.variableType}${this.allowedNumbers ? " or numbers" : ""} after '${previousToken}'. Pls do not use consecutive two mathametical operators (+ - * / ^)`;
           expectation = Expectation.UNDEFINED;
         }
 
@@ -148,7 +148,7 @@ export class Parser {
          * Multiple number/variable together without operator
          */
         else if (expectation === Expectation.OPERATOR && !isOperator && !isSpace && token != ")") {
-          parseOutput.errorString = `Please use mathametical operators (${Array.from(this.allowedOperators).join(", ")}) after ${previousToken}.`;
+          parseOutput.errorString = `Please use mathametical operators (${Array.from(this.allowedOperators).join(" ")}) after '${previousToken}'.`;
           expectation = Expectation.UNDEFINED;
         }
 
