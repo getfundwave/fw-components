@@ -351,6 +351,12 @@ export class Parser {
         const number = Number.parseFloat(sign + "1") * operandValue;
         calcStack.push(Big(number));
       } else {
+
+        if (calcStack.size() < 2) {
+          calculationResult.errorString = "Calculation error: Invalid formula";
+          return calculationResult;
+        }
+
         const operator = frontItem;
         const numB = calcStack.pop()!;
         const numA = calcStack.pop()!;

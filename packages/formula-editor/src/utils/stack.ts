@@ -17,4 +17,8 @@ export class Stack<Type> {
     return this._elements.length === 0;
   }
 
+  size(): number {
+    return this._elements.length;
+  }
+
 }
