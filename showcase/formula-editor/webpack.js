@@ -1,21 +1,19 @@
 /* eslint-disable */
-const path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const webpack = require('webpack');
+const path = require("path");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const webpack = require("webpack");
 
-const roots = [
-  path.join(__dirname, 'node_modules'), 'node_modules'
-];
+const roots = [path.join(__dirname, "node_modules"), "node_modules"];
 
-module.exports = () => { 
+module.exports = () => {
   return {
     entry: {
-      'formula-editor-showcase': ['./index.js'],
+      "formula-editor-showcase": ["./index.js"],
     },
     resolve: {
-      modules: roots
+      modules: roots,
     },
     module: {
       rules: [
@@ -25,12 +23,18 @@ module.exports = () => {
           options: {
             presets: ["@babel/preset-env"],
             plugins: [
-              ["@babel/plugin-proposal-decorators", { loose: true, decoratorsBeforeExport: true, legacy:false }],
+              [
+                "@babel/plugin-proposal-decorators",
+                { loose: true, decoratorsBeforeExport: true, legacy: false },
+              ],
               ["@babel/plugin-proposal-class-properties", { loose: true }],
               ["@babel/plugin-proposal-object-rest-spread", { loose: true }],
               ["@babel/plugin-transform-react-jsx", { loose: true }],
               ["@babel/plugin-proposal-private-methods", { loose: true }],
-              ["@babel/plugin-proposal-private-property-in-object", { loose: true }],
+              [
+                "@babel/plugin-proposal-private-property-in-object",
+                { loose: true },
+              ],
             ],
           },
         },
@@ -77,35 +81,49 @@ module.exports = () => {
           use: [{ loader: "url-loader", options: { limit: 10000 } }],
         },
         {
-          test: new RegExp('./node_modules/lit-element-router/utility/router-utility.js'),
-          loader: 'string-replace-loader',
+          test: new RegExp(
+            "./node_modules/lit-element-router/utility/router-utility.js"
+          ),
+          loader: "string-replace-loader",
           options: {
             search: /\[\\\\w\\u00C0-\\u00D6\\u00D8-\\u00f6\\u00f8-\\u00ff-\]/,
-            replace: '[^\/]',
+            replace: "[^/]",
             strict: true,
           },
         },
       ],
     },
     output: {
-      filename: 'main.js',
-      path: path.resolve(__dirname, 'dist')
+      filename: "main.js",
+      path: path.resolve(__dirname, "dist"),
     },
     devServer: {
-      contentBase: path.join(__dirname, './dist'),
+      static: path.join(__dirname, "./dist"),
       compress: true,
       port: 8080,
       historyApiFallback: true,
-      hot: true
+      hot: true,
     },
     plugins: [
-      new HtmlWebpackPlugin({ template: 'index.html', baseUrl: '/' }),
+      new HtmlWebpackPlugin({ template: "index.html", baseUrl: "/" }),
       new webpack.ProgressPlugin(),
       new CleanWebpackPlugin(),
-      new CopyWebpackPlugin([{ from: 'node_modules/@webcomponents/webcomponentsjs/**/*.js', to: './', context: './', }]),
-      new CopyWebpackPlugin([{ from: 'node_modules/web-animations-js/*.js', to: './', context: './', }]),
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: "node_modules/@webcomponents/webcomponentsjs/**/*.js",
+            to: "./",
+            context: "./",
+          },
+          {
+            from: "node_modules/web-animations-js/*.js",
+            to: "./",
+            context: "./",
+          },
+        ],
+      }),
     ],
-    mode: 'development',
-    devtool: 'source-map'
+    mode: "development",
+    devtool: "source-map",
   };
 };
