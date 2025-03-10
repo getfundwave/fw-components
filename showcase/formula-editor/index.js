@@ -75,7 +75,7 @@ export class FWFormulaEditorShowcase extends LitElement {
 
   handleCalculate = () => {
     try {
-      const formulaParser = new Parser(this.variables, "0");
+      const formulaParser = new Parser(this.variables, 0);
       const calculatedResult = formulaParser.calculate(this.formula.formulaString);
 
       if (calculatedResult.errorString) {

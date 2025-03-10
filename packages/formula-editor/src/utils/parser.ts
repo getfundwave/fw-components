@@ -246,14 +246,13 @@ export class Parser {
       if (token === "(") {
         operatorStack.push("(");
       } else if (token === ")") {
-        while (operatorStack.top() != "(") {
+        while (!operatorStack.isEmpty() && operatorStack.top() != "(") {
           outputQueue.enqueue(operatorStack.pop()!);
         }
 
         operatorStack.pop();
       } else if (this.allowedOperators.has(token)) {
-        while (
-          this.allowedOperators.has(operatorStack.top()!) && operatorPrecedence[token] <= operatorPrecedence[operatorStack.top()!]) {
+        while (!operatorStack.isEmpty() && this.allowedOperators.has(operatorStack.top()!) && operatorPrecedence[token] <= operatorPrecedence[operatorStack.top()!]) {
           outputQueue.enqueue(operatorStack.pop()!);
         }
 
@@ -263,7 +262,7 @@ export class Parser {
       }
     }
 
-    while (operatorStack.top()) {
+    while (!operatorStack.isEmpty() && operatorStack.top()) {
       outputQueue.enqueue(operatorStack.pop()!);
     }
 
@@ -368,7 +367,7 @@ export class Parser {
               calcStack.push(Big(numA).mul(Big(numB)));
               break;
             case "/":
-              if (parseFloat(Big(numB).toString()) === 0) {
+              if (Big(numB).eq(0)) {
                 calculationResult.errorString = "Division by zero encountered";
                 return calculationResult;
               }
@@ -385,7 +384,12 @@ export class Parser {
       }
     }
 
+    if (calcStack.isEmpty()) {
+      calculationResult.errorString = "Calculation error: Empty result stack";
+      return calculationResult;
+    }
     calculationResult.result = parseFloat(calcStack.top().toString());
+
     return calculationResult;
   }
 }
