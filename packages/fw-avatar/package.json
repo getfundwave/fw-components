@@ -1,6 +1,6 @@
 {
   "name": "@fw-components/fw-avatar",
-  "version": "2.0.7-formula-editor.0",
+  "version": "2.0.7-formula-editor.44",
   "description": "Avatar Web Component",
   "main": "src/fw-avatar.js",
   "type": "module",
