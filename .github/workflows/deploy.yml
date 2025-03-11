@@ -3,7 +3,7 @@ name: Deploy Showcases
 on:
   push:
     branches:
-      - main
+      - formula-editor
     paths:
       - showcase/**
       - .github/workflows/deploy.yml
