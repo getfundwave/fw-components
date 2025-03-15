@@ -2,9 +2,10 @@
   "name": "fw-theme-builder",
   "version": "1.0.0",
   "scripts": {
-    "webpack": "webpack --config webpack.dev.js",
-    "webpack-dev": "webpack --config webpack.dev.js",
-    "start": "webpack-dev-server --config webpack.dev.js --host 0.0.0.0 --hot",
+    "webpack": "webpack --config webpack.js",
+    "webpack-dev": "webpack --config webpack.js",
+    "start": "webpack-dev-server --config webpack.js --host 0.0.0.0 --hot",
+    "build": "webpack --config webpack.js --stats verbose",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
