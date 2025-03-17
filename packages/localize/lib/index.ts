@@ -4,64 +4,48 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-import {Deferred} from '@lit/localize/internal/deferred.js';
-import {LOCALE_STATUS_EVENT} from '@lit/localize/internal/locale-status-event.js';
-import {runtimeMsg} from '@lit/localize/internal/runtime-msg.js';
+import { Deferred } from '@lit/localize/internal/deferred.js';
+import { LOCALE_STATUS_EVENT } from '@lit/localize/internal/locale-status-event.js';
 
-import type {LocaleStatusEventDetail} from '@lit/localize/internal/locale-status-event.js';
-import type {
-  LocaleModule,
-  TemplateLike,
-  TemplateMap,
-  MsgFn,
-  MsgOptions,
-} from '@lit/localize/internal/types.js';
-import {_installMsgImplementation} from '@lit/localize/init/install';
+import type { LocaleStatusEventDetail } from '@lit/localize/internal/locale-status-event.js';
+import type { LocaleModule, MsgFn } from '@lit/localize/internal/types.js';
 
-/**
- * Configuration parameters for lit-localize when in runtime mode.
- */
-export interface RuntimeConfiguration {
-  /**
-   * Required locale code in which source templates in this project are written,
-   * and the initial active locale.
-   */
-  sourceLocale: string;
-
-  /**
-   * Required locale codes that are supported by this project. Should not
-   * include the `sourceLocale` code.
-   */
-  targetLocales: Iterable<string>;
-
-  /**
-   * Required function that returns the localized templates for the given locale
-   * code.
-   *
-   * This function will only ever be called with a `locale` that is contained by
-   * `targetLocales`.
-   */
-  loadLocale: (locale: string) => Promise<LocaleModule>;
-}
+import { RuntimeConfiguration } from '@lit/localize';
+export { updateWhenLocaleChanges } from '@lit/localize';
+import { _installMsgImplementation } from '@lit/localize/init/install.js';
+export { msg } from '@lit/localize/init/install.js';
+export { str } from '@lit/localize';
 
 /**
  * Dispatch a "lit-localize-status" event to `window` with the given detail.
  */
 function dispatchStatusEvent(detail: LocaleStatusEventDetail) {
-  window.dispatchEvent(new CustomEvent(LOCALE_STATUS_EVENT, {detail}));
+  window.dispatchEvent(new CustomEvent(LOCALE_STATUS_EVENT, { detail }));
 }
 
 let activeLocale = '';
 let loadingLocale: string | undefined;
 let sourceLocale: string | undefined;
 let validLocales: Set<string> | undefined;
+
 let loadLocale: ((locale: string) => Promise<LocaleModule>) | undefined;
-let templates: TemplateMap | undefined;
+
+type Dictionary = Record<string, string>;
+let dictionary: Dictionary = {};
+
 let loading = new Deferred<void>();
 // The loading promise must be initially resolved, because that's what we should
 // return if the user immediately calls setLocale(sourceLocale).
 loading.resolve();
+
 let requestId = 0;
+
+// _LIT_LOCALIZE_MSG_ is used during extraction
+type MsgImpl = ((payload: string, dictionary: Dictionary) => string) & { _LIT_LOCALIZE_MSG_: never; };
+export const msgImpl = ((payload: string, dictionary: Dictionary) => {
+  if (dictionary?.[payload.toLocaleLowerCase()]) return dictionary?.[payload.toLocaleLowerCase()];
+  else return payload;
+}) as MsgImpl;
 
 /**
  * Set configuration parameters for lit-localize when in runtime mode. Returns
@@ -78,13 +62,13 @@ export const configureLocalization: ((config: RuntimeConfiguration) => {
 }) & {
   _LIT_LOCALIZE_CONFIGURE_LOCALIZATION_?: never;
 } = (config: RuntimeConfiguration) => {
-  _installMsgImplementation(((template: TemplateLike, options?: MsgOptions) =>
-    runtimeMsg(templates, template, options)) as MsgFn);
+  _installMsgImplementation(((payload: string) =>
+    msgImpl(payload, dictionary)) as MsgFn);
   activeLocale = sourceLocale = config.sourceLocale;
   validLocales = new Set(config.targetLocales);
   validLocales.add(config.sourceLocale);
   loadLocale = config.loadLocale;
-  return {getLocale, setLocale};
+  return { getLocale, setLocale };
 };
 
 /**
@@ -122,27 +106,32 @@ const setLocale: ((newLocale: string) => Promise<void>) & {
   if (!validLocales.has(newLocale)) {
     throw new Error('Invalid locale code');
   }
+
   requestId++;
   const thisRequestId = requestId;
   loadingLocale = newLocale;
+
   if (loading.settled) {
     loading = new Deferred();
   }
-  dispatchStatusEvent({status: 'loading', loadingLocale: newLocale});
-  const localePromise: Promise<Partial<LocaleModule>> =
+
+  dispatchStatusEvent({ status: 'loading', loadingLocale: newLocale });
+
+  const localePromise: Promise<Partial<Dictionary>> =
     newLocale === sourceLocale
       ? // We could switch to the source locale synchronously, but we prefer to
-        // queue it on a microtask so that switching locales is consistently
-        // asynchronous.
-        Promise.resolve({templates: undefined})
+      // queue it on a microtask so that switching locales is consistently
+      // asynchronous.
+      Promise.resolve({})
       : loadLocale(newLocale);
+
   localePromise.then(
-    (mod) => {
+    (localeDictionary) => {
       if (requestId === thisRequestId) {
         activeLocale = newLocale;
         loadingLocale = undefined;
-        templates = mod.templates;
-        dispatchStatusEvent({status: 'ready', readyLocale: newLocale});
+        dictionary = localeDictionary as Dictionary;
+        dispatchStatusEvent({ status: 'ready', readyLocale: newLocale });
         loading.resolve();
       }
       // Else another locale was requested in the meantime. Don't resolve or
@@ -161,5 +150,6 @@ const setLocale: ((newLocale: string) => Promise<void>) & {
       }
     }
   );
+
   return loading.promise;
 };
