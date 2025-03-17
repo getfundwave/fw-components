@@ -15,7 +15,7 @@ import { KnownError, unreachable } from "@lit/localize-tools/lib/error.js";
 import { LitLocalizer } from "@lit/localize-tools/lib/index.js";
 import { printDiagnostics } from "@lit/localize-tools/lib/typescript.js";
 import { readConfigFileAndWriteSchema } from "@lit/localize-tools/lib/config.js";
-import { RuntimeLitLocalizer } from "@lit/localize-tools/lib/modes/runtime.js";
+import { RuntimeLitLocalizer as BaseLitLocalizer } from "@lit/localize-tools/lib/modes/runtime.js";
 import type { Config } from "@lit/localize-tools/lib/types/config.js";
 import type { RuntimeOutputConfig } from "@lit/localize-tools/lib/types/modes.js";
 
@@ -95,8 +95,7 @@ async function runAndThrow({ config, command }: CliOptions) {
     const { messages } = localizer.extractSourceMessages();
     if (!messages.length) return;
 
-    const strings = messages.filter(message => message.contents.every(content => typeof content === "string")).map(({ contents }) => contents).flat(1);
-    console.log("Extracted content:\n ".concat(strings.join(", ")));
+    await localizer.writeInterchangeFiles();
   } else {
     // Should already have been validated.
     throw new KnownError(
@@ -105,10 +104,59 @@ async function runAndThrow({ config, command }: CliOptions) {
   }
 }
 
+class CustomRuntimeLitLocalizer extends BaseLitLocalizer {
+  async writeInterchangeFiles() {
+    const { messages } = this.extractSourceMessages();
+
+    const strings = messages
+      .map(message => {
+        // Attempt to get the first string content
+        const stringContent = message.contents.find(content => typeof content === 'string');
+        return stringContent as string | undefined;
+      })
+      .filter((str): str is string => str !== undefined);
+
+    const locales = this.config.targetLocales;
+
+    for (const locale of locales) {
+      const outputDir = path.join(process.cwd(), "locales");
+      await fs.mkdir(outputDir, { recursive: true });
+      const outputFile = path.join(outputDir, `${locale}.json`);
+
+      let translations: Record<string, string> = {};
+
+      try {
+        const existingContent = await fs.readFile(outputFile, 'utf8');
+        try {
+          translations = JSON.parse(existingContent);
+        } catch (parseError) {
+          throw new Error(`Existing locale file ${outputFile} contains invalid JSON`);
+        }
+      } catch (readError) {
+        if ((readError as NodeJS.ErrnoException).code !== 'ENOENT') {
+          throw readError;
+        }
+      }
+
+      strings.forEach(str => {
+        if (!(str in translations)) {
+          translations[str] = '';
+        }
+      });
+
+      await fs.writeFile(
+        outputFile, 
+        JSON.stringify(translations, null, 2), 
+        'utf8'
+      );
+    }
+  }
+}
+
 function makeLocalizer(config: Config): LitLocalizer {
   switch (config.output.mode) {
     case "runtime":
-      return new RuntimeLitLocalizer(
+      return new CustomRuntimeLitLocalizer(
         config as Config & { output: RuntimeOutputConfig; }
       );
     default:
