@@ -4,30 +4,26 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-import * as path from 'path';
-import minimist from 'minimist';
-import {KnownError, unreachable} from '@lit/localize-tools/src/error.js';
-import type {Config} from '@lit/localize-tools/src/types/config.js';
-import {readConfigFileAndWriteSchema} from '@lit/localize-tools/src/config.js';
-import {LitLocalizer} from '@lit/localize-tools/src/index.js';
-import {printDiagnostics} from '@lit/localize-tools/src/typescript.js';
-import {TransformLitLocalizer} from '@lit/localize-tools/src/modes/transform.js';
-import {RuntimeLitLocalizer} from '@lit/localize-tools/src/modes/runtime.js';
-import type {
-  TransformOutputConfig,
-  RuntimeOutputConfig,
-} from '@lit/localize-tools/src/types/modes.js';
-import {dirname} from 'path';
-import {fileURLToPath} from 'url';
-import * as fs from 'fs/promises';
-import 'source-map-support/register.js';
+import "source-map-support/register.js";
+
+import { fileURLToPath } from "url";
+import * as fs from "fs/promises";
+import * as path from "path";
+import minimist from "minimist";
+
+import { KnownError, unreachable } from "@lit/localize-tools/lib/error.js";
+import { LitLocalizer } from "@lit/localize-tools/lib/index.js";
+import { printDiagnostics } from "@lit/localize-tools/lib/typescript.js";
+import { readConfigFileAndWriteSchema } from "@lit/localize-tools/lib/config.js";
+import { RuntimeLitLocalizer } from "@lit/localize-tools/lib/modes/runtime.js";
+import type { Config } from "@lit/localize-tools/lib/types/config.js";
+import type { RuntimeOutputConfig } from "@lit/localize-tools/lib/types/modes.js";
 
 const usage = `
-Usage: lit-localize [--config=lit-localize.json] COMMAND
+Usage: fw-localize [--config=lit-localize.json] COMMAND
 
 Commands:
   extract     Extract messages from source files
-  build       Build your project
 
 Options:
   --help      Display this help message.
@@ -36,7 +32,7 @@ Options:
               See https://github.com/lit/lit/tree/main/packages/localize#readme for details.
 `;
 
-const commands = ['build', 'extract'] as const;
+const commands = ["extract"] as const;
 type Command = (typeof commands)[number];
 const isCommand = (str: string): str is Command =>
   commands.includes(str as Command);
@@ -61,14 +57,14 @@ export async function runAndLog(argv: string[]): Promise<number> {
     if (err instanceof KnownError) {
       console.error(err.message);
     } else {
-      console.error('Unexpected error\n');
+      console.error("Unexpected error\n");
       console.error((err as Error).message);
       console.error();
       console.error((err as Error).stack);
     }
     console.log();
     console.log(`Version: ${await version()}`);
-    console.log(`Args: ${argv.slice(2).join(' ')}`);
+    console.log(`Args: ${argv.slice(2).join(" ")}`);
     if (config) {
       console.log(`Config:`, JSON.stringify(config, null, 2));
     }
@@ -80,47 +76,27 @@ export async function runAndLog(argv: string[]): Promise<number> {
 
 async function version() {
   const packageJsonPath = path.resolve(
-    dirname(fileURLToPath(import.meta.url)),
-    '..',
-    'package.json'
+    path.dirname(fileURLToPath(import.meta.url)),
+    "..",
+    "package.json"
   );
   const packageJson = JSON.parse(
-    await fs.readFile(packageJsonPath, 'utf8')
-  ) as {version: number};
+    await fs.readFile(packageJsonPath, "utf8")
+  ) as { version: number; };
   return packageJson.version;
 }
 
-async function runAndThrow({config, command}: CliOptions) {
+async function runAndThrow({ config, command }: CliOptions) {
   const localizer = makeLocalizer(config);
 
-  if (command === 'extract') {
-    // TODO(aomarks) Don't even require the user to have configured their output
-    // mode if they're just doing extraction.
-    console.log('Extracting messages');
-    const {messages, errors} = localizer.extractSourceMessages();
-    if (errors.length > 0) {
-      printDiagnostics(errors);
-      throw new KnownError('Error analyzing program');
-    }
-    console.log(`Extracted ${messages.length} messages`);
-    console.log(`Writing interchange files`);
-    await localizer.writeInterchangeFiles();
-  } else if (command === 'build') {
-    console.log('Building');
-    const {errors} = localizer.validateTranslations();
-    if (errors.length > 0) {
-      // TODO(aomarks) It might be more friendly to replace these invalid
-      // localized templates with the source ones, show the errors and return
-      // non-zero, but still continue with the rest of the process so that at
-      // least some of the app can work during development.
-      throw new KnownError(
-        'One or more localized templates contain a set of placeholders ' +
-          '(HTML or template literal expressions) that do not exactly match ' +
-          'the source code, aborting. Details:\n\n' +
-          errors.join('\n')
-      );
-    }
-    await localizer.build();
+  if (command === "extract") {
+    // TODO(aomarks) Don"t even require the user to have configured their output
+    // mode if they"re just doing extraction.
+    const { messages } = localizer.extractSourceMessages();
+    if (!messages.length) return;
+
+    const strings = messages.filter(message => message.contents.every(content => typeof content === "string")).map(({ contents }) => contents).flat(1);
+    console.log("Extracted content:\n ".concat(strings.join(", ")));
   } else {
     // Should already have been validated.
     throw new KnownError(
@@ -131,20 +107,13 @@ async function runAndThrow({config, command}: CliOptions) {
 
 function makeLocalizer(config: Config): LitLocalizer {
   switch (config.output.mode) {
-    case 'transform':
-      return new TransformLitLocalizer(
-        // TODO(aomarks) Unfortunate that TypeScript doesn't automatically do
-        // this type narrowing. Because the union is on a nested property?
-        config as Config & {output: TransformOutputConfig}
-      );
-    case 'runtime':
+    case "runtime":
       return new RuntimeLitLocalizer(
-        config as Config & {output: RuntimeOutputConfig}
+        config as Config & { output: RuntimeOutputConfig; }
       );
     default:
       throw new KnownError(
-        `Internal error: unknown mode ${
-          (unreachable(config.output) as Config['output']).mode
+        `Internal error: unknown mode ${(unreachable(config.output as never) as Config["output"]).mode
         }`
       );
   }
@@ -155,25 +124,25 @@ function cliOptsFromArgs(argv: string[]): CliOptions {
   if (args._.length === 0) {
     throw new KnownError(
       `Missing command argument. ` +
-        `Valid commands: ${[...commands].join(', ')}`
+      `Valid commands: ${[...commands].join(", ")}`
     );
   }
   const command = args._[0];
   if (!isCommand(command)) {
     throw new KnownError(
       `Invalid command ${command}}. ` +
-        `Valid commands: ${[...commands].join(', ')}`
+      `Valid commands: ${[...commands].join(", ")}`
     );
   }
   if (args._.length > 1) {
     throw new KnownError(
-      `Unknown argument(s): ${args._.slice(1).join(' ')}` + usage
+      `Unknown argument(s): ${args._.slice(1).join(" ")}` + usage
     );
   }
-  if ('help' in args) {
+  if ("help" in args) {
     throw new KnownError(usage);
   }
-  const configPath = args['config'] || './lit-localize.json';
+  const configPath = args["config"] || "./localize.json";
   const config = readConfigFileAndWriteSchema(configPath);
-  return {config, command};
+  return { config, command };
 }
