@@ -13,7 +13,6 @@ import minimist from "minimist";
 
 import { KnownError, unreachable } from "@lit/localize-tools/lib/error.js";
 import { LitLocalizer } from "@lit/localize-tools/lib/index.js";
-import { printDiagnostics } from "@lit/localize-tools/lib/typescript.js";
 import { readConfigFileAndWriteSchema } from "@lit/localize-tools/lib/config.js";
 import { RuntimeLitLocalizer as BaseLitLocalizer } from "@lit/localize-tools/lib/modes/runtime.js";
 import type { Config } from "@lit/localize-tools/lib/types/config.js";

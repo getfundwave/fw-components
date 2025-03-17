@@ -43,7 +43,7 @@ let requestId = 0;
 // _LIT_LOCALIZE_MSG_ is used during extraction
 type MsgImpl = ((payload: string, dictionary: Dictionary) => string) & { _LIT_LOCALIZE_MSG_: never; };
 export const msgImpl = ((payload: string, dictionary: Dictionary) => {
-  if (dictionary?.[payload.toLocaleLowerCase()]) return dictionary?.[payload.toLocaleLowerCase()];
+  if (dictionary?.[payload]) return dictionary?.[payload];
   else return payload;
 }) as MsgImpl;
 
