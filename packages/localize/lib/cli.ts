@@ -17,6 +17,7 @@ import { readConfigFileAndWriteSchema } from "@lit/localize-tools/lib/config.js"
 import { RuntimeLitLocalizer as BaseLitLocalizer } from "@lit/localize-tools/lib/modes/runtime.js";
 import type { Config } from "@lit/localize-tools/lib/types/config.js";
 import type { RuntimeOutputConfig } from "@lit/localize-tools/lib/types/modes.js";
+import { Locale } from "@lit/localize-tools/lib/types/locale";
 
 const usage = `
 Usage: fw-localize [--config=lit-localize.json] COMMAND
@@ -94,6 +95,9 @@ async function runAndThrow({ config, command }: CliOptions) {
     const { messages } = localizer.extractSourceMessages();
     if (!messages.length) return;
 
+    console.log(`Extracted ${messages.length} messages`);
+    console.log(`Writing interchange files`);
+
     await localizer.writeInterchangeFiles();
   } else {
     // Should already have been validated.
@@ -116,6 +120,8 @@ class CustomRuntimeLitLocalizer extends BaseLitLocalizer {
       .filter((str): str is string => str !== undefined);
 
     const locales = this.config.targetLocales;
+
+    locales.unshift("source" as Locale);
 
     for (const locale of locales) {
       const outputDir = path.join(process.cwd(), "locales");
@@ -142,6 +148,8 @@ class CustomRuntimeLitLocalizer extends BaseLitLocalizer {
           translations[str] = '';
         }
       });
+
+      if (locale === "source") strings.push(...Object.keys(translations).filter(stringKey => !strings.includes(stringKey)));
 
       await fs.writeFile(
         outputFile, 
