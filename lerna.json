@@ -3,7 +3,7 @@
     "packages/*"
   ],
   "useWorkspaces": true,
-  "version": "2.2.0",
+  "version": "2.2.1-fw-localize.2",
   "command": {
     "version": {
       "message": "chore(release): publish %s \n [skip ci]"

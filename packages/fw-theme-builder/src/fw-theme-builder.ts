@@ -4,6 +4,7 @@ import "./fw-color-pick";
 import "./fw-size-pick";
 import "./fw-font-pick";
 import { fontOptions, defaultTheme } from "./models";
+import { msg } from "@fw-components/localize";
 
 enum ThemeEnum {
   COLORS = "colors",
@@ -170,12 +171,12 @@ export class FwThemeBuilder extends LitElement {
       case ThemeEnum.COLORS:
         content = html` <div part="content-container">
           ${(Object.keys(this.theme.colors) ?? []).map(
-            (clr) => html` <button
+            (color) => html` <button
               part="theme-button"
               @click=${() =>
-                this.sectionChangeHandler( `colors-${clr}`)}
+                this.sectionChangeHandler(`colors-${color}`)}
             >
-              ${clr}
+              ${msg(color)}
             </button>`
           )}
         </div>`;
@@ -242,7 +243,7 @@ export class FwThemeBuilder extends LitElement {
                         class="section-heading"
                         part="fonts-ungrouped-heading"
                       >
-                        Fonts
+                        ${msg("Fonts")}
                       </h2>
                       ${Object.keys(this.theme[ThemeEnum.FONTS]).map((font: string) =>
                         this.createFontPickComponent(font)
@@ -259,7 +260,7 @@ export class FwThemeBuilder extends LitElement {
                         class="section-heading"
                         part="sizes-ungrouped-heading"
                       >
-                        Sizes
+                        ${msg("Sizes")}
                       </h2>
                       ${Object.keys(this.theme[ThemeEnum.SIZES]).map((size: string) =>
                         this.createSizePickComponent(size)
@@ -276,7 +277,7 @@ export class FwThemeBuilder extends LitElement {
                         class="section-heading"
                         part="colors-ungrouped-heading"
                       >
-                        Colors
+                        ${msg("Colors")}
                       </h2>
                       ${Object.keys(this.theme[ThemeEnum.COLORS]).map(
                         (group) => html`
@@ -285,7 +286,7 @@ export class FwThemeBuilder extends LitElement {
                               class="color-group-heading"
                               part="color-group-heading"
                             >
-                              ${group}
+                              ${msg(group)}
                             </h3>
                             ${Object.keys(this.theme[ThemeEnum.COLORS][group]).map(
                               (type: string) =>
