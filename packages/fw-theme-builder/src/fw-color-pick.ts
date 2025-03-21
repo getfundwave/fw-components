@@ -1,3 +1,4 @@
+import { msg } from "@fw-components/localize";
 import { html, css, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
@@ -61,7 +62,7 @@ export class FwColorPick extends LitElement {
         }
       </style>
       <button part="color-button" class="color-button" data-label-color="${this.value}">
-        ${this.label}
+        ${msg((this.label || "").trim())}
         <input
           part="color-hidden-input"
           class="colorpicker-hidden"
