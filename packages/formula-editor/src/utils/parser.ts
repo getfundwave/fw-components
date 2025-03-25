@@ -119,12 +119,12 @@ export class Parser {
          * Unknown symbol/variable/word
          */
         if (!(isNumber || isOperator || isBracket || isSpace)) {
-          parseOutput.errorString = `${this.variableType} : '${token}' doesn't exist`;
+          parseOutput.errorString = `${this.variableType} : '${token}' doesn't exist.`;
           expectation = Expectation.UNDEFINED;
         }
 
         else if (this.allowedOperators.has(previousToken) && isOperator) {
-          parseOutput.errorString = `Please don't use mathematical operators (+ - * / ^) consecutively`;
+          parseOutput.errorString = `Please don't use mathematical operators (+ - * / ^) consecutively.`;
           expectation = Expectation.UNDEFINED;
         }
 
@@ -157,7 +157,7 @@ export class Parser {
          * division by zero
          */
         else if (isNumber && previousToken === "/" && (this.variables.get(token) === 0 || Number(token) === 0)) {
-          parseOutput.errorString = `Division by zero is not possible`;
+          parseOutput.errorString = `Division by zero is not possible.`;
           expectation = Expectation.UNDEFINED;
         }
 
