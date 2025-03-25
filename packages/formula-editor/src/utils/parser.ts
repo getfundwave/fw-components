@@ -201,7 +201,7 @@ export class Parser {
     } 
     
     if (this.allowedOperators.has(previousToken)) {
-      parseOutput.errorString = `Please don't use mathematical operators (${Array.from(this.allowedOperators).join(",")}) at the end.`;
+      parseOutput.errorString = `Please don't use mathematical operators (${Array.from(this.allowedOperators).join(" ")}) at the end.`;
     } 
 
     if (!parentheses.isEmpty()) {
