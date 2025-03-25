@@ -140,7 +140,7 @@ export class Parser {
         else if (expectation === Expectation.VARIABLE && !isNumber && !isSpace && token != "(" 
           && !((unaryOperators.includes(token)) && (!parsedString.trim() || previousToken === "(" || this.allowedOperators.has(previousToken)))
         ) {
-          parseOutput.errorString = `Please use ${this.variableType}${this.allowedNumbers ? " or numbers" : ""} after '${previousToken}'.`;
+          parseOutput.errorString = `Please use ${this.variableType} ${this.variableType && this.allowedNumbers ? " or " : ''} ${this.allowedNumbers ? "numbers" : ""} after '${previousToken}'.`;
           expectation = Expectation.UNDEFINED;
         }
 
