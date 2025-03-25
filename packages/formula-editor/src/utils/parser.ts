@@ -119,12 +119,12 @@ export class Parser {
          * Unknown symbol/variable/word
          */
         if (!(isNumber || isOperator || isBracket || isSpace)) {
-          parseOutput.errorString = `${this.variableType} : '${token}' does not exist`;
+          parseOutput.errorString = `${this.variableType} : '${token}' doesn't exist`;
           expectation = Expectation.UNDEFINED;
         }
 
         else if (this.allowedOperators.has(previousToken) && isOperator) {
-          parseOutput.errorString = `Please use ${this.variableType}${this.allowedNumbers ? " or numbers" : ""} after '${previousToken}'. Pls do not use consecutive two mathametical operators (+ - * / ^)`;
+          parseOutput.errorString = `Please don't use mathematical operators (+ - * / ^) consecutively`;
           expectation = Expectation.UNDEFINED;
         }
 
@@ -148,7 +148,7 @@ export class Parser {
          * Multiple number/variable together without operator
          */
         else if (expectation === Expectation.OPERATOR && !isOperator && !isSpace && token != ")") {
-          parseOutput.errorString = `Please use mathametical operators (${Array.from(this.allowedOperators).join(" ")}) after '${previousToken}'.`;
+          parseOutput.errorString = `Please use mathematical operators (${Array.from(this.allowedOperators).join(" ")}) after '${previousToken}'.`;
           expectation = Expectation.UNDEFINED;
         }
 
@@ -165,7 +165,7 @@ export class Parser {
          * Empty brackets
          */
         else if (previousToken === "(" && token === ")") {
-          parseOutput.errorString = `Pls do not use empty brackets ().`;
+          parseOutput.errorString = `Please don't use empty brackets ().`;
           expectation = Expectation.UNDEFINED;
         }
       }
@@ -201,7 +201,7 @@ export class Parser {
     } 
     
     if (this.allowedOperators.has(previousToken)) {
-      parseOutput.errorString = `Pls do not use mathametical operators (${Array.from(this.allowedOperators).join(",")}) at the end.`;
+      parseOutput.errorString = `Please don't use mathematical operators (${Array.from(this.allowedOperators).join(",")}) at the end.`;
     } 
 
     if (!parentheses.isEmpty()) {
