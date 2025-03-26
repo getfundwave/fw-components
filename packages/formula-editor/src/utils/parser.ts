@@ -124,7 +124,7 @@ export class Parser {
         }
 
         else if (this.allowedOperators.has(previousToken) && isOperator) {
-          parseOutput.errorString = `Please don't use mathematical operators (+ - * / ^) consecutively.`;
+          parseOutput.errorString = `Please don't use mathematical operators (${Array.from(this.allowedOperators).join(" ")}) consecutively.`;
           expectation = Expectation.UNDEFINED;
         }
 
