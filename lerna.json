@@ -3,7 +3,7 @@
     "packages/*"
   ],
   "useWorkspaces": true,
-  "version": "2.1.0",
+  "version": "2.1.1-formula-editor-regex-fix.0",
   "command": {
     "version": {
       "message": "chore(release): publish %s \n [skip ci]"
