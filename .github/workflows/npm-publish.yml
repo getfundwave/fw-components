@@ -11,7 +11,7 @@ env:
 
 jobs:
   build_test_publish:
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-22.04"
     environment: "${{ github.ref_name == 'main' && 'prod' || '' }}"
     steps:
       - name: Generate token
