@@ -1,6 +1,6 @@
 {
   "name": "@fw-components/formula-editor",
-  "version": "2.1.1-formula-editor-regex-fix.0",
+  "version": "2.1.1-formula-editor-regex-fix.1",
   "description": "A WYSIWYG type formula editor",
   "main": "dist/formula-editor/src/formula-editor.js",
   "exports": {
