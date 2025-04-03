@@ -14,7 +14,7 @@ export class Parser {
   allowedOperators :  Set<string>;
   variableType: string;
 
-  constructor(variables: Map<string, number>, minSuggestionLen: number, formulaRegex : RegExp = /[A-Za-z0-9_#@]+|[-+(),*^/\s]/g , allowedNumbers: boolean = true, allowedOperators :  Set<string> = mathematicalOperators, variableType: string = "") {
+  constructor(variables: Map<string, number>, minSuggestionLen: number, formulaRegex : RegExp = /[A-Za-z0-9_#@.]+|[-+(),*^/\s]/g , allowedNumbers: boolean = true, allowedOperators :  Set<string> = mathematicalOperators, variableType: string = "") {
     this.variables = variables;
     this.formulaRegex = formulaRegex;
     this._recommender = new Recommender(Array.from(this.variables.keys()), minSuggestionLen);
@@ -90,7 +90,7 @@ export class Parser {
           isNumber = true;
 
           if (this.allowedOperators.has(token)) {
-            const updatedTokenString = `${token} ${recommendation}`;
+            const updatedTokenString = `${token} ${recommendation} `;
 
             parseOutput.formattedString += updatedTokenString;
             currentPosition += updatedTokenString.length;
@@ -101,9 +101,9 @@ export class Parser {
           };
 
           const updatedTokenLength = recommendation.length - token.length;
-          parseOutput.newCursorPosition = Math.min(parseOutput.newCursorPosition, formula.length) + updatedTokenLength;
+          parseOutput.newCursorPosition = Math.min(parseOutput.newCursorPosition, formula.length) + updatedTokenLength + 1;
 
-          token = recommendation;
+          token = recommendation + " ";
           recommendation = null;
         }
 
@@ -191,8 +191,8 @@ export class Parser {
     });
 
     if (recommendation){
-      parseOutput.newCursorPosition = Math.min(parseOutput.newCursorPosition, formula.length) + recommendation.length;
-      parseOutput.formattedString += recommendation;
+      parseOutput.newCursorPosition = Math.min(parseOutput.newCursorPosition, formula.length) + recommendation.length + 1;
+      parseOutput.formattedString += recommendation + " ";
       previousToken = recommendation;
     }
 
@@ -213,7 +213,7 @@ export class Parser {
 
   buildRPN(formula: string): Queue<string> | null {
     if (this.parseInput(formula).errorString) return null;    
-
+    
     const tokens = getFormulaTokens(formula,this.formulaRegex)?.filter((el: string) => !/\s+/.test(el) && el !== "");
 
     let previousToken = "";
@@ -345,10 +345,13 @@ export class Parser {
     while (!formulaRPN.isEmpty()) {
       const frontItem = formulaRPN.dequeue()!;
       if (!this.allowedOperators.has(frontItem)) {
+        console.log("frontitem",frontItem)
         const [sign, variableKey] = /^[+-]/.test(frontItem) ? [frontItem[0], frontItem.slice(1)] : ["", frontItem];
         const operandValue = Number.parseFloat(this.variables.get(variableKey)?.toString() ?? variableKey);
-
+        console.log("sign",sign)
+        console.log("variable",variableKey)
         const number = Number.parseFloat(sign + "1") * operandValue;
+        console.log("number",number)
         calcStack.push(Big(number));
       } else {
 
@@ -364,6 +367,7 @@ export class Parser {
         try {
           switch (operator) {
             case "+":
+              console.log("+", numA , " " ,numB)
               calcStack.push(Big(numA).add(Big(numB)));
               break;
             case "-":
