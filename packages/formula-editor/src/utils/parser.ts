@@ -90,7 +90,7 @@ export class Parser {
           isNumber = true;
 
           if (this.allowedOperators.has(token)) {
-            const updatedTokenString = `${token} ${recommendation} `;
+            const updatedTokenString = `${token} ${recommendation}`;
 
             parseOutput.formattedString += updatedTokenString;
             currentPosition += updatedTokenString.length;
@@ -101,9 +101,9 @@ export class Parser {
           };
 
           const updatedTokenLength = recommendation.length - token.length;
-          parseOutput.newCursorPosition = Math.min(parseOutput.newCursorPosition, formula.length) + updatedTokenLength + 1;
+          parseOutput.newCursorPosition = Math.min(parseOutput.newCursorPosition, formula.length) + updatedTokenLength;
 
-          token = recommendation + " ";
+          token = recommendation;
           recommendation = null;
         }
 
@@ -119,12 +119,12 @@ export class Parser {
          * Unknown symbol/variable/word
          */
         if (!(isNumber || isOperator || isBracket || isSpace)) {
-          parseOutput.errorString = `${this.variableType} : '${token}' does not exist`;
+          parseOutput.errorString = `${this.variableType} : '${token}' doesn't exist.`;
           expectation = Expectation.UNDEFINED;
         }
 
         else if (this.allowedOperators.has(previousToken) && isOperator) {
-          parseOutput.errorString = `Please use ${this.variableType}${this.allowedNumbers ? " or numbers" : ""} after '${previousToken}'. Pls do not use consecutive two mathametical operators (+ - * / ^)`;
+          parseOutput.errorString = `Please don't use mathematical operators (${Array.from(this.allowedOperators).join(" ")}) consecutively.`;
           expectation = Expectation.UNDEFINED;
         }
 
@@ -140,7 +140,7 @@ export class Parser {
         else if (expectation === Expectation.VARIABLE && !isNumber && !isSpace && token != "(" 
           && !((unaryOperators.includes(token)) && (!parsedString.trim() || previousToken === "(" || this.allowedOperators.has(previousToken)))
         ) {
-          parseOutput.errorString = `Please use ${this.variableType}${this.allowedNumbers ? " or numbers" : ""} after '${previousToken}'.`;
+          parseOutput.errorString = `Please use ${this.variableType} ${this.variableType && this.allowedNumbers ? " or " : ''} ${this.allowedNumbers ? "numbers" : ""} after '${previousToken}'.`;
           expectation = Expectation.UNDEFINED;
         }
 
@@ -148,7 +148,7 @@ export class Parser {
          * Multiple number/variable together without operator
          */
         else if (expectation === Expectation.OPERATOR && !isOperator && !isSpace && token != ")") {
-          parseOutput.errorString = `Please use mathametical operators (${Array.from(this.allowedOperators).join(" ")}) after '${previousToken}'.`;
+          parseOutput.errorString = `Please use mathematical operators (${Array.from(this.allowedOperators).join(" ")}) after '${previousToken}'.`;
           expectation = Expectation.UNDEFINED;
         }
 
@@ -157,7 +157,7 @@ export class Parser {
          * division by zero
          */
         else if (isNumber && previousToken === "/" && (this.variables.get(token) === 0 || Number(token) === 0)) {
-          parseOutput.errorString = `Division by zero is not possible`;
+          parseOutput.errorString = `Division by zero is not possible.`;
           expectation = Expectation.UNDEFINED;
         }
 
@@ -165,7 +165,7 @@ export class Parser {
          * Empty brackets
          */
         else if (previousToken === "(" && token === ")") {
-          parseOutput.errorString = `Pls do not use empty brackets ().`;
+          parseOutput.errorString = `Please don't use empty brackets ().`;
           expectation = Expectation.UNDEFINED;
         }
       }
@@ -191,8 +191,8 @@ export class Parser {
     });
 
     if (recommendation){
-      parseOutput.newCursorPosition = Math.min(parseOutput.newCursorPosition, formula.length) + recommendation.length + 1;
-      parseOutput.formattedString += recommendation + " ";
+      parseOutput.newCursorPosition = Math.min(parseOutput.newCursorPosition, formula.length) + recommendation.length;
+      parseOutput.formattedString += recommendation;
       previousToken = recommendation;
     }
 
@@ -201,7 +201,7 @@ export class Parser {
     } 
     
     if (this.allowedOperators.has(previousToken)) {
-      parseOutput.errorString = `Pls do not use mathametical operators (${Array.from(this.allowedOperators).join(",")}) at the end.`;
+      parseOutput.errorString = `Please don't use mathematical operators (${Array.from(this.allowedOperators).join(" ")}) at the end.`;
     } 
 
     if (!parentheses.isEmpty()) {
@@ -213,7 +213,7 @@ export class Parser {
 
   buildRPN(formula: string): Queue<string> | null {
     if (this.parseInput(formula).errorString) return null;    
-    
+
     const tokens = getFormulaTokens(formula,this.formulaRegex)?.filter((el: string) => !/\s+/.test(el) && el !== "");
 
     let previousToken = "";
@@ -345,13 +345,10 @@ export class Parser {
     while (!formulaRPN.isEmpty()) {
       const frontItem = formulaRPN.dequeue()!;
       if (!this.allowedOperators.has(frontItem)) {
-        console.log("frontitem",frontItem)
         const [sign, variableKey] = /^[+-]/.test(frontItem) ? [frontItem[0], frontItem.slice(1)] : ["", frontItem];
         const operandValue = Number.parseFloat(this.variables.get(variableKey)?.toString() ?? variableKey);
-        console.log("sign",sign)
-        console.log("variable",variableKey)
+
         const number = Number.parseFloat(sign + "1") * operandValue;
-        console.log("number",number)
         calcStack.push(Big(number));
       } else {
 
@@ -367,7 +364,6 @@ export class Parser {
         try {
           switch (operator) {
             case "+":
-              console.log("+", numA , " " ,numB)
               calcStack.push(Big(numA).add(Big(numB)));
               break;
             case "-":
