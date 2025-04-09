@@ -190,6 +190,9 @@ export class FormulaEditor extends LitElement {
       event.preventDefault();
       const direction = event.code === "ArrowDown" ? "down" : "up";
       this.suggestionMenu.navigate(direction);
+    } else if (event.code === "Enter") {
+      event.preventDefault();
+      this.suggestionMenu.handleRecommendationSelect();
     }
   }
 
