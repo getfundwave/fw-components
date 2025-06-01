@@ -1,6 +1,6 @@
 {
   "name": "@fw-components/styles",
-  "version": "2.3.2-formula-editor-regex-fix.0",
+  "version": "2.3.2",
   "description": "Style library for web components",
   "publishConfig": {
     "access": "public"

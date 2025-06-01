@@ -1,6 +1,6 @@
 {
   "name": "@fw-components/trackers",
-  "version": "2.3.2-formula-editor-regex-fix.0",
+  "version": "2.3.2",
   "description": "Usage trackers for web components",
   "publishConfig": {
     "access": "public"
