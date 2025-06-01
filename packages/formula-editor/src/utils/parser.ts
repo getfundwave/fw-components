@@ -14,7 +14,7 @@ export class Parser {
   allowedOperators :  Set<string>;
   variableType: string;
 
-  constructor(variables: Map<string, number>, minSuggestionLen: number, formulaRegex : RegExp = /[A-Za-z0-9_#@]+|[-+(),*^/\s]/g , allowedNumbers: boolean = true, allowedOperators :  Set<string> = mathematicalOperators, variableType: string = "") {
+  constructor(variables: Map<string, number>, minSuggestionLen: number, formulaRegex : RegExp = /[A-Za-z0-9_#@.]+|[-+(),*^/\s]/g , allowedNumbers: boolean = true, allowedOperators :  Set<string> = mathematicalOperators, variableType: string = "") {
     this.variables = variables;
     this.formulaRegex = formulaRegex;
     this._recommender = new Recommender(Array.from(this.variables.keys()), minSuggestionLen);

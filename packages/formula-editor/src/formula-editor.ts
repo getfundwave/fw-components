@@ -101,9 +101,16 @@ export class FormulaEditor extends LitElement {
   }
 
   _adjustTextAreaHeight() {
-    if (!this.formulaString) this.editor.style.height = "var(--fe-height, 30px)";
+    requestAnimationFrame(() => {
+      if (!this.editor) return;
 
-    if (this.editor.scrollHeight > this.editor.clientHeight) this.editor.style.height = String(this.editor.scrollHeight + 5).concat("px");
+      this.editor.style.height = "var(--fe-height, 30px)";
+  
+      const newHeight = this.editor.scrollHeight;
+  
+      this.editor.style.height = `${newHeight + 5}px`;
+    });
+  
   }
 
   /**
@@ -174,7 +181,7 @@ export class FormulaEditor extends LitElement {
     if (event.code === "Tab") {
       event.preventDefault();
       if (this.recommendations?.length === 1) {
-        this.suggestionMenu.handleRecommendationSelect();
+        this.suggestionMenu.handleRecommendationSelect(0);
       } else {
         const direction = event.shiftKey ? "up" : "down";
         this.suggestionMenu.navigate(direction);
