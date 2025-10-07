@@ -19,7 +19,7 @@ export async function fetchEventsFromNotion(context: TStoreContext["notion"]) {
 
   const core = notionPage.block[pageId];
 
-  const collectionId = core?.value?.type === "collection_view_page" ? core.value.collection_id : null;
+  const collectionId = core?.value?.type === "collection_view_page" ? core.value?.collection_id : null;
 
   if (!collectionId) return;
 
